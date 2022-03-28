@@ -1,0 +1,16 @@
+Package: roogledocs
+Title: R wrapper for Googledocs java library
+Version: 0.01
+Authors@R: c(
+    person(given = "Rob",family = "Challen",email = "rob@terminological.co.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre")),
+    person(given = "terminological",role = "aut"))
+Description: R wrapper for Googledocs java library
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+	tibble
+Imports:
+	rJava,
+	R6,
+	xptr
