@@ -52,7 +52,7 @@ public class RService {
     private static final List<String> SCOPES = Arrays.asList(
     		DocsScopes.DOCUMENTS,
     		DocsScopes.DRIVE);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
     private Logger log = LoggerFactory.getLogger(RService.class);
     
     
