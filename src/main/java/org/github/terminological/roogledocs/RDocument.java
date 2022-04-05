@@ -41,7 +41,9 @@ public class RDocument {
 		return service.getDocs().documents().get(docId).setFields(fields).execute();
 	}
 
-	private static String INLINE_FIELDS = "body(content(paragraph(elements(endIndex,startIndex,textRun(content))))),namedRanges";
+	protected static String INLINE_FIELDS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,textRun(content))))),namedRanges";
+	protected static String STRUCTURAL_ELEMENTS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,textRun(content))),table(columns,rows)))";
+	
 	//private static String LINK_FIELDS = "body(content(paragraph(elements(endIndex,startIndex,textRun(content,textStyle/link/url)))))";
 
 	Document getDoc() throws IOException {
@@ -152,17 +154,17 @@ public class RDocument {
 	}
 
 	public void updateTaggedImage(String tagName, URI imageLink) throws IOException {
-		updateTaggedImage(tagName, imageLink, null);
+		updateTaggedImage(tagName, imageLink, true, null);
 	}
 	
 	public void updateTaggedImage(String tagName, URI imageLink, Double maxWidthInInches, Double maxHeightInInches) throws IOException {
 		Size size = new Size()
 				.setWidth(new Dimension().setMagnitude(maxWidthInInches*72).setUnit("PT"))
 				.setHeight(new Dimension().setMagnitude(maxHeightInInches*72).setUnit("PT"));
-		updateTaggedImage(tagName, imageLink, size);
+		updateTaggedImage(tagName, imageLink, false, size);
 	}
 	
-	public void updateTaggedImage(String tagName, URI imageLink, Size size) throws IOException {
+	public void updateTaggedImage(String tagName, URI imageLink, boolean useGoogleDocSize, Size size) throws IOException {
 
 		// Fetch the document to determine the current indexes of the named ranges.
 		// Find the matching named ranges.
@@ -197,7 +199,7 @@ public class RDocument {
 			if (insertIndexes.contains(range.getStartIndex())) {
 				// Insert the replacement image.
 				
-				if (size == null && imageSizes.containsKey(range.getStartIndex())) {
+				if (useGoogleDocSize && imageSizes.containsKey(range.getStartIndex())) {
 					size = imageSizes.get(range.getStartIndex());
 				}
 				

@@ -15,7 +15,7 @@
 		<r6.version>master-SNAPSHOT</r6.version>
             </properties>
 
-            <name>Java html to pdf for R</name>
+            <name>R Google Docs integration</name>
 
 	<dependencies>
 		<dependency>
@@ -51,7 +51,7 @@
 		    <groupId>com.google.apis</groupId>
 		    <artifactId>google-api-services-docs</artifactId>
 		    <version>v1-rev20200803-1.30.10</version>
-<!-- 		    <version>v1-rev20210707-1.32.1</version> -->
+<!-- 		    <version>v1-rev20210707-1.32.1</version> this did not work, maybe a corrupted jar.-->
 		</dependency>
 		<dependency>
 	      <groupId>com.google.apis</groupId>

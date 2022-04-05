@@ -108,7 +108,7 @@ class TestApi {
 	final void testStructure() throws IOException {
 		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
-		Document doc = test1.getDoc();
+		Document doc = test1.getDoc(RDocument.STRUCTURAL_ELEMENTS);
 		System.out.print(doc.toPrettyString());
 	}
 	

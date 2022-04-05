@@ -41,6 +41,15 @@ public class DocumentHelper {
 				);
 	}
 	
+	static Stream<Range> findTableRanges(Document doc) {
+		return ofNullable(doc.getBody().getContent())
+			.filter(c -> c.getTable() != null)
+			.map(c -> new Range()
+					.setStartIndex(c.getStartIndex())
+					.setEndIndex(c.getEndIndex())
+			);
+	}
+	
 	static Stream<ParagraphElement> elements(Document doc) {
 		return ofNullable(doc.getBody().getContent())
 				.flatMap(d -> ofNullable(d.getParagraph()))

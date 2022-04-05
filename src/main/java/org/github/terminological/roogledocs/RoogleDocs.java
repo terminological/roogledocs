@@ -1,17 +1,27 @@
 package org.github.terminological.roogledocs;
 
+import static uk.co.terminological.rjava.RConverter.dataframeCollector;
+import static uk.co.terminological.rjava.RConverter.mapping;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
 
-import static uk.co.terminological.rjava.RConverter.*;
+import com.google.api.services.docs.v1.model.Dimension;
+import com.google.api.services.docs.v1.model.Size;
 
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RDefault;
@@ -123,12 +133,53 @@ public class RoogleDocs {
 	 * @throws IOException
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String tagName, String absoluteFilePath) throws IOException {
+	public RoogleDocs updateTaggedImage(String tagName, String absoluteFilePath, @RDefault(rCode="300") Double dpi) throws IOException {
 		String id = service.upload(Paths.get(absoluteFilePath));
 		URI uri = service.getThumbnailUri(id);
-		rdoc().updateTaggedImage(tagName, uri);
+		rdoc().updateTaggedImage(tagName, uri, true, getImageDim(absoluteFilePath, dpi));
 		service.delete(id);
 		return this;
+	}
+	
+	private static String getFileSuffix(final String path) {
+	    String result = null;
+	    if (path != null) {
+	        result = "";
+	        if (path.lastIndexOf('.') != -1) {
+	            result = path.substring(path.lastIndexOf('.'));
+	            if (result.startsWith(".")) {
+	                result = result.substring(1);
+	            }
+	        }
+	    }
+	    return result;
+	}
+	
+	private static Size getImageDim(final String path, Double dpi) throws IOException {
+		Size result = null;
+	    String suffix = getFileSuffix(path);
+	    Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+	    if (iter.hasNext()) {
+	        ImageReader reader = iter.next();
+	        try {
+	            ImageInputStream stream = new FileImageInputStream(new File(path));
+	            reader.setInput(stream);
+	            int width = reader.getWidth(reader.getMinIndex());
+	            int height = reader.getHeight(reader.getMinIndex());
+	            result = new Size()
+	            		.setWidth(
+	            				new Dimension().setMagnitude(width*dpi/72).setUnit("PT")
+	            		)
+	            		.setHeight(
+	            				new Dimension().setMagnitude(height*dpi/72).setUnit("PT")
+	            		);
+	        } finally {
+	            reader.dispose();
+	        }
+	    } else {
+	        throw new IOException("No reader found for given format: " + suffix);
+	    }
+	    return result;
 	}
 	
 	/**
