@@ -26,7 +26,10 @@ import com.google.api.services.docs.v1.model.Size;
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RDefault;
 import uk.co.terminological.rjava.RMethod;
+import uk.co.terminological.rjava.UnconvertableTypeException;
 import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RNumeric;
+import uk.co.terminological.rjava.types.RNumericVector;
 
 /**
  * Programmatically substitute data into a google doc
@@ -113,30 +116,33 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Subsititutes all occurrences of {{tag-name}} with the text parameter.
+	 * Substitutes all occurrences of {{tag-name}} with the text parameter.
 	 * @param tagName the tag name
-	 * @param text the value to relace the tag with (e.g. a result from analysis)
+	 * @param text the value to replace the tag with (e.g. a result from analysis)
 	 * @return itself - a fluent method
 	 * @throws IOException
 	 */
 	@RMethod
 	public RoogleDocs updateTaggedText(String tagName, String text) throws IOException {
 		rdoc().updateTaggedText(tagName, text);
+		System.out.println("Text "+tagName+" updated");
 		return this;
 	}
 	
 	/**
-	 * Subsitututes all occurrences of {{tag-name}} with an image from the local storage
+	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage
 	 * @param tagName the tag name
-	 * @param absoluteFilePath a file path to an png imge file.
-	 * @returnitself - a fluent method
+	 * @param absoluteFilePath a file path to an png image file.
+	 * @param dpi the dots per inch of the image in the document (defaults to 300)
+	 * @return itself - a fluent method
 	 * @throws IOException
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String tagName, String absoluteFilePath, @RDefault(rCode="300") Double dpi) throws IOException {
+	public RoogleDocs updateTaggedImage(String tagName, String absoluteFilePath, @RDefault(rCode="300") double dpi) throws IOException {
 		String id = service.upload(Paths.get(absoluteFilePath));
 		URI uri = service.getThumbnailUri(id);
 		rdoc().updateTaggedImage(tagName, uri, true, getImageDim(absoluteFilePath, dpi));
+		System.out.println("Figure "+tagName+" updated");
 		service.delete(id);
 		return this;
 	}
@@ -155,7 +161,7 @@ public class RoogleDocs {
 	    return result;
 	}
 	
-	private static Size getImageDim(final String path, Double dpi) throws IOException {
+	private static Size getImageDim(final String path, double dpi) throws IOException {
 		Size result = null;
 	    String suffix = getFileSuffix(path);
 	    Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
@@ -191,6 +197,37 @@ public class RoogleDocs {
 	@RMethod
 	public RoogleDocs revertTags() throws IOException {
 		rdoc().revertTags();
+		return this;
+	}
+	
+	/**
+	 * @param tableIndex what is the table index in the document? leave out for a new table at the end of the document.
+	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column
+	 * @return
+	 * @throws IOException if the google docs API throws an error 
+	 * @throws UnconvertableTypeException if the data frame is the wrong format.
+	 */
+	@RMethod
+	public RoogleDocs updateTable(@RDefault(rCode="-1") int tableIndex, RDataframe longFormatTable, RNumericVector colWidths, @RDefault(rCode="5.9") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
+		System.out.println("Table "+index+" updated");
+		return this;
+	}
+	
+	/**
+	 * @param figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. 
+	 * @param absoluteFilePath a file path to an png image file.
+	 * @param dpi the dots per inch of the image in the document (defaults to 300)
+	 * @return itself (a fluent method)
+	 * @throws IOException if the google docs API throws an error, or the file cannot be read.
+	 */
+	@RMethod
+	public RoogleDocs updateFigure(@RDefault(rCode="-1") int figureIndex, String absoluteFilePath, @RDefault(rCode="300") double dpi) throws IOException {
+		String id = service.upload(Paths.get(absoluteFilePath));
+		URI uri = service.getThumbnailUri(id);
+		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));
+		System.out.println("Figure "+index+" updated");
+		service.delete(id);
 		return this;
 	}
 }

@@ -2,18 +2,30 @@ package org.github.terminological.roogledocs;
 
 import static org.github.terminological.roogledocs.StreamHelper.ofNullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.github.terminological.roogledocs.datatypes.Tuple;
+import org.github.terminological.roogledocs.datatypes.TupleList;
+
 import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.InlineObjectProperties;
+import com.google.api.services.docs.v1.model.Location;
 import com.google.api.services.docs.v1.model.ParagraphElement;
 import com.google.api.services.docs.v1.model.Range;
 import com.google.api.services.docs.v1.model.Size;
+import com.google.api.services.docs.v1.model.Table;
+import com.google.api.services.docs.v1.model.TableCell;
+import com.google.api.services.docs.v1.model.TableCellLocation;
+import com.google.api.services.docs.v1.model.TableRow;
 import com.google.api.services.docs.v1.model.TextStyle;
 
 public class DocumentHelper {
@@ -41,6 +53,31 @@ public class DocumentHelper {
 				);
 	}
 	
+	static TupleList<TableCellLocation,Range> getSortedTableCells(Table table, int tableStart) {
+		TupleList<TableCellLocation,Range> out = new TupleList<>();
+		int i=0;
+		for(TableRow row: table.getTableRows()) {
+			int j=0;
+			for(TableCell cell : row.getTableCells()) {
+				out.and(
+					new TableCellLocation().setRowIndex(i).setColumnIndex(j).setTableStartLocation(new Location().setIndex(tableStart)), 
+					new Range().setStartIndex(cell.getStartIndex()).setEndIndex(cell.getEndIndex())
+				);
+				j= j + Optional.ofNullable(cell.getTableCellStyle().getRowSpan()).orElse(1);
+			}
+			i= i + 1;
+		}
+		Collections.sort(out, new Comparator<Tuple<TableCellLocation,Range>>() {
+			@Override
+			public int compare(Tuple<TableCellLocation, Range> o1, Tuple<TableCellLocation, Range> o2) {
+				//descending sort on start index.
+				return o2.getSecond().getStartIndex().compareTo(o1.getSecond().getStartIndex());
+			}
+			
+		});
+		return out;
+	}
+	
 	static Stream<Range> findTableRanges(Document doc) {
 		return ofNullable(doc.getBody().getContent())
 			.filter(c -> c.getTable() != null)
@@ -59,6 +96,21 @@ public class DocumentHelper {
 	static Stream<String> text(ParagraphElement e) {
 		return ofNullable(e.getTextRun())
 				.flatMap(tr -> ofNullable(tr.getContent()));
+	}
+	
+	static List<String> inlineImageIds(Document doc) {
+		List<String> ids = new ArrayList<>();
+		ofNullable(doc.getBody())
+		.flatMap(b -> ofNullable(b.getContent()))
+		.flatMap(e -> ofNullable(e.getParagraph()))
+		.flatMap(p -> ofNullable(p.getElements()))
+		.forEach(el -> {
+			// int index = el.getStartIndex();
+			ofNullable(el.getInlineObjectElement())
+				.map(io -> io.getInlineObjectId())
+				.forEach(id -> ids.add(id));
+		});
+		return(ids);
 	}
 	
 	static Map<Integer,Size> imageSizes(Document doc) {

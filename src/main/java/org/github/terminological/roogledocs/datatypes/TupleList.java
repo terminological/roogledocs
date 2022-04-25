@@ -2,6 +2,14 @@ package org.github.terminological.roogledocs.datatypes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TupleList<X, Y>  extends ArrayList<Tuple<X,Y>> {
 	
@@ -57,6 +65,39 @@ public class TupleList<X, Y>  extends ArrayList<Tuple<X,Y>> {
 
 	public boolean contains(X element1, Y element2) {
 		return this.contains(Tuple.create(element1, element2));
+	}
+	
+	public static <S,T> Collector<Tuple<S,T>, TupleList<S,T>, TupleList<S,T>> collector() {
+		return new Collector<Tuple<S,T>, TupleList<S,T>, TupleList<S,T>>() {
+
+			@Override
+			public Supplier<TupleList<S, T>> supplier() {
+				return () -> TupleList.create();
+			}
+
+			@Override
+			public BiConsumer<TupleList<S, T>, Tuple<S, T>> accumulator() {
+				return (l,t) -> l.add(t);
+			}
+
+			@Override
+			public BinaryOperator<TupleList<S, T>> combiner() {
+				return (l1,l2) -> {
+					l1.addAll(l2);
+					return(l1);
+				};
+			}
+
+			@Override
+			public Function<TupleList<S, T>, TupleList<S, T>> finisher() {
+				return (l) -> l;
+			}
+
+			@Override
+			public Set<Characteristics> characteristics() {
+				return Stream.of(Characteristics.IDENTITY_FINISH).collect(Collectors.toSet());
+			}
+		};
 	}
 
 }

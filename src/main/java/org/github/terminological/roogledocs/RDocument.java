@@ -16,7 +16,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import org.github.terminological.roogledocs.datatypes.LongFormatTable;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
 import org.slf4j.Logger;
@@ -29,6 +31,13 @@ import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.Range;
 import com.google.api.services.docs.v1.model.Request;
 import com.google.api.services.docs.v1.model.Size;
+import com.google.api.services.docs.v1.model.Table;
+
+import uk.co.terminological.rjava.UnconvertableTypeException;
+import uk.co.terminological.rjava.types.RBoundDataframe;
+import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RNumeric;
+import uk.co.terminological.rjava.types.RNumericVector;
 
 public class RDocument {
 
@@ -43,6 +52,9 @@ public class RDocument {
 
 	protected static String INLINE_FIELDS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,textRun(content))))),namedRanges";
 	protected static String STRUCTURAL_ELEMENTS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,textRun(content))),table(columns,rows)))";
+	protected static String TABLES_ONLY = "body(content(startIndex,endIndex,table(columns,rows)))";
+	protected static String TABLES_AND_CELLS = "body(content(startIndex,endIndex,table(tableRows(tableCells(endIndex,startIndex,tableCellStyle(columnSpan,rowSpan))))))"; //(tableCells(content(startIndex,endIndex,tableCellStyle(columnSpan,rowSpan))))))";
+	protected static String IMAGE_POSITIONS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,inlineObjectElement))))";
 	
 	//private static String LINK_FIELDS = "body(content(paragraph(elements(endIndex,startIndex,textRun(content,textStyle/link/url)))))";
 
@@ -262,6 +274,97 @@ public class RDocument {
 
 	public String getDocId() {
 		return docId;
+	}
+
+	public int updateOrInsertInlineImage(int figureIndex, URI imageLink, Double maxWidthInInches, Double maxHeightInInches) throws IOException {
+		Size size = new Size()
+				.setWidth(new Dimension().setMagnitude(maxWidthInInches*72).setUnit("PT"))
+				.setHeight(new Dimension().setMagnitude(maxHeightInInches*72).setUnit("PT"));
+		return updateOrInsertInlineImage(figureIndex, imageLink, size);
+	}
+	
+	public int updateOrInsertInlineImage(int figureIndex, URI imageLink, Size size) throws IOException {
+		Document document = getDoc(IMAGE_POSITIONS);
+		List<String> imageIds = DocumentHelper.inlineImageIds(document);
+		RequestBuilder request1 = new RequestBuilder(this);
+		try {
+			
+			String imageId = imageIds.get(figureIndex-1);
+			request1.updateImageWithUri(imageId, imageLink);
+			request1.sendRequest();
+			return figureIndex;
+			
+		} catch (IndexOutOfBoundsException e) {
+			//create a new image at end of document
+			figureIndex = imageIds.size()+1;
+			request1.insertImageAtEnd(imageLink, size);
+			request1.sendRequest();
+			return figureIndex;
+		}
+		
+	}
+	
+	public int updateOrInsertTable(int tableIndex, RDataframe longFormatTable, RNumericVector colWidths, RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+		Document document = getDoc(TABLES_ONLY);
+		
+		RBoundDataframe<LongFormatTable> df = longFormatTable.attach(LongFormatTable.class);
+		// get rows and columns of table
+		int rows = df.streamCoerce().mapToInt(lft -> lft.row().get()+lft.rowSpan().get()-1).max().orElseThrow(() -> new IOException("Zero rows in table"));
+		int cols = df.streamCoerce().mapToInt(lft -> lft.col().get()+lft.colSpan().get()-1).max().orElseThrow(() -> new IOException("Zero columns in table"));
+		
+		RequestBuilder request1 = new RequestBuilder(this);
+		
+		TupleList<Integer,Integer> tables;
+		Tuple<Integer,Integer> tablePos;
+		tables = ofNullable(document.getBody().getContent())
+				.filter(se -> se.getTable() != null)
+				.map(se -> Tuple.create(se.getStartIndex()-1,se.getEndIndex())) //Always \n added before table which is sort of part of table.
+				.collect(TupleList.collector());
+		try {
+			
+			tablePos = tables.get(tableIndex-1);
+			// delete the existing table
+			request1.deleteContent(tablePos);
+			request1.createTable(tablePos.getFirst(),rows,cols,colWidths,tableWidthInches);
+			
+		} catch (IndexOutOfBoundsException e) {
+			
+			// if nothing found set position to end of last element in content.
+			Integer endPos = ofNullable(document.getBody().getContent()).mapToInt(se -> se.getEndIndex()).max().orElseThrow(() -> new RuntimeException("Unable to find end fo document"));
+			tablePos = Tuple.create(endPos, endPos);
+			// and reset the index to the current table count. 
+			tableIndex = tables.size()+1;
+			request1.createTableAtEnd(tablePos.getFirst(),rows,cols,colWidths,tableWidthInches);
+			
+		}
+		
+		// create a blank table size rows/cols as position or end of document
+		
+		request1.sendRequest();
+		
+		// get layout of now empty table 
+		document = getDoc(TABLES_AND_CELLS);
+		List<Table> tables2 = ofNullable(document.getBody().getContent())
+				.flatMap(b -> ofNullable(b.getTable()))
+				.collect(Collectors.toList());
+		
+		tables = ofNullable(document.getBody().getContent())
+				.filter(se -> se.getTable() != null)
+				.map(se -> Tuple.create(se.getStartIndex(),se.getEndIndex())) // the actual start of the table this time
+				.collect(TupleList.collector());
+		
+		Table insertInto = tables2.get(tableIndex-1);
+		tablePos = tables.get(tableIndex-1);
+		
+		RequestBuilder request2 = new RequestBuilder(this);
+		List<LongFormatTable> tmp = df.streamCoerce().collect(Collectors.toList()); 
+	    
+		request2.writeTableContent(tmp, insertInto, tablePos.getFirst());
+		
+		request2.sendRequest();
+		
+		
+		return tableIndex;
 	}
 	
 }

@@ -28,6 +28,12 @@ import org.slf4j.LoggerFactory;
 import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.Size;
 
+import uk.co.terminological.rjava.UnconvertableTypeException;
+import uk.co.terminological.rjava.types.RCharacterVector;
+import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RNumeric;
+import uk.co.terminological.rjava.types.RVector;
+
 class TestApi {
 
 	static final Path TOKENDIR = Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs");
@@ -108,7 +114,7 @@ class TestApi {
 	final void testStructure() throws IOException {
 		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
-		Document doc = test1.getDoc(RDocument.STRUCTURAL_ELEMENTS);
+		Document doc = test1.getDoc(RDocument.IMAGE_POSITIONS);
 		System.out.print(doc.toPrettyString());
 	}
 	
@@ -157,6 +163,42 @@ class TestApi {
 	final void testRevert() throws IOException {
 		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
 		test2.revertTags();
+		Document doc = test2.getDoc();
+		System.out.print(doc.toPrettyString());
+	}
+	
+	@Test
+	final void testTableInsert() throws IOException, UnconvertableTypeException {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		String tmp = dtf.format(now); 
+		RDataframe df = RDataframe.create()
+				.withCol("label", RVector.with("A1",tmp,"B1","B2","B3"))
+				.withCol("col", RVector.with(1,2,1,2,3))
+				.withCol("row", RVector.with(1,1,2,2,2))
+				.withCol("colSpan", RVector.with(1,2,1,1,1))
+				.withCol("rowSpan", RVector.with(1,1,1,1,1))
+				.withCol("fontFace", RVector.with("bold","italic","bold.italic","plain","plain"))
+				.withCol("fontName", RVector.with("Roboto","Arial","Courier New","Times New Roman","Pacifico"))
+				.withCol("fontSize", RVector.with(8D,8D,12D,20D,6D))
+				.withCol("alignment", RVector.with("START","CENTER","START","CENTER","END"))
+				.withCol("valignment", RVector.with("TOP","MIDDLE","BOTTOM","MIDDLE","TOP"))
+				.withCol("bottomBorderWeight", RVector.with(0D,0D,1D,1D,1D))
+				.withCol("topBorderWeight", RVector.with(1D,1D,0D,0D,0D))
+				.withCol("leftBorderWeight", RVector.with(1D,0D,1D,0D,0D))
+				.withCol("rightBorderWeight", RVector.with(0D,1D,0D,0D,1D))
+				.withCol("fillColour", RVector.with("#FFFFFF","#DDFFFF","#FFDDFF","#FFFFDD","#DDDDDD"));
+		
+		System.out.println(df.asCsv());
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		
+		test2.updateOrInsertTable(1, df, RVector.with(2D,4D,3D), RNumeric.from(4D));				
+	}
+	
+	@Test
+	final void testImageInsert() throws IOException {
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		test2.updateOrInsertInlineImage(1, URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"), 4.0, 4.0);
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
 	}

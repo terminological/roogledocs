@@ -18,7 +18,7 @@ Programmatically substitute data into a google doc
 
 Version: 0.01
 
-Generated: 2022-03-29T00:57:28.104
+Generated: 2022-04-25T18:01:03.273
 }
 
 \details{
@@ -57,6 +57,14 @@ instance = J$RoogleDocs$new(tokenDirectory)
 ## Method `RoogleDocs$revertTags`
 ## -----------------------------------
 
+## -----------------------------------
+## Method `RoogleDocs$updateTable`
+## -----------------------------------
+
+## -----------------------------------
+## Method `RoogleDocs$updateFigure`
+## -----------------------------------
+
 }}
 
 \keyword{java api}
@@ -79,8 +87,10 @@ instance = J$RoogleDocs$new(tokenDirectory)
 			\item \href{#method-searchForDocuments}{\code{instance$searchForDocuments(titleMatch)}}
 			\item \href{#method-tagsDefined}{\code{instance$tagsDefined()}}
 			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(tagName, text)}}
-			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(tagName, absoluteFilePath)}}
+			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(tagName, absoluteFilePath, dpi)}}
 			\item \href{#method-revertTags}{\code{instance$revertTags()}}
+			\item \href{#method-updateTable}{\code{instance$updateTable(tableIndex, longFormatTable, colWidths, tableWidthInches)}}
+			\item \href{#method-updateFigure}{\code{instance$updateFigure(figureIndex, absoluteFilePath, dpi)}}
 			\item \code{instance$clone()}
 			\item \code{instance$print()}
 		}
@@ -275,7 +285,7 @@ not available
 	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
 	
 	\subsection{Method \code{updateTaggedText()}}{
-		Subsititutes all occurrences of {{tag-name}} with the text parameter.
+		Substitutes all occurrences of {{tag-name}} with the text parameter.
 	
 
 		\subsection{Usage}{
@@ -292,7 +302,7 @@ instance$updateTaggedText(tagName, text)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{tagName the tag name}{ - (java expects a String)}
-				\item{text the value to relace the tag with (e.g. a result from analysis)}{ - (java expects a String)}
+				\item{text the value to replace the tag with (e.g. a result from analysis)}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -313,7 +323,7 @@ not available
 	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
 	
 	\subsection{Method \code{updateTaggedImage()}}{
-		Subsitututes all occurrences of {{tag-name}} with an image from the local storage
+		Substitutes all occurrences of {{tag-name}} with an image from the local storage
 	
 
 		\subsection{Usage}{
@@ -321,7 +331,7 @@ not available
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(...);
-instance$updateTaggedImage(tagName, absoluteFilePath)
+instance$updateTaggedImage(tagName, absoluteFilePath, dpi)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -330,13 +340,14 @@ instance$updateTaggedImage(tagName, absoluteFilePath)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{tagName the tag name}{ - (java expects a String)}
-				\item{absoluteFilePath a file path to an png imge file.}{ - (java expects a String)}
+				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300")}{ - (java expects a double)}
 			}
 			\if{html}{\out{</div>}}
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: 
+			R6 RoogleDocs object: itself - a fluent method
 		}
 
 		\subsection{Examples}{
@@ -375,6 +386,85 @@ instance$revertTags()
 
 		\subsection{Returns}{
 			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTable"></a>}}
+	
+	\subsection{Method \code{updateTable()}}{
+		no description
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(...);
+instance$updateTable(tableIndex, longFormatTable, colWidths, tableWidthInches)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
+				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column}{ - (java expects a RDataframe)}
+				\item{colWidths}{ - (java expects a RNumericVector)}
+				\item{tableWidthInches - (defaulting to "5.9")}{ - (java expects a RNumeric)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: 
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateFigure"></a>}}
+	
+	\subsection{Method \code{updateFigure()}}{
+		no description
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(...);
+instance$updateFigure(figureIndex, absoluteFilePath, dpi)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
+				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300")}{ - (java expects a double)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself (a fluent method)
 		}
 
 		\subsection{Examples}{
