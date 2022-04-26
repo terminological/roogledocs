@@ -204,7 +204,7 @@ class TestApi {
 	@Test
 	final void testImageInsert() throws IOException {
 		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
-		test2.updateOrInsertInlineImage(1, URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"), 4.0, 4.0);
+		test2.updateOrInsertInlineImage(1, URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"), 3.0, 3.0);
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
 	}

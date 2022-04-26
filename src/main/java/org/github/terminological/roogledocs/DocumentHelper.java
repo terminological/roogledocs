@@ -98,17 +98,17 @@ public class DocumentHelper {
 				.flatMap(tr -> ofNullable(tr.getContent()));
 	}
 	
-	static List<String> inlineImageIds(Document doc) {
-		List<String> ids = new ArrayList<>();
+	static TupleList<String,Range> inlineImageIds(Document doc) {
+		TupleList<String,Range> ids = new TupleList<>();
 		ofNullable(doc.getBody())
 		.flatMap(b -> ofNullable(b.getContent()))
 		.flatMap(e -> ofNullable(e.getParagraph()))
 		.flatMap(p -> ofNullable(p.getElements()))
 		.forEach(el -> {
-			// int index = el.getStartIndex();
+			Range range = new Range().setStartIndex(el.getStartIndex()).setEndIndex(el.getEndIndex());
 			ofNullable(el.getInlineObjectElement())
 				.map(io -> io.getInlineObjectId())
-				.forEach(id -> ids.add(id));
+				.forEach(id -> ids.and(id, range));
 		});
 		return(ids);
 	}

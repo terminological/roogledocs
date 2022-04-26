@@ -210,7 +210,7 @@ public class RoogleDocs {
 	 * @throws UnconvertableTypeException if the data frame is the wrong format.
 	 */
 	@RMethod
-	public RoogleDocs updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="5.9") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+	public RoogleDocs updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
 		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
 		System.out.println("Table "+index+" updated");
 		return this;

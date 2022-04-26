@@ -285,16 +285,29 @@ public class RDocument {
 	
 	public int updateOrInsertInlineImage(int figureIndex, URI imageLink, Size size) throws IOException {
 		Document document = getDoc(IMAGE_POSITIONS);
-		List<String> imageIds = DocumentHelper.inlineImageIds(document);
+		TupleList<String,Range> imageIds = DocumentHelper.inlineImageIds(document);
 		RequestBuilder request1 = new RequestBuilder(this);
 		try {
 			
-			String imageId = imageIds.get(figureIndex-1);
-			request1.updateImageWithUri(imageId, imageLink);
+			//String imageId = imageIds.get(figureIndex-1).getFirst();
+			Range range = imageIds.get(figureIndex-1).getSecond();
+			
+			request1.add(
+					new Request().setDeleteContentRange(new DeleteContentRangeRequest().setRange(range)));
+
+//			if (useGoogleDocSize && imageSizes.containsKey(range.getStartIndex())) {
+//				size = imageSizes.get(range.getStartIndex());
+//			}
+				
+			//Range newRange = 
+			request1.insertImage(imageLink, range.getStartIndex(), size);
+
+			// request1.updateImageWithUri(imageId, imageLink);
 			request1.sendRequest();
 			return figureIndex;
 			
 		} catch (IndexOutOfBoundsException e) {
+			
 			//create a new image at end of document
 			figureIndex = imageIds.size()+1;
 			request1.insertImageAtEnd(imageLink, size);

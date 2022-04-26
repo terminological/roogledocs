@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.01
 #' 
-#' Generated: 2022-04-26T17:14:25.269
+#' Generated: 2022-04-26T19:20:38.745
 #'
 #' @details
 	#' Programmatically substitute data into a google doc
@@ -217,10 +217,10 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column - (java expects a RDataframe)
 	#' @param tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1") - (java expects a int)
 	#' @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')") - (java expects a RNumericVector)
-	#' @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "5.9") - (java expects a RNumeric)
+	#' @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "6.2") - (java expects a RNumeric)
 	#' @return R6 RoogleDocs object: 
 	#' 
-	updateTable = function(longFormatTable, tableIndex=-1, colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=5.9) {
+	updateTable = function(longFormatTable, tableIndex=-1, colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
 		# copy parameters
 		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
 		tmp_tableIndex = self$.api$.toJava$int(tableIndex);
