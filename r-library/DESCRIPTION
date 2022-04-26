@@ -11,6 +11,8 @@ LazyData: true
 Suggests: 
 	tibble
 Imports:
+	huxtable,
+	tidyverse,
 	rJava,
 	R6,
 	xptr

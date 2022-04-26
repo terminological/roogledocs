@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.01
 #' 
-#' Generated: 2022-04-25T18:01:03.286
+#' Generated: 2022-04-26T17:14:25.269
 #'
 #' @details
 	#' Programmatically substitute data into a google doc
@@ -128,16 +128,16 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @description 
 	#' updateTaggedText: 
 	#' Substitutes all occurrences of {{tag-name}} with the text parameter.
-	#' @param tagName the tag name - (java expects a String)
 	#' @param text the value to replace the tag with (e.g. a result from analysis) - (java expects a String)
+	#' @param tagName the tag name - (java expects a String)
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
-	updateTaggedText = function(tagName, text) {
+	updateTaggedText = function(text, tagName) {
 		# copy parameters
-		tmp_tagName = self$.api$.toJava$String(tagName);
 		tmp_text = self$.api$.toJava$String(text);
+		tmp_tagName = self$.api$.toJava$String(tagName);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedText" , tmp_tagName, tmp_text); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedText" , tmp_text, tmp_tagName); 
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
@@ -157,18 +157,18 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @description 
 	#' updateTaggedImage: 
 	#' Substitutes all occurrences of {{tag-name}} with an image from the local storage
-	#' @param tagName the tag name - (java expects a String)
 	#' @param absoluteFilePath a file path to an png image file. - (java expects a String)
+	#' @param tagName the tag name - (java expects a String)
 	#' @param dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300") - (java expects a double)
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
-	updateTaggedImage = function(tagName, absoluteFilePath, dpi=300) {
+	updateTaggedImage = function(absoluteFilePath, tagName, dpi=300) {
 		# copy parameters
-		tmp_tagName = self$.api$.toJava$String(tagName);
 		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
+		tmp_tagName = self$.api$.toJava$String(tagName);
 		tmp_dpi = self$.api$.toJava$double(dpi);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_tagName, tmp_absoluteFilePath, tmp_dpi); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_dpi); 
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
@@ -214,20 +214,20 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @description 
 	#' updateTable: 
 	#' no description
-	#' @param tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1") - (java expects a int)
 	#' @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column - (java expects a RDataframe)
-	#' @param colWidths - (java expects a RNumericVector)
-	#' @param tableWidthInches - (defaulting to "5.9") - (java expects a RNumeric)
+	#' @param tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1") - (java expects a int)
+	#' @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')") - (java expects a RNumericVector)
+	#' @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "5.9") - (java expects a RNumeric)
 	#' @return R6 RoogleDocs object: 
 	#' 
-	updateTable = function(tableIndex=-1, longFormatTable, colWidths, tableWidthInches=5.9) {
+	updateTable = function(longFormatTable, tableIndex=-1, colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=5.9) {
 		# copy parameters
-		tmp_tableIndex = self$.api$.toJava$int(tableIndex);
 		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
+		tmp_tableIndex = self$.api$.toJava$int(tableIndex);
 		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
 		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTable" , tmp_tableIndex, tmp_longFormatTable, tmp_colWidths, tmp_tableWidthInches); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTable" , tmp_longFormatTable, tmp_tableIndex, tmp_colWidths, tmp_tableWidthInches); 
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
@@ -247,18 +247,18 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @description 
 	#' updateFigure: 
 	#' no description
-	#' @param figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. - (defaulting to "-1") - (java expects a int)
 	#' @param absoluteFilePath a file path to an png image file. - (java expects a String)
+	#' @param figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. - (defaulting to "-1") - (java expects a int)
 	#' @param dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300") - (java expects a double)
 	#' @return R6 RoogleDocs object: 
 	#' itself (a fluent method)
-	updateFigure = function(figureIndex=-1, absoluteFilePath, dpi=300) {
+	updateFigure = function(absoluteFilePath, figureIndex=-1, dpi=300) {
 		# copy parameters
-		tmp_figureIndex = self$.api$.toJava$int(figureIndex);
 		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
+		tmp_figureIndex = self$.api$.toJava$int(figureIndex);
 		tmp_dpi = self$.api$.toJava$double(dpi);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_figureIndex, tmp_absoluteFilePath, tmp_dpi); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_absoluteFilePath, tmp_figureIndex, tmp_dpi); 
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {

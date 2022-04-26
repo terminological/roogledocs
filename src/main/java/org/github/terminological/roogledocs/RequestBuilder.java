@@ -38,15 +38,16 @@ import com.google.api.services.docs.v1.model.TableCellLocation;
 import com.google.api.services.docs.v1.model.TableCellStyle;
 import com.google.api.services.docs.v1.model.TableColumnProperties;
 import com.google.api.services.docs.v1.model.TableRange;
+import com.google.api.services.docs.v1.model.TableRowStyle;
 import com.google.api.services.docs.v1.model.TextStyle;
 import com.google.api.services.docs.v1.model.UpdateParagraphStyleRequest;
 import com.google.api.services.docs.v1.model.UpdateTableCellStyleRequest;
 import com.google.api.services.docs.v1.model.UpdateTableColumnPropertiesRequest;
+import com.google.api.services.docs.v1.model.UpdateTableRowStyleRequest;
 import com.google.api.services.docs.v1.model.UpdateTextStyleRequest;
 import com.google.api.services.docs.v1.model.WeightedFontFamily;
 import com.google.api.services.docs.v1.model.WriteControl;
 
-import uk.co.terminological.rjava.types.RBoundDataframe;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
 
@@ -203,7 +204,16 @@ public class RequestBuilder extends ArrayList<Request> {
 	                .setRows(rows)
 	                .setColumns(cols)));
 		setColumnWidths(position+1, colWidths, tableWidthInches);
+		//setRowProperties(position+1);
 	}
+	
+//	private List<Integer> range(int end) {
+//		List<Integer> out = new ArrayList<>();
+//		for (int i=0; i<end; i++) {
+//			out.add(i);
+//		}
+//		return out;
+//	}
 	
 	public void createTableAtEnd(int position, int rows, int cols, RNumericVector colWidths, RNumeric tableWidthInches) {
 		this.add(
@@ -214,6 +224,20 @@ public class RequestBuilder extends ArrayList<Request> {
 	                .setRows(rows)
 	                .setColumns(cols)));
 		setColumnWidths(position, colWidths, tableWidthInches);
+		//setRowProperties(position);
+	}
+	
+	private void setRowProperties(int position) {
+		this.add(new Request().setUpdateTableRowStyle(
+				new UpdateTableRowStyleRequest()
+					.setTableStartLocation(new Location().setIndex(position))
+					.setRowIndices(new ArrayList<>())
+					.setTableRowStyle(new TableRowStyle()
+							.setMinRowHeight(new Dimension().setMagnitude(0D).setUnit("PT"))
+							// heights etc.
+					)
+					.setFields("minRowHeight")
+		));
 	}
 	
 	private void setColumnWidths(int position, RNumericVector colWidths, RNumeric tableWidthInches) {
@@ -294,6 +318,10 @@ public class RequestBuilder extends ArrayList<Request> {
 										// TODO: foreground colour
 										.setBackgroundColor(fromHex(c.fillColour().get()))
 										.setContentAlignment(c.valignment().get()) //TOP,MIDDLE,BOTTOM
+										.setPaddingBottom(new Dimension().setMagnitude(1.0).setUnit("PT"))
+										.setPaddingTop(new Dimension().setMagnitude(1.0).setUnit("PT"))
+										.setPaddingLeft(new Dimension().setMagnitude(2.0).setUnit("PT"))
+										.setPaddingRight(new Dimension().setMagnitude(2.0).setUnit("PT"))
 									)
 								// .setTableStartLocation(new Location().setIndex(tableStart))
 								.setTableRange(new TableRange()
@@ -301,7 +329,7 @@ public class RequestBuilder extends ArrayList<Request> {
 										.setRowSpan(1)
 										.setColumnSpan(1)
 								)
-								.setFields("borderBottom,borderTop,borderLeft,borderRight,backgroundColor,contentAlignment")
+								.setFields("borderBottom,borderTop,borderLeft,borderRight,paddingBottom,paddingTop,paddingLeft,paddingRight,backgroundColor,contentAlignment")
 						)
 								
 						
@@ -328,6 +356,7 @@ public class RequestBuilder extends ArrayList<Request> {
 			
 			
 		});
+		setRowProperties(tableStart);
 	}
 
 	public static OptionalColor fromHex(String hex) {

@@ -18,7 +18,7 @@ Programmatically substitute data into a google doc
 
 Version: 0.01
 
-Generated: 2022-04-25T18:01:03.273
+Generated: 2022-04-26T17:14:25.262
 }
 
 \details{
@@ -86,11 +86,11 @@ instance = J$RoogleDocs$new(tokenDirectory)
 			\item \href{#method-findOrCreateDocument}{\code{instance$findOrCreateDocument(title)}}
 			\item \href{#method-searchForDocuments}{\code{instance$searchForDocuments(titleMatch)}}
 			\item \href{#method-tagsDefined}{\code{instance$tagsDefined()}}
-			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(tagName, text)}}
-			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(tagName, absoluteFilePath, dpi)}}
+			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
+			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, dpi)}}
 			\item \href{#method-revertTags}{\code{instance$revertTags()}}
-			\item \href{#method-updateTable}{\code{instance$updateTable(tableIndex, longFormatTable, colWidths, tableWidthInches)}}
-			\item \href{#method-updateFigure}{\code{instance$updateFigure(figureIndex, absoluteFilePath, dpi)}}
+			\item \href{#method-updateTable}{\code{instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)}}
+			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi)}}
 			\item \code{instance$clone()}
 			\item \code{instance$print()}
 		}
@@ -293,7 +293,7 @@ not available
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(...);
-instance$updateTaggedText(tagName, text)
+instance$updateTaggedText(text, tagName)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -301,8 +301,8 @@ instance$updateTaggedText(tagName, text)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tagName the tag name}{ - (java expects a String)}
 				\item{text the value to replace the tag with (e.g. a result from analysis)}{ - (java expects a String)}
+				\item{tagName the tag name}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -331,7 +331,7 @@ not available
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(...);
-instance$updateTaggedImage(tagName, absoluteFilePath, dpi)
+instance$updateTaggedImage(absoluteFilePath, tagName, dpi)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -339,8 +339,8 @@ instance$updateTaggedImage(tagName, absoluteFilePath, dpi)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tagName the tag name}{ - (java expects a String)}
 				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
+				\item{tagName the tag name}{ - (java expects a String)}
 				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300")}{ - (java expects a double)}
 			}
 			\if{html}{\out{</div>}}
@@ -408,7 +408,7 @@ not available
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(...);
-instance$updateTable(tableIndex, longFormatTable, colWidths, tableWidthInches)
+instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -416,10 +416,10 @@ instance$updateTable(tableIndex, longFormatTable, colWidths, tableWidthInches)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
 				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column}{ - (java expects a RDataframe)}
-				\item{colWidths}{ - (java expects a RNumericVector)}
-				\item{tableWidthInches - (defaulting to "5.9")}{ - (java expects a RNumeric)}
+				\item{tableIndex what is the table index in the document? leave out for a new table at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
+				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')")}{ - (java expects a RNumericVector)}
+				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "5.9")}{ - (java expects a RNumeric)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -448,7 +448,7 @@ not available
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(...);
-instance$updateFigure(figureIndex, absoluteFilePath, dpi)
+instance$updateFigure(absoluteFilePath, figureIndex, dpi)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -456,8 +456,8 @@ instance$updateFigure(figureIndex, absoluteFilePath, dpi)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
 				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
+				\item{figureIndex what is the figure index in the document (only counts inline images - not absolutely positioned ones)? leave out for a new image at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
 				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to "300")}{ - (java expects a double)}
 			}
 			\if{html}{\out{</div>}}

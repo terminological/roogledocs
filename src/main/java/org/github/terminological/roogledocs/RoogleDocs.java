@@ -36,7 +36,7 @@ import uk.co.terminological.rjava.types.RNumericVector;
  * @author terminological
  *
  */
-@RClass
+@RClass(imports = {"tidyverse","huxtable"})
 public class RoogleDocs {
 
 	RService service;
@@ -123,7 +123,7 @@ public class RoogleDocs {
 	 * @throws IOException
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedText(String tagName, String text) throws IOException {
+	public RoogleDocs updateTaggedText(String text, String tagName) throws IOException {
 		rdoc().updateTaggedText(tagName, text);
 		System.out.println("Text "+tagName+" updated");
 		return this;
@@ -138,7 +138,7 @@ public class RoogleDocs {
 	 * @throws IOException
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String tagName, String absoluteFilePath, @RDefault(rCode="300") double dpi) throws IOException {
+	public RoogleDocs updateTaggedImage(String absoluteFilePath, String tagName, @RDefault(rCode="300") double dpi) throws IOException {
 		String id = service.upload(Paths.get(absoluteFilePath));
 		URI uri = service.getThumbnailUri(id);
 		rdoc().updateTaggedImage(tagName, uri, true, getImageDim(absoluteFilePath, dpi));
@@ -161,7 +161,7 @@ public class RoogleDocs {
 	    return result;
 	}
 	
-	private static Size getImageDim(final String path, double dpi) throws IOException {
+	protected static Size getImageDim(final String path, double dpi) throws IOException {
 		Size result = null;
 	    String suffix = getFileSuffix(path);
 	    Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
@@ -174,10 +174,10 @@ public class RoogleDocs {
 	            int height = reader.getHeight(reader.getMinIndex());
 	            result = new Size()
 	            		.setWidth(
-	            				new Dimension().setMagnitude(width*dpi/72).setUnit("PT")
+	            				new Dimension().setMagnitude(width/dpi*72).setUnit("PT")
 	            		)
 	            		.setHeight(
-	            				new Dimension().setMagnitude(height*dpi/72).setUnit("PT")
+	            				new Dimension().setMagnitude(height/dpi*72).setUnit("PT")
 	            		);
 	        } finally {
 	            reader.dispose();
@@ -203,12 +203,14 @@ public class RoogleDocs {
 	/**
 	 * @param tableIndex what is the table index in the document? leave out for a new table at the end of the document.
 	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column
+	 * @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table
+	 * @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins)  
 	 * @return
 	 * @throws IOException if the google docs API throws an error 
 	 * @throws UnconvertableTypeException if the data frame is the wrong format.
 	 */
 	@RMethod
-	public RoogleDocs updateTable(@RDefault(rCode="-1") int tableIndex, RDataframe longFormatTable, RNumericVector colWidths, @RDefault(rCode="5.9") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+	public RoogleDocs updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="5.9") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
 		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
 		System.out.println("Table "+index+" updated");
 		return this;
@@ -222,7 +224,7 @@ public class RoogleDocs {
 	 * @throws IOException if the google docs API throws an error, or the file cannot be read.
 	 */
 	@RMethod
-	public RoogleDocs updateFigure(@RDefault(rCode="-1") int figureIndex, String absoluteFilePath, @RDefault(rCode="300") double dpi) throws IOException {
+	public RoogleDocs updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi) throws IOException {
 		String id = service.upload(Paths.get(absoluteFilePath));
 		URI uri = service.getThumbnailUri(id);
 		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));

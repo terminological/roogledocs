@@ -156,7 +156,13 @@ class TestApi {
 		Document doc = test2.getDoc();
 		Optional<Size> size = DocumentHelper.imageSize(doc, "image-here");
 		System.out.print(size);	
-					
+	}
+	
+	@Test
+	final void testImageSize2() throws IOException {
+		Size size = RoogleDocs.getImageDim(
+				"/home/terminological/Git/bristol-cases/output/icu-subgroups/fig1-data-flow-2022-04-26.png", 300);
+		System.out.print(size);	
 	}
 	
 	@Test

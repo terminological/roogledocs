@@ -27,7 +27,7 @@ R wrapper for Googledocs java library
 
 Version: 0.01
 
-Generated: 2022-04-25T18:01:03.169
+Generated: 2022-04-26T17:14:25.215
 }
 
 \author{\email{rob@terminological.co.uk}}
