@@ -6,9 +6,9 @@
 #'
 #' Version: 0.01
 #'
-#' Generated: 2022-04-26T19:20:38.708
+#' Generated: 2022-04-27T17:15:23.447
 #'
-#' Contact: rob@terminological.co.uk
+#' Contact: rob.challen@bristol.ac.uk
 #' @import huxtable
 #' @import tidyverse
 #' @import rJava
@@ -66,7 +66,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
  	
  		message("Initialising R wrapper for Googledocs java library")
  		message("Version: 0.01")
-		message("Generated: 2022-04-26T19:20:38.708")
+		message("Generated: 2022-04-27T17:15:23.448")
  	
 		if (!.jniInitialized) 
 	        .jinit(parameters=getOption("java.parameters"),silent = TRUE, force.init = FALSE)
@@ -87,9 +87,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
     	self$.log = .jcall("org/slf4j/LoggerFactory", returnSig = "Lorg/slf4j/Logger;", method = "getLogger", "roogledocs");
     	.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug","Version: 0.01");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-04-26T19:20:38.708");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-04-27T17:15:23.448");
 		# .jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
-		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob@terminological.co.uk");
+		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
 		# initialise type conversion functions
 		
@@ -128,13 +128,6 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmp = as.numeric(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumeric',tmp))
 			},
-			RLogical=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
-				if (length(rObj) > 1) stop('input too long')
-				if (!is.logical(rObj)) stop('expected a logical')
-				tmp = as.integer(rObj)[[1]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
-			},
 			RFactor=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
 				if (length(rObj) > 1) stop('input too long')
@@ -142,20 +135,27 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmpLabel = levels(rObj)[[tmp]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
 			},
+			RLogical=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
+				if (length(rObj) > 1) stop('input too long')
+				if (!is.logical(rObj)) stop('expected a logical')
+				tmp = as.integer(rObj)[[1]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
+			},
 			RNull=function(rObj) {
 				if (!is.null(rObj)) stop('input expected to be NULL')
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNull'))
-			},
-			RCharacter=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter'))
-				tmp = as.character(rObj)[[1]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter',tmp))
 			},
 			RLogicalVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector'))
 				if (!is.logical(rObj)) stop('expected a vector of logicals')
 				tmp = as.integer(rObj)
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector',rJava::.jarray(tmp)))
+			},
+			RCharacter=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter'))
+				tmp = as.character(rObj)[[1]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter',tmp))
 			},
 			String=function(rObj) return(as.character(rObj)),
 			void=function(rObj) stop('no input expected'),
@@ -308,11 +308,11 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RCharacterVector=function(jObj) as.character(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive')),
 			RoogleDocs=function(jObj) return(jObj),
 			RNumeric=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='D',method='rPrimitive')),
-			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
+			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RNull=function(jObj) return(NULL),
-			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
 			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
+			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
 			String=function(jObj) return(as.character(jObj)),
 			void=function(jObj) invisible(NULL),
 			double=function(jObj) return(as.numeric(jObj)),
@@ -349,12 +349,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		# initialise java class constructors and static method definitions
 		
 		self$RoogleDocs = list(
-			new = function(tokenDirectory=normalizePath('~/.roogledocs', mustWork = FALSE)) {
+			new = function(tokenDirectory=normalizePath('~/.roogledocs', mustWork = FALSE), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# constructor
 				# convert parameters to java
 				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				tmp_disabled = self$.toJava$boolean(disabled);
 				# invoke constructor method
-				tmp_out = .jnew("org/github/terminological/roogledocs/RoogleDocs" , tmp_tokenDirectory); 
+				tmp_out = .jnew("org/github/terminological/roogledocs/RoogleDocs" , tmp_tokenDirectory, tmp_disabled); 
 				# convert result back to R (should be a identity conversion)
 				tmp_r6 = RoogleDocs$new(
 					self$.fromJava$RoogleDocs(tmp_out),

@@ -2,13 +2,13 @@ Package: roogledocs
 Title: R wrapper for Googledocs java library
 Version: 0.01
 Authors@R: c(
-    person(given = "Rob",family = "Challen",email = "rob@terminological.co.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre")),
-    person(given = "terminological",role = "aut"))
-Description: R wrapper for Googledocs java library
+    person(given = "Rob",family = "Challen",email = "rob.challen@bristol.ac.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre")))
+Description: Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
+	here,
 	tibble
 Imports:
 	huxtable,

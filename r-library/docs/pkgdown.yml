@@ -1,0 +1,7 @@
+pandoc: 1.16.0.2
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  using-roogledocs: using-roogledocs.html
+last_built: 2022-04-27T16:15Z
+

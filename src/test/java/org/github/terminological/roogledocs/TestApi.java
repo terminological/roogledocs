@@ -3,7 +3,6 @@ package org.github.terminological.roogledocs;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -29,7 +28,6 @@ import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.Size;
 
 import uk.co.terminological.rjava.UnconvertableTypeException;
-import uk.co.terminological.rjava.types.RCharacterVector;
 import uk.co.terminological.rjava.types.RDataframe;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RVector;
@@ -120,7 +118,7 @@ class TestApi {
 	
 	@Test
 	final void testRApi() throws IOException, GeneralSecurityException {
-		RoogleDocs rd = new RoogleDocs(TOKENDIR.toString());
+		RoogleDocs rd = new RoogleDocs(TOKENDIR.toString(),false);
 		rd.findOrCreateDocument("Roogledocs example 1");
 		System.out.print(rd.tagsDefined());
 		
@@ -207,5 +205,11 @@ class TestApi {
 		test2.updateOrInsertInlineImage(1, URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"), 3.0, 3.0);
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
+	}
+	
+	@Test
+	final void testClone() throws IOException {
+		RDocument d = singleton.getOrClone("roogledocs-demo", "https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing");
+		// d.saveAsPdf("/home/terminological/tmp/template.pdf");
 	}
 }

@@ -1,0 +1,87 @@
+---
+title: "Using roogledocs"
+author: "Rob Challen"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using roogledocs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+resource_files:
+  - images/example-template-doc.pdf
+  - images/example-after-update.pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE
+)
+
+library(tidyverse)
+library(huxtable)
+devtools::load_all("~/Git/roogledocs/r-library/")
+here::i_am("vignettes/using-roogledocs.Rmd")
+```
+
+## Initialising the library
+
+Prior to doing any analysis we may have some form of template
+
+```{r}
+J = roogledocs::JavaApi$new()
+options('roogledocs.disabled'=FALSE)
+doc = J$RoogleDocs$new()
+```
+```{r}
+doc$deleteDocument("roogledocs-demo",TRUE)
+doc$findOrCloneTemplate("roogledocs-demo","https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing")
+doc$saveAsPdf(here::here("docs/articles/example-template-doc.pdf"))
+```
+
+This example demonstrates a [template](example-template-doc.pdf).
+
+# Tabular data
+
+```{r table1}
+hux = diamonds %>% mutate(colorCat = ifelse(color <= "G", "D-G","G-J")) %>% group_by(cut,colorCat) %>% summarise(
+  `Size (mean + sd)` = sprintf("%1.2f \u00B1 %1.2f",mean(carat),sd(carat)),
+  `Cost (mean + sd)` = sprintf("%1.0f \u00B1 %1.0f",mean(price),sd(price))
+) %>% huxtable::as_hux() %>% huxtable::theme_article() %>% huxtable::merge_repeated_rows()
+
+hux %>% roogledocs::as.long_format_table() %>% doc$updateTable(tableIndex = 1,tableWidthInches = 4)
+
+hux
+```
+
+# Updating figures
+
+```{r fig1}
+g = ggplot(diamonds, aes(x=carat,y=price, colour=color))+geom_point()
+filename = tempfile(fileext = ".png")
+ggsave(filename, g, width=6, height=3)
+filename %>% doc$updateFigure(figureIndex = 1)
+g
+```
+
+```{r fig2}
+g2 = ggplot(diamonds, aes(x=cut,y=price, fill=cut))+geom_violin(draw_quantiles = c(0.95,0.5,0.05))+scale_fill_brewer()
+filename = tempfile(fileext = ".png")
+ggsave(filename, g2, width=4, height=3)
+filename %>% doc$updateFigure(figureIndex = 2)
+g2
+```
+# Updating tagged text
+
+```{r tags}
+doc$tagsDefined()
+```
+
+```{r autotext}
+format(Sys.Date(),"%d/%m/%Y") %>% doc$updateTaggedText(tagName = "table-1-update-date")
+sprintf("%1.1f \u00B1 %1.1f",mean(diamonds$price),sd(diamonds$price)) %>% doc$updateTaggedText(tagName = "diamonds-mean-sd")
+```
+```{r}
+doc$saveAsPdf(here::here("docs/articles/example-after-update.pdf"))
+```
+
+After the analysis has run we have a new version of the google document [which looks like this](example-after-update.pdf).

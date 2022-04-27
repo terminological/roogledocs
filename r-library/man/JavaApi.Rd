@@ -23,21 +23,21 @@
 }
 
 \description{
-R wrapper for Googledocs java library
+Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 
 Version: 0.01
 
-Generated: 2022-04-26T19:20:38.690
+Generated: 2022-04-27T17:15:23.429
 }
 
-\author{\email{rob@terminological.co.uk}}
+\author{\email{rob.challen@bristol.ac.uk}}
 
 \keyword{java api}
 
 \section{Static methods and constructors}{
 	\itemize{
 		\item \code{JavaApi$get()}
-		\item \href{#method-RoogleDocs-new}{\code{J$RoogleDocs$new(tokenDirectory)}}
+		\item \href{#method-RoogleDocs-new}{\code{J$RoogleDocs$new(tokenDirectory, disabled)}}
 	}
 	
 
@@ -51,7 +51,7 @@ Generated: 2022-04-26T19:20:38.690
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-J$RoogleDocs$new(tokenDirectory)
+J$RoogleDocs$new(tokenDirectory, disabled)
 	  		}
 			\if{html}{\out{</div>}}
 		}
@@ -61,6 +61,7 @@ J$RoogleDocs$new(tokenDirectory)
 			\describe{
 				\itemize{
 					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to "normalizePath('~/.roogledocs', mustWork = FALSE)")}{ - (java expects a String)}
+					\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to "getOption('roogledocs.disabled',FALSE)")}{ - (java expects a boolean)}
 				}
 			}
 			\if{html}{\out{</div>}}

@@ -55,7 +55,6 @@ public class RService {
     private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
     private Logger log = LoggerFactory.getLogger(RService.class);
     
-    
     // Configuration
     private Path tokenDirectory = null;
     private Docs service = null;
@@ -87,6 +86,8 @@ public class RService {
     Drive getDrive()  {
     	return driveService;
     }
+    
+    protected Path getTokenDirectory() {return tokenDirectory;}
     
     // do auth stuff when RoogleDocs first called.
     private void initialiseService() throws IOException, GeneralSecurityException {
@@ -150,6 +151,7 @@ public class RService {
     public RDocument getOrCreate(String documentName) throws IOException {
     	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
     	if (tmp.size() > 0) {
+    		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or document id.");
     		String docId = tmp.get(0).getFirst(); 
     		return new RDocument(docId,this);
     	}
@@ -159,15 +161,40 @@ public class RService {
     	return new RDocument(doc.getDocumentId(),this);
     }
     
-    public RDocument getDocument(String docId) throws IOException {
+    public RDocument getOrClone(String documentName, String templateUri) throws IOException {
+    	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
+    	if (tmp.size() > 0) {
+    		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or document id.");
+    		String docId = tmp.get(0).getFirst(); 
+    		return new RDocument(docId,this);
+    	}
     	
-    	// https://docs.google.com/document/d/1woDbkXAkf6RbvtjGlXMPBOl7zvDCviAvAWDZGNerYCk/edit?usp=sharing
+    	String templateId = extractDocId(templateUri);
+    	File f = new File().setName(documentName);
+    	File newf = driveService.files().copy(templateId, f).execute();
+    	if (!newf.getMimeType().equals(MIME_DOCS)) {
+    		driveService.files().delete(newf.getId());
+    		throw new IOException("templateUri must refer to a google doc.");
+    	}
+    	log.info("Created new document with title: " + documentName);
+    	return new RDocument(newf.getId(),this);
+    }
+    
+    protected static String extractDocId(String docId) throws IOException {
+    	if (docId == null) throw new IOException("URL format docId cannot be parsed: "+docId);
     	if (docId.startsWith("http")) {
     		Pattern p = Pattern.compile("/([^/]+)/[^/]+$");
     		Matcher m = p.matcher(docId);
     		if (!m.find()) throw new IOException("URL format docId cannot be parsed: "+docId);
     		docId = docId.substring(m.start(1),m.end(1));
     	}
+    	return docId;
+    }
+    
+    public RDocument getDocument(String docId) throws IOException {
+    	
+    	// https://docs.google.com/document/d/1woDbkXAkf6RbvtjGlXMPBOl7zvDCviAvAWDZGNerYCk/edit?usp=sharing
+    	docId = extractDocId(docId);
     	
     	File f = driveService.files().get(docId).execute();
     	if (f != null) {
@@ -265,6 +292,18 @@ public class RService {
         }
         
         return uri;
+    }
+    
+    public void deleteByName(String documentName) throws IOException {
+    	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
+    	if (tmp.size() == 1) {
+    		String docId = tmp.get(0).getFirst();
+    		delete(docId);
+    	} else if (tmp.size() > 1) {
+    		throw new IOException("More than one possible match detected. aborting delete.");
+    	} else {
+    		log.info("No documents found with name: "+documentName);
+    	}
     }
     
     public void delete(String fileId) throws IOException {

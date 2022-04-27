@@ -3,6 +3,4 @@
 export(JavaApi)
 export(as.long_format_table)
 export(RoogleDocs)
-import(huxtable)
-import(tidyverse)
 import(rJava)

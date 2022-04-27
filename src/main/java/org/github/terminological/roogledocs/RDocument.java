@@ -5,7 +5,9 @@ import static org.github.terminological.roogledocs.DocumentHelper.imageSizes;
 import static org.github.terminological.roogledocs.DocumentHelper.text;
 import static org.github.terminological.roogledocs.StreamHelper.ofNullable;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -378,6 +380,12 @@ public class RDocument {
 		
 		
 		return tableIndex;
+	}
+
+	public void saveAsPdf(String absoluteFilePath) throws IOException {
+		OutputStream outputStream = new FileOutputStream(absoluteFilePath);
+		service.getDrive().files().export(docId, "application/pdf")
+	    	.executeMediaAndDownloadTo(outputStream);
 	}
 	
 }

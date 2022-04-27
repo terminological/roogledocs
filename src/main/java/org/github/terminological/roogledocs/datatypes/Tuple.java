@@ -9,8 +9,8 @@ import java.util.function.Function;
  * An immutable tuple class
  * @author terminological
  *
- * @param <S1>
- * @param <S2>
+ * @param <S1> the first element type
+ * @param <S2> the second element type
  */
 public class Tuple<S1, S2> implements Cloneable, Serializable, Entry<S1,S2> {
 	

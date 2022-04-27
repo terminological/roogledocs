@@ -1,12 +1,35 @@
-#' Convert a square display table format to a long format suitable for applying as a sequence of formatting operations in a google doc or as a ggplot. Currently only huxtables are supported.
-#' Flextables look very similar. Only a limited subset of formatting features is implemented.
+#' Converts a square display table format to a long format suitable for applying as a sequence of formatting operations 
+#' in a google doc or as a ggplot. Currently only huxtables are supported but flextables look very similar. 
+#' Only a limited subset of formatting features is implemented at present as supported by roogledocs. The output format
+#' is a simple dataframe with the following columns:
+#' 
+#' - Character: label - non blank text (a single space is OK but not an empty string)
+#' - Integer: row - must be an integer, 1-based from top left
+#' - Integer: col - must be an integer, 1-based from top left
+#' - Integer: rowSpan - must be an integer, minimum value 1
+#' - Integer: colSpan - must be an integer, minimum value 1
+#' - Character: fontName - font name as seen in font drop down of google docs e.g "Roboto","Arial","Times New Roman", unrecognised values will be displayed as Arial
+#' - Character: fontFace - one of "bold", "bold.italic", "italic", "plain"
+#' - Numeric: fontSize - in points
+#' - Character: fillColour - as a hex string e.g. "#aaaaaa". N.b. British English spelling (sorry)
+#' - Numeric: leftBorderWeight - border weight in points - minimum size that appears in google docs is 0.5
+#' - Numeric: rightBorderWeight
+#' - Numeric: topBorderWeight
+#' - Numeric: bottomBorderWeight
+#' - Character: alignment - one of "START","CENTER","END"
+#' - Character: valignment - one of "TOP","MIDDLE","BOTTOM"
 #'
-#' @param table 
+#' It also has an attribute `colWidths` which is a vector the same length as the width of the 
+#' table containing the relative widths of the columns. The overall table width is 
+#' decided on rendering.
+#' 
+#' So not supported at the moment are border line types, border colours, control of padding, row height control,
+#' alignment on a decimal point, complex content / markup in cells.
+#'
+#' @param table the input table (e.g. a huxtable)
 #'
 #' @return a format that is considered valid for roogledocs::RoogleDocs$updateTable()
 #' @export
-#'
-#' @examples
 as.long_format_table = function(table) {
   UseMethod("as.long_format_table", table)
 }
