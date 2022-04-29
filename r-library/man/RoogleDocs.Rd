@@ -19,7 +19,7 @@ Programmatically substitute images, data and tables into a google doc.
 
 Version: 0.01
 
-Generated: 2022-04-27T17:15:23.474
+Generated: 2022-04-29T17:32:22.150
 }
 
 \details{
@@ -99,6 +99,14 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 ## Method `RoogleDocs$deleteDocument`
 ## -----------------------------------
 
+## -----------------------------------
+## Method `RoogleDocs$appendText`
+## -----------------------------------
+
+## -----------------------------------
+## Method `RoogleDocs$appendFormattedParagraph`
+## -----------------------------------
+
 }}
 
 \keyword{java api}
@@ -131,6 +139,8 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi)}}
 			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath)}}
 			\item \href{#method-deleteDocument}{\code{instance$deleteDocument(docName, areYouSure)}}
+			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
+			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
 			\item \code{instance$clone()}
 			\item \code{instance$print()}
 		}
@@ -612,7 +622,8 @@ instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column.}{ - (java expects a RDataframe)}
+				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
 				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to "-1")}{ - (java expects a int)}
 				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')")}{ - (java expects a RNumericVector)}
 				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "6.2")}{ - (java expects a RNumeric)}
@@ -730,6 +741,82 @@ instance$deleteDocument(docName, areYouSure)
 			\itemize{
 				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
 				\item{areYouSure - a boolean check. - (defaulting to "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)")}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-appendText"></a>}}
+	
+	\subsection{Method \code{appendText()}}{
+		Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(...);
+instance$appendText(text, style)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{text - a single string with the text to append which may include newlines}{ - (java expects a RCharacter)}
+				\item{style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to "'NORMAL_TEXT'")}{ - (java expects a RCharacter)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-appendFormattedParagraph"></a>}}
+	
+	\subsection{Method \code{appendFormattedParagraph()}}{
+		Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(...);
+instance$appendFormattedParagraph(formattedTextDf)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
 			}
 			\if{html}{\out{</div>}}
 		}

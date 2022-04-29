@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.01
 #' 
-#' Generated: 2022-04-27T17:15:23.483
+#' Generated: 2022-04-29T17:32:22.159
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe one day slides)
@@ -332,7 +332,8 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @description 
 	#' updateTable: 
 	#' Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
-	#' @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. - (java expects a RDataframe)
+	#' @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+	#' rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize. - (java expects a RDataframe)
 	#' @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to "-1") - (java expects a int)
 	#' @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')") - (java expects a RNumericVector)
 	#' @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "6.2") - (java expects a RNumeric)
@@ -433,6 +434,63 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_areYouSure = self$.api$.toJava$boolean(areYouSure);
 		# execute method call
 		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="deleteDocument" , tmp_docName, tmp_areYouSure); 
+		# is this a fluent method?
+		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		if(self$.jobj$equals(tmp_out)) {
+			# return fluent method
+			self$.api$printMessages()
+			invisible(self)
+		} else {
+			# wrap return java object in R6 class  
+			out = RoogleDocs$new(
+				self$.api$.fromJava$RoogleDocs(tmp_out),
+				self$.api
+			);
+			self$.api$printMessages()
+			return(out);
+		}
+	},
+	#' @description 
+	#' appendText: 
+	#' Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+	#' would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
+	#' @param text - a single string with the text to append which may include newlines - (java expects a RCharacter)
+	#' @param style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to "'NORMAL_TEXT'") - (java expects a RCharacter)
+	#' @return R6 RoogleDocs object: 
+	#' itself - a fluent method
+	appendText = function(text, style='NORMAL_TEXT') {
+		# copy parameters
+		tmp_text = self$.api$.toJava$RCharacter(text);
+		tmp_style = self$.api$.toJava$RCharacter(style);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendText" , tmp_text, tmp_style); 
+		# is this a fluent method?
+		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		if(self$.jobj$equals(tmp_out)) {
+			# return fluent method
+			self$.api$printMessages()
+			invisible(self)
+		} else {
+			# wrap return java object in R6 class  
+			out = RoogleDocs$new(
+				self$.api$.fromJava$RoogleDocs(tmp_out),
+				self$.api
+			);
+			self$.api$printMessages()
+			return(out);
+		}
+	},
+	#' @description 
+	#' appendFormattedParagraph: 
+	#' Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
+	#' @param formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize. - (java expects a RDataframe)
+	#' @return R6 RoogleDocs object: 
+	#' itself - a fluent method
+	appendFormattedParagraph = function(formattedTextDf) {
+		# copy parameters
+		tmp_formattedTextDf = self$.api$.toJava$RDataframe(formattedTextDf);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendFormattedParagraph" , tmp_formattedTextDf); 
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {

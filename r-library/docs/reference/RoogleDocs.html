@@ -42,7 +42,7 @@
 <meta property="og:title" content="RoogleDocs — RoogleDocs" />
 <meta property="og:description" content="Programmatically substitute images, data and tables into a google doc.
 Version: 0.01
-Generated: 2022-04-27T17:15:23.474" />
+Generated: 2022-04-29T17:32:22.150" />
 
 
 
@@ -125,7 +125,7 @@ Generated: 2022-04-27T17:15:23.474" />
     <div class="ref-description">
     <p>Programmatically substitute images, data and tables into a google doc.</p>
 <p>Version: 0.01</p>
-<p>Generated: 2022-04-27T17:15:23.474</p>
+<p>Generated: 2022-04-29T17:32:22.150</p>
     </div>
 
 
@@ -180,6 +180,8 @@ can be updated independently of the analysis, by the wider team.</p>
 <li><p><a href='#method-updateFigure'><code>instance$updateFigure(absoluteFilePath, figureIndex, dpi)</code></a></p></li>
 <li><p><a href='#method-saveAsPdf'><code>instance$saveAsPdf(absoluteFilePath)</code></a></p></li>
 <li><p><a href='#method-deleteDocument'><code>instance$deleteDocument(docName, areYouSure)</code></a></p></li>
+<li><p><a href='#method-appendText'><code>instance$appendText(text, style)</code></a></p></li>
+<li><p><a href='#method-appendFormattedParagraph'><code>instance$appendFormattedParagraph(formattedTextDf)</code></a></p></li>
 <li><p><code>instance$clone()</code></p></li>
 <li><p><code>instance$print()</code></p></li>
 </ul><p></p>
@@ -486,7 +488,8 @@ not available
 	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><ul>
-<li><p>longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. - (java expects a RDataframe)</p></li>
+<li><p>longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize. - (java expects a RDataframe)</p></li>
 <li><p>tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to "-1") - (java expects a int)</p></li>
 <li><p>colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to "attr(longFormatTable,'colWidths')") - (java expects a RNumericVector)</p></li>
 <li><p>tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to "6.2") - (java expects a RNumeric)</p></li>
@@ -570,6 +573,54 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
 <p><div class="r example copy"></p><pre>
 not available
+			</pre><p></div></p><p></p><p><hr>
+	<a id="method-appendText"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>appendText()</code></h3>
+<p>Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.</p>	
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendText</span><span class='op'>(</span><span class='va'>text</span>, <span class='va'>style</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><ul>
+<li><p>text - a single string with the text to append which may include newlines - (java expects a RCharacter)</p></li>
+<li><p>style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to "'NORMAL_TEXT'") - (java expects a RCharacter)</p></li>
+</ul><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>
+not available
+			</pre><p></div></p><p></p><p><hr>
+	<a id="method-appendFormattedParagraph"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>appendFormattedParagraph()</code></h3>
+<p>Append a new paragraph, with text from the 'label' column with optional formating in the other columns.</p>	
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendFormattedParagraph</span><span class='op'>(</span><span class='va'>formattedTextDf</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><ul>
+<li><p>formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize. - (java expects a RDataframe)</p></li>
+</ul><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>
+not available
 			</pre><p></div></p><p></p>
 
 
@@ -636,6 +687,14 @@ not available
 
 <span class='co'>## -----------------------------------</span>
 <span class='co'>## Method `RoogleDocs$deleteDocument`</span>
+<span class='co'>## -----------------------------------</span>
+
+<span class='co'>## -----------------------------------</span>
+<span class='co'>## Method `RoogleDocs$appendText`</span>
+<span class='co'>## -----------------------------------</span>
+
+<span class='co'>## -----------------------------------</span>
+<span class='co'>## Method `RoogleDocs$appendFormattedParagraph`</span>
 <span class='co'>## -----------------------------------</span>
 
 <span class='op'>}</span></div></pre>

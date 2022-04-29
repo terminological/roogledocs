@@ -29,6 +29,7 @@ import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RDefault;
 import uk.co.terminological.rjava.RMethod;
 import uk.co.terminological.rjava.UnconvertableTypeException;
+import uk.co.terminological.rjava.types.RCharacter;
 import uk.co.terminological.rjava.types.RDataframe;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
@@ -294,7 +295,8 @@ public class RoogleDocs {
 	/**
 	 * Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
 	 * @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document.
-	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column.
+	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
 	 * @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table
 	 * @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins)  
 	 * @return itself - a fluent method
@@ -353,6 +355,36 @@ public class RoogleDocs {
 		if (disabled) return this;
 		if (areYouSure) service.deleteByName(docName);
 		else System.out.println("aborted delete.");
+		return this;
+	}
+	
+	/**
+	 * Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+	 * would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
+	 * @param text - a single string with the text to append which may include newlines
+	 * @param style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6
+	 * @return itself - a fluent method
+	 * @throws IOException if there is a problem communicating with google servers.
+	 */
+	@RMethod
+	public RoogleDocs appendText(RCharacter text, @RDefault(rCode="'NORMAL_TEXT'") RCharacter style) throws IOException {
+		if (disabled) return this;
+		if(!text.isNa()) document.appendText(text.get(), style.opt());
+		return this;
+	}
+	
+	
+	/**
+	 * Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
+	 * @param formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.
+	 * @return itself - a fluent method
+	 * @throws IOException if there is a problem communicating with google servers.
+	 * @throws UnconvertableTypeException if the dataframe format is not correct
+	 */
+	@RMethod
+	public RoogleDocs appendFormattedParagraph(RDataframe formattedTextDf) throws IOException, UnconvertableTypeException {
+		if (disabled) return this;
+		document.appendText(formattedTextDf);
 		return this;
 	}
 }

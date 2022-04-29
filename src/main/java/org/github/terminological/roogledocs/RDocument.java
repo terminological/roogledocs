@@ -15,12 +15,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.github.terminological.roogledocs.datatypes.LongFormatTable;
+import org.github.terminological.roogledocs.datatypes.LongFormatText;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
 import org.slf4j.Logger;
@@ -35,6 +37,7 @@ import com.google.api.services.docs.v1.model.Request;
 import com.google.api.services.docs.v1.model.Size;
 import com.google.api.services.docs.v1.model.Table;
 
+import uk.co.terminological.rjava.RFunctions;
 import uk.co.terminological.rjava.UnconvertableTypeException;
 import uk.co.terminological.rjava.types.RBoundDataframe;
 import uk.co.terminological.rjava.types.RDataframe;
@@ -57,6 +60,8 @@ public class RDocument {
 	protected static String TABLES_ONLY = "body(content(startIndex,endIndex,table(columns,rows)))";
 	protected static String TABLES_AND_CELLS = "body(content(startIndex,endIndex,table(tableRows(tableCells(endIndex,startIndex,tableCellStyle(columnSpan,rowSpan))))))"; //(tableCells(content(startIndex,endIndex,tableCellStyle(columnSpan,rowSpan))))))";
 	protected static String IMAGE_POSITIONS = "body(content(startIndex,endIndex,paragraph(elements(endIndex,startIndex,inlineObjectElement))))";
+	protected static String MINIMAL = "body(content(startIndex,endIndex))";
+	protected static String NAMED_RANGES = "namedRanges";
 	
 	//private static String LINK_FIELDS = "body(content(paragraph(elements(endIndex,startIndex,textRun(content,textStyle/link/url)))))";
 
@@ -128,7 +133,7 @@ public class RDocument {
 		// Find the matching named ranges.
 		log.info("Autotext replacing: {{"+tagName+"}} with "+newText);
 		updateInlineTags();
-		Document document = getDoc();
+		Document document = getDoc(NAMED_RANGES);
 		
 		List<Range> allRanges = new ArrayList<>();
 		Set<Integer> insertIndexes = new HashSet<>();
@@ -152,12 +157,7 @@ public class RDocument {
 
 			if (insertIndexes.contains(range.getStartIndex())) {
 				// Insert the replacement text.
-				Range newRange = requests.insertText(newText, range.getStartIndex());
-
-//				Optional<TextStyle> style = textStyle(document,range);				
-//				if (style.isPresent()) {
-//					requests.add(new Request().setUpdateTextStyle(new UpdateTextStyleRequest().setRange(newRange).setTextStyle(style.get()).setFields("*")));
-//				}
+				Range newRange = requests.insertTextContent(range.getStartIndex(),newText, Optional.empty());
 
 				// Re-create the named range on the new text.
 				requests.createNamedRange(tagName, newRange);
@@ -232,7 +232,7 @@ public class RDocument {
 
 		// Fetch the document to determine the current indexes of the named ranges.
 		// Find the matching named ranges.
-		Document document = getDoc();
+		Document document = getDoc(NAMED_RANGES);
 		
 		List<Range> allRanges = new ArrayList<>();
 		HashMap<Integer,String> insertIndexes = new HashMap<>();
@@ -262,7 +262,7 @@ public class RDocument {
 			if (insertIndexes.containsKey(range.getStartIndex())) {
 				String tagName = "{{"+insertIndexes.get(range.getStartIndex())+"}}"; 
 				// Insert the replacement text.
-				requests.insertText(tagName, range.getStartIndex());
+				requests.insertTextContent(range.getStartIndex(),tagName, Optional.empty());
 
 			}
 		}
@@ -322,10 +322,13 @@ public class RDocument {
 	public int updateOrInsertTable(int tableIndex, RDataframe longFormatTable, RNumericVector colWidths, RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
 		Document document = getDoc(TABLES_ONLY);
 		
-		RBoundDataframe<LongFormatTable> df = longFormatTable.attach(LongFormatTable.class);
+		RBoundDataframe<LongFormatTable> df = longFormatTable.attachPermissive(LongFormatTable.class);
 		// get rows and columns of table
-		int rows = df.streamCoerce().mapToInt(lft -> lft.row().get()+lft.rowSpan().get()-1).max().orElseThrow(() -> new IOException("Zero rows in table"));
-		int cols = df.streamCoerce().mapToInt(lft -> lft.col().get()+lft.colSpan().get()-1).max().orElseThrow(() -> new IOException("Zero columns in table"));
+		if (RFunctions.any(s -> s.isNa(), df.get("row"))) throw new UnconvertableTypeException("the row column cannot have missing values");
+		if (RFunctions.any(s -> s.isNa(), df.get("col"))) throw new UnconvertableTypeException("the col column cannot have missing values");
+		
+		int rows = df.streamCoerce().mapToInt(lft -> lft.row().get()+lft.rowSpan().opt().orElse(1)-1).max().orElseThrow(() -> new IOException("Zero rows in table"));
+		int cols = df.streamCoerce().mapToInt(lft -> lft.col().get()+lft.colSpan().opt().orElse(1)-1).max().orElseThrow(() -> new IOException("Zero columns in table"));
 		
 		RequestBuilder request1 = new RequestBuilder(this);
 		
@@ -345,11 +348,9 @@ public class RDocument {
 		} catch (IndexOutOfBoundsException e) {
 			
 			// if nothing found set position to end of last element in content.
-			Integer endPos = ofNullable(document.getBody().getContent()).mapToInt(se -> se.getEndIndex()).max().orElseThrow(() -> new RuntimeException("Unable to find end fo document"));
-			tablePos = Tuple.create(endPos, endPos);
 			// and reset the index to the current table count. 
 			tableIndex = tables.size()+1;
-			request1.createTableAtEnd(tablePos.getFirst(),rows,cols,colWidths,tableWidthInches);
+			request1.createTable(endPos(document),rows,cols,colWidths,tableWidthInches);
 			
 		}
 		
@@ -387,5 +388,29 @@ public class RDocument {
 		service.getDrive().files().export(docId, "application/pdf")
 	    	.executeMediaAndDownloadTo(outputStream);
 	}
+	
+	private static int endPos(Document document) {
+		Integer endPos = ofNullable(document.getBody().getContent()).mapToInt(se -> se.getEndIndex()-1).max().orElseThrow(() -> new RuntimeException("Unable to find end of document"));
+		return endPos;
+	}
+	
+	public void appendText(String text, Optional<String> style) throws IOException {
+		Document document = getDoc(MINIMAL);
+		RequestBuilder request1 = new RequestBuilder(this);
+		request1.insertTextContent(endPos(document), text, style);
+		request1.sendRequest();
+	}
+	
+	public void appendText(RDataframe longFormatText) throws IOException, UnconvertableTypeException {
+		Document document = getDoc(MINIMAL);
+		RBoundDataframe<LongFormatText> df = longFormatText.attachPermissive(LongFormatText.class);
+		RequestBuilder request1 = new RequestBuilder(this);
+		int position = endPos(document);
+		request1.insertTextContent(position, "\n", Optional.empty());
+		request1.writeTextContent(position+1, df.streamCoerce().collect(Collectors.toList()));
+		request1.sendRequest();
+	}
+	
+	
 	
 }

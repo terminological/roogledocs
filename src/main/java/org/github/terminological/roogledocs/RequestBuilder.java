@@ -5,10 +5,15 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
 import org.github.terminological.roogledocs.datatypes.LongFormatTable;
+import org.github.terminological.roogledocs.datatypes.LongFormatText;
+import org.github.terminological.roogledocs.datatypes.TextFormat;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
 import org.slf4j.Logger;
@@ -23,6 +28,7 @@ import com.google.api.services.docs.v1.model.EndOfSegmentLocation;
 import com.google.api.services.docs.v1.model.InsertInlineImageRequest;
 import com.google.api.services.docs.v1.model.InsertTableRequest;
 import com.google.api.services.docs.v1.model.InsertTextRequest;
+import com.google.api.services.docs.v1.model.Link;
 import com.google.api.services.docs.v1.model.Location;
 import com.google.api.services.docs.v1.model.MergeTableCellsRequest;
 import com.google.api.services.docs.v1.model.OptionalColor;
@@ -102,38 +108,6 @@ public class RequestBuilder extends ArrayList<Request> {
 		return this.size() > 0;
 	}
 	
-	public Range insertText(String newText, Integer start) {
-		return insertText(newText, Optional.of(start), Optional.empty()).get();
-	}
-	
-	public Optional<Range> insertText(String newText, Optional<Integer> start, Optional<TextStyle> style) {
-		InsertTextRequest itr = new InsertTextRequest();
-		if (start.isPresent()) {
-			
-			itr.setLocation(
-					new Location()
-					.setIndex(start.get()))
-			.setText(newText);
-			
-			this.add(
-				new Request()
-				.setInsertText(itr));
-			
-			Range rng = new Range().setStartIndex(start.get()).setEndIndex(start.get() + newText.length());
-			
-			style.ifPresent(s -> formatText(rng,s));
-			
-			return Optional.of(rng);
-			
-		} else {
-			
-			// TODO: figure out how to set the format of this without getting the whole document again.
-			itr.setEndOfSegmentLocation(new EndOfSegmentLocation());
-			this.add(new Request().setInsertText(itr));
-			return Optional.empty();
-		}
-	}
-	
 	public void deleteContent(Range range) {
 		this.add(new Request().setDeleteContentRange(new DeleteContentRangeRequest().setRange(range)));
 	}
@@ -143,18 +117,6 @@ public class RequestBuilder extends ArrayList<Request> {
 			.setStartIndex(range.getFirst())
 			.setEndIndex(range.getSecond())
 		);
-	}
-	
-	public void formatText(Range range, TextStyle style) {
-		this.add(
-				new Request()
-					.setUpdateTextStyle(
-						new UpdateTextStyleRequest()
-							.setRange(range)
-							.setTextStyle(style)
-							.setFields("*")
-					)
-				);
 	}
 	
 	public void updateImageWithUri(String imageId, URI imageLink) {
@@ -204,27 +166,6 @@ public class RequestBuilder extends ArrayList<Request> {
 	                .setRows(rows)
 	                .setColumns(cols)));
 		setColumnWidths(position+1, colWidths, tableWidthInches);
-		//setRowProperties(position+1);
-	}
-	
-//	private List<Integer> range(int end) {
-//		List<Integer> out = new ArrayList<>();
-//		for (int i=0; i<end; i++) {
-//			out.add(i);
-//		}
-//		return out;
-//	}
-	
-	public void createTableAtEnd(int position, int rows, int cols, RNumericVector colWidths, RNumeric tableWidthInches) {
-		this.add(
-			new Request()
-	        .setInsertTable(
-	            new InsertTableRequest()
-	            	.setEndOfSegmentLocation(new EndOfSegmentLocation())
-	                .setRows(rows)
-	                .setColumns(cols)));
-		setColumnWidths(position, colWidths, tableWidthInches);
-		//setRowProperties(position);
 	}
 	
 	private void setRowProperties(int position) {
@@ -268,56 +209,32 @@ public class RequestBuilder extends ArrayList<Request> {
 	public void writeTableContent(Collection<LongFormatTable> df, Table skeleton, int tableStart) {
 		TupleList<TableCellLocation, Range> cellPos = DocumentHelper.getSortedTableCells(skeleton, tableStart);
 		cellPos.stream().forEach(t -> {
-			Optional<List<Request>> tmp = df.stream().filter(c -> 
+			df.stream().filter(c -> 
 				c.col().get() == t.getFirst().getColumnIndex()+1 && 
 				c.row().get() == t.getFirst().getRowIndex()+1)
 			.findFirst()
-			.map(c -> {
-				int len = c.label().get().length();
-				return Arrays.asList(
-					new Request()
-						.setInsertText(
-							new InsertTextRequest()
-							.setText(c.label().get())
-							.setLocation(new Location().setIndex(t.getSecond().getStartIndex()+1)) //the plus one here is to make sure we are in the paragraph in the cell.
-						),
-					new Request()
-						.setUpdateTextStyle(
-							new UpdateTextStyleRequest()
-							.setRange(new Range()
-									.setStartIndex(t.getSecond().getStartIndex()+1)
-									.setEndIndex(t.getSecond().getStartIndex()+len+1)
-							)
-							.setTextStyle(new TextStyle()
-									.setBold(c.fontFace().get().contains("bold"))
-									.setItalic(c.fontFace().get().contains("italic"))
-									.setFontSize(new Dimension().setMagnitude(c.fontSize().get()).setUnit("PT"))
-									.setWeightedFontFamily(new WeightedFontFamily().setFontFamily(c.fontName().get()))
-							)
-							.setFields("bold,italic,fontSize,weightedFontFamily")
-						),
-					new Request()
+			.ifPresent(c -> {
+				int insertPosition = t.getSecond().getStartIndex()+1;
+				Range textPos = insertTextContent(insertPosition, c.label().opt().map(s -> s == "" ? " " : s).orElse(" "), Optional.empty());
+				formatText(textPos, c);
+				this.add(new Request()
 						.setUpdateParagraphStyle(new UpdateParagraphStyleRequest()
-							.setRange(new Range()
-									.setStartIndex(t.getSecond().getStartIndex()+1)
-									.setEndIndex(t.getSecond().getStartIndex()+len+1)
-							)
+							.setRange(textPos)
 							.setParagraphStyle(new ParagraphStyle()
-									.setAlignment(c.alignment().get()) //START,CENTER,END
-							)
-							.setFields("alignment")
-						),
-					new Request()
+									.setAlignment(c.alignment().opt().map(checkRange("START","CENTER","END")).orElse("START")) //START,CENTER,END
+							).setFields("alignment")
+				));
+				this.add(new Request()
 						.setUpdateTableCellStyle(
 							new UpdateTableCellStyleRequest()
 								.setTableCellStyle(new TableCellStyle()
-										.setBorderBottom(border(c.bottomBorderWeight().get()))
-										.setBorderTop(border(c.topBorderWeight().get()))
-										.setBorderLeft(border(c.leftBorderWeight().get()))
-										.setBorderRight(border(c.rightBorderWeight().get()))
+										.setBorderBottom(border(c.bottomBorderWeight().opt().orElse(0D)))
+										.setBorderTop(border(c.topBorderWeight().opt().orElse(0D)))
+										.setBorderLeft(border(c.leftBorderWeight().opt().orElse(0D)))
+										.setBorderRight(border(c.rightBorderWeight().opt().orElse(0D)))
 										// TODO: foreground colour
-										.setBackgroundColor(fromHex(c.fillColour().get()))
-										.setContentAlignment(c.valignment().get()) //TOP,MIDDLE,BOTTOM
+										.setBackgroundColor(fromHex(c.fillColour().opt().orElse("#FFFFFF")))
+										.setContentAlignment(c.valignment().opt().map(checkRange("TOP","MIDDLE","BOTTOM")).orElse("TOP")) //TOP,MIDDLE,BOTTOM
 										.setPaddingBottom(new Dimension().setMagnitude(1.0).setUnit("PT"))
 										.setPaddingTop(new Dimension().setMagnitude(1.0).setUnit("PT"))
 										.setPaddingLeft(new Dimension().setMagnitude(2.0).setUnit("PT"))
@@ -326,19 +243,17 @@ public class RequestBuilder extends ArrayList<Request> {
 								// .setTableStartLocation(new Location().setIndex(tableStart))
 								.setTableRange(new TableRange()
 										.setTableCellLocation(t.getFirst())
+										// Merges have not happened yet
 										.setRowSpan(1)
 										.setColumnSpan(1)
 								)
 								.setFields("borderBottom,borderTop,borderLeft,borderRight,paddingBottom,paddingTop,paddingLeft,paddingRight,backgroundColor,contentAlignment")
 						)
-								
-						
 					);
 			});
-			tmp.ifPresent(this::addAll);
 			// Cell merges
 			df.stream()
-				.filter(c -> c.colSpan().get() > 1 || c.rowSpan().get() > 1)
+				.filter(c -> c.colSpan().opt().orElse(1) > 1 || c.rowSpan().opt().orElse(1) > 1)
 				.map(c -> new Request()
 						.setMergeTableCells(new MergeTableCellsRequest()
 								.setTableRange(new TableRange()
@@ -356,6 +271,7 @@ public class RequestBuilder extends ArrayList<Request> {
 			
 			
 		});
+		// set row heights to 0 for auto:
 		setRowProperties(tableStart);
 	}
 
@@ -370,17 +286,112 @@ public class RequestBuilder extends ArrayList<Request> {
 		
 	}
 	
-//	public void updateTableFormat(List<LongFormatTable> df, Table skeleton) {
-//		// int tableStart = skeleton.getTableRows().get(0).getTableCells().get(0).getStartIndex();
-//				TupleList<TableCellLocation, Range> cellPos = DocumentHelper.getSortedTableCells(skeleton);
-//				cellPos.stream().forEach(t -> {
-//					Optional<List<Request>> tmp = df.stream().filter(c -> 
-//					c.col().get() == t.getFirst().getColumnIndex()+1 && 
-//					c.row().get() == t.getFirst().getRowIndex()+1)
-//				.findFirst()
-//				.map(c -> {
-//					
-//				});
-//				
-//	}
+	Function<String,String> checkRange(String... range) {
+		return (s) -> {
+			if(!Arrays.asList(range).contains(s))
+				throw new RuntimeException("item must be one of: "+String.join(", ", range));
+			return s;
+		};
+	}
+	
+	public Range insertTextContent(int position, String unformattedText, Optional<String> style) {
+		if (unformattedText == null || unformattedText == "") return new Range().setStartIndex(position).setEndIndex(position);
+		Range textRun = insertTextRun(position, unformattedText);
+			
+		String c = style.map(checkRange("NORMAL_TEXT","TITLE","SUBTITLE","HEADING_1","HEADING_2","HEADING_3","HEADING_4","HEADING_5","HEADING_6")).orElse("NORMAL_TEXT");
+		
+		this.add(new Request().setUpdateParagraphStyle(new UpdateParagraphStyleRequest()
+            .setRange(textRun)
+            .setParagraphStyle(new ParagraphStyle()
+                    .setNamedStyleType(c))
+            .setFields("namedStyleType")
+		));
+			
+		return textRun;
+	}
+	
+	private Range insertTextRun(int position, String unformattedText) {
+		if (unformattedText == null || unformattedText == "") return new Range().setStartIndex(position).setEndIndex(position);
+		this.add(
+				new Request()
+					.setInsertText(
+						new InsertTextRequest()
+						.setText(unformattedText)
+						.setLocation(new Location().setIndex(position) //the plus one here is to make sure we are in the paragraph in the cell.
+				))
+			);
+			int len = StringUtils.strip(unformattedText,"\n").length();
+			int offset = unformattedText.indexOf(StringUtils.strip(unformattedText,"\n"));
+			Range textRun = new Range()
+					.setStartIndex(position+offset)
+					.setEndIndex(position+offset+len);
+			
+		return textRun;
+	}
+	
+	private void formatText(Range textRun, TextFormat c) {
+		c.fontSize().opt().ifPresent(f -> {
+			this.add(
+					new Request()
+					.setUpdateTextStyle(
+						new UpdateTextStyleRequest()
+						.setRange(textRun)
+						.setTextStyle(new TextStyle()
+								.setFontSize(new Dimension().setMagnitude(f).setUnit("PT"))
+						)
+						.setFields("fontSize")
+					)	
+			);
+		});
+		c.fontName().opt().ifPresent(f -> {
+			this.add(
+					new Request()
+					.setUpdateTextStyle(
+						new UpdateTextStyleRequest()
+						.setRange(textRun)
+						.setTextStyle(new TextStyle()
+								.setWeightedFontFamily(new WeightedFontFamily().setFontFamily(f))
+						)
+						.setFields("weightedFontFamily")
+					)	
+			);
+		});
+		c.fontFace().opt().ifPresent(f -> {
+			this.add(
+					new Request()
+					.setUpdateTextStyle(
+						new UpdateTextStyleRequest()
+						.setRange(textRun)
+						.setTextStyle(new TextStyle()
+								.setBold(f.contains("bold"))
+								.setItalic(f.contains("italic"))
+								.setUnderline(f.contains("underlined"))
+						)
+						.setFields("bold,italic,underline")
+					)	
+			);
+		});
+	}
+	
+	public void writeTextContent(int position, List<LongFormatText> df) {
+		Collections.reverse(df);
+		df
+			.stream()
+			.filter(c -> c.label().get() != null && c.label().get() != "")
+			.forEach(c -> {
+			
+				Range textRun = insertTextRun(position, c.label().get());
+				formatText(textRun, c);
+				
+				if (!c.link().isNa()) {
+					this.add(new Request()
+			                .setUpdateTextStyle(new UpdateTextStyleRequest()
+			                        .setRange(textRun)
+			                        .setTextStyle(new TextStyle()
+			                                .setLink(new Link().setUrl(c.link().get())))
+			                        .setFields("link")));
+				}
+			});
+	}
+		
 }

@@ -85,7 +85,7 @@ as.long_format_table.huxtable = function(table) {
 .remove_spans = function(tidy) {
   # assumes a row,col,rowSpan,colSpan dataframe, with rowSpan and colSpan only defined in the top left cell of a merged cell
   # now we have to get rid of merged cells
-  spans = tidy %>% select(row,col,rowSpan,colSpan) %>% 
+  spans = tidy %>% select(row,col,rowSpan,colSpan,bottomBorderWeight,rightBorderWeight) %>% 
     mutate(
       # make sure rowspan and colspan are valid.
       rowSpan = ifelse(rowSpan<1,1,rowSpan) %>% tidyr::replace_na(1),
@@ -106,7 +106,14 @@ as.long_format_table.huxtable = function(table) {
   
   dups = spans %>% arrange(col,row) %>% filter((row > minRow & row <= maxRow) | (col>minCol & col<=maxCol))
   
-  tidy %>% anti_join(dups, by=c("row","col"))
+  # these cells will have a bit of info about bottom and right borders at the end of a span.
+  spanEnds = dups %>% filter(row == maxRow & col == maxCol) %>% select(row = minRow, col = minCol, bottomBorderWeight,rightBorderWeight)
+  
+  tidy %>% anti_join(dups, by=c("row","col")) %>% left_join(spanEnds, by=c("row","col"), suffix=c("",".new")) %>%
+    mutate(
+      bottomBorderWeight = ifelse(is.na(bottomBorderWeight.new), bottomBorderWeight, bottomBorderWeight.new),
+      rightBorderWeight = ifelse(is.na(rightBorderWeight.new), rightBorderWeight, rightBorderWeight.new)
+    ) %>% select(-ends_with(".new"))
 }
 
 

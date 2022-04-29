@@ -112,7 +112,7 @@ class TestApi {
 	final void testStructure() throws IOException {
 		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
-		Document doc = test1.getDoc(RDocument.IMAGE_POSITIONS);
+		Document doc = test1.getDoc(RDocument.MINIMAL);
 		System.out.print(doc.toPrettyString());
 	}
 	
@@ -182,10 +182,10 @@ class TestApi {
 				.withCol("row", RVector.with(1,1,2,2,2))
 				.withCol("colSpan", RVector.with(1,2,1,1,1))
 				.withCol("rowSpan", RVector.with(1,1,1,1,1))
-				.withCol("fontFace", RVector.with("bold","italic","bold.italic","plain","plain"))
+				.withCol("fontFace", RVector.with("bold","italic","bold.italic",null,"plain"))
 				.withCol("fontName", RVector.with("Roboto","Arial","Courier New","Times New Roman","Pacifico"))
 				.withCol("fontSize", RVector.with(8D,8D,12D,20D,6D))
-				.withCol("alignment", RVector.with("START","CENTER","START","CENTER","END"))
+				.withCol("alignment", RVector.with("START","CENTER",null,"CENTER","END"))
 				.withCol("valignment", RVector.with("TOP","MIDDLE","BOTTOM","MIDDLE","TOP"))
 				.withCol("bottomBorderWeight", RVector.with(0D,0D,1D,1D,1D))
 				.withCol("topBorderWeight", RVector.with(1D,1D,0D,0D,0D))
@@ -211,5 +211,38 @@ class TestApi {
 	final void testClone() throws IOException {
 		RDocument d = singleton.getOrClone("roogledocs-demo", "https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing");
 		// d.saveAsPdf("/home/terminological/tmp/template.pdf");
+	}
+	
+	@Test
+	final void testTextInsert() throws IOException {
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		test2.appendText("First header2\nSecond header2", Optional.of("HEADING_2"));	
+	}
+	
+	@Test
+	final void testFormattedInsert() throws IOException, UnconvertableTypeException {
+		
+//			RDataframe df = RDataframe.create()
+//				.withCol("label", RVector.with("Some bold"," and italic.\n","Bold and italic on new line in 12pt\n","NOW 20pt plain\n","\tand 6pt normal\t"))
+//				.withCol("link", RVector.with("http://www.example.com",null,null,null,null))
+//				.withCol("fontName", RVector.with("Courier New",null,null,null,null))
+//				.withCol("fontFace", RVector.with("bold","italic","bold.italic",null,"underlined"))
+//				.withCol("fontSize", RVector.with(8D,8D,12D,20D,6D))
+//				//.withCol("style", RVector.with("NORMAL_TEXT",null,null,"HEADING_1","NORMAL_TEXT"))
+//				;
+//		
+//		System.out.println(df.asCsv());
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		
+		// test2.appendText(df);	
+		
+		
+		RDataframe df2 = RDataframe.create()
+				.withCol("label", RVector.with("Roogledocs", " is also able to add text at the end of the document with complex formatting. ", "Supporting fonts and formatting such as ", "bold, ", "italic ", "and underlined", " amongst other things."))
+				.withCol("link", RVector.with("https://terminological.github.io/roogledocs/r-library/docs/", null, null, null, null, null, null))
+				.withCol("fontName", RVector.with("Courier New", null, null, null, null, null, null))
+				.withCol("fontFace", RVector.with("plain", "plain", "plain", "bold", "italic", "underlined", "plain"));
+
+		test2.appendText(df2);
 	}
 }
