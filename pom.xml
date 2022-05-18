@@ -134,7 +134,7 @@ can be updated independently of the analysis, by the wider team.
 						<maintainerOrganisation>University of Bristol</maintainerOrganisation>
 						<maintainerORCID>0000-0002-5504-7768</maintainerORCID>
 					</packageData>
-					<outputDirectory>${project.basedir}/r-library</outputDirectory>
+					<outputDirectory>${project.basedir}</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>

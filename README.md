@@ -15,17 +15,17 @@ can be updated independently of the analysis, by the wider team.
 Roogledocs is not on cran yet. Installation from this repo can be done as follows:
 
 ```R
-devtools::install_github("terminological/roogledocs", subdir="r-library")
+devtools::install_github("terminological/roogledocs")
 ```
 
 ## R library documentation
 
-[The R package site is here](https://terminological.github.io/roogledocs/r-library/docs/)
+[The R package site is here](https://terminological.github.io/roogledocs/docs/)
 
 ## Simple usage
 
 ```R
-J = roogledocs::JavaApi$new()
+J = roogledocs::JavaApi$get()
 paper = J$RoogleDocs$new()
 paper$findOrCreateDocument("my-new-nature-paper")
 paper$updateFigure("/full/path/to/figure-1.png", figureIndex = 1, dpi = 300)
