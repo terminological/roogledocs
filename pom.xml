@@ -106,7 +106,7 @@
 				<configuration>
 					<packageData>
 						<title>R wrapper for Googledocs java library</title>
-						<version>0.01</version>
+						<version>0.1.0</version>
 						<description>
 Programmatically substitute images, data and tables into a google doc. 
 R library to perform limited interactions with google docs (and maybe one day slides)

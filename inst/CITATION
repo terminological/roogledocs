@@ -3,7 +3,7 @@ c(
 	bibentry(bibtype = "Manual",
 		title = "R wrapper for Googledocs java library",
 		year = 2022,
-		note = "R package version 0.01",
+		note = "R package version 0.1.0",
 		author = c(
 			person(given = "Rob",family = "Challen",email = "rob.challen@bristol.ac.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre"))		)
 	),

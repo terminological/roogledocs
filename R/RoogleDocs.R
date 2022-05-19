@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.01
+#' Version: 0.1.0
 #' 
-#' Generated: 2022-05-18T16:57:21.776
+#' Generated: 2022-05-19T09:47:25.637
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe one day slides)
@@ -56,12 +56,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	reauth = function() {
 		# copy parameters
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="reauth" ); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="reauth" , check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -69,7 +71,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -81,12 +82,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	enable = function() {
 		# copy parameters
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="enable" ); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="enable" , check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -94,7 +97,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -106,12 +108,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	disable = function() {
 		# copy parameters
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="disable" ); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="disable" , check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -119,7 +123,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -133,12 +136,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		# copy parameters
 		tmp_shareUrlOrDocId = self$.api$.toJava$String(shareUrlOrDocId);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="withDocument" , tmp_shareUrlOrDocId); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="withDocument" , tmp_shareUrlOrDocId, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -146,7 +151,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -161,12 +165,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		# copy parameters
 		tmp_title = self$.api$.toJava$String(title);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCreateDocument" , tmp_title); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCreateDocument" , tmp_title, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -174,7 +180,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -191,12 +196,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_title = self$.api$.toJava$String(title);
 		tmp_templateUri = self$.api$.toJava$String(templateUri);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCloneTemplate" , tmp_title, tmp_templateUri); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCloneTemplate" , tmp_title, tmp_templateUri, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -204,7 +211,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -218,10 +224,12 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		# copy parameters
 		tmp_titleMatch = self$.api$.toJava$String(titleMatch);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="searchForDocuments" , tmp_titleMatch); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="searchForDocuments" , tmp_titleMatch, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# convert java object back to R
 		out = self$.api$.fromJava$RDataframe(tmp_out);
-		self$.api$printMessages()
 		if(is.null(out)) return(invisible(out))
 		return(out);
 	},
@@ -233,10 +241,12 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	tagsDefined = function() {
 		# copy parameters
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="tagsDefined" ); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="tagsDefined" , check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# convert java object back to R
 		out = self$.api$.fromJava$RDataframe(tmp_out);
-		self$.api$printMessages()
 		if(is.null(out)) return(invisible(out))
 		return(out);
 	},
@@ -252,12 +262,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_text = self$.api$.toJava$String(text);
 		tmp_tagName = self$.api$.toJava$String(tagName);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedText" , tmp_text, tmp_tagName); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedText" , tmp_text, tmp_tagName, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -265,7 +277,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -286,12 +297,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_tagName = self$.api$.toJava$String(tagName);
 		tmp_dpi = self$.api$.toJava$double(dpi);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_dpi); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_dpi, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -299,7 +312,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -312,12 +324,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	revertTags = function() {
 		# copy parameters
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="revertTags" ); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="revertTags" , check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -325,7 +339,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -346,12 +359,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
 		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTable" , tmp_longFormatTable, tmp_tableIndex, tmp_colWidths, tmp_tableWidthInches); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTable" , tmp_longFormatTable, tmp_tableIndex, tmp_colWidths, tmp_tableWidthInches, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -359,7 +374,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -377,12 +391,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_figureIndex = self$.api$.toJava$int(figureIndex);
 		tmp_dpi = self$.api$.toJava$double(dpi);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_absoluteFilePath, tmp_figureIndex, tmp_dpi); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_absoluteFilePath, tmp_figureIndex, tmp_dpi, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -390,7 +406,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -404,12 +419,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		# copy parameters
 		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="saveAsPdf" , tmp_absoluteFilePath); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="saveAsPdf" , tmp_absoluteFilePath, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -417,7 +434,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -433,12 +449,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_docName = self$.api$.toJava$String(docName);
 		tmp_areYouSure = self$.api$.toJava$boolean(areYouSure);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="deleteDocument" , tmp_docName, tmp_areYouSure); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="deleteDocument" , tmp_docName, tmp_areYouSure, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -446,7 +464,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -463,12 +480,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_text = self$.api$.toJava$RCharacter(text);
 		tmp_style = self$.api$.toJava$RCharacter(style);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendText" , tmp_text, tmp_style); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendText" , tmp_text, tmp_style, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -476,7 +495,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},
@@ -490,12 +508,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		# copy parameters
 		tmp_formattedTextDf = self$.api$.toJava$RDataframe(formattedTextDf);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendFormattedParagraph" , tmp_formattedTextDf); 
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendFormattedParagraph" , tmp_formattedTextDf, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
 		# is this a fluent method?
 		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			self$.api$printMessages()
 			invisible(self)
 		} else {
 			# wrap return java object in R6 class  
@@ -503,7 +523,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 				self$.api$.fromJava$RoogleDocs(tmp_out),
 				self$.api
 			);
-			self$.api$printMessages()
 			return(out);
 		}
 	},

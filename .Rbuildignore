@@ -8,3 +8,5 @@
 ^src$
 ^target$
 pom.xml
+.classpath
+index.html

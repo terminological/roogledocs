@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.01
+Version: 0.1.0
 
-Generated: 2022-05-18T16:57:21.763
+Generated: 2022-05-19T09:47:25.609
 }
 
 \details{
