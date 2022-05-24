@@ -19,7 +19,7 @@ Programmatically substitute images, data and tables into a google doc.
 
 Version: 0.1.0
 
-Generated: 2022-05-19T09:47:25.609
+Generated: 2022-05-24T12:06:31.002
 }
 
 \details{

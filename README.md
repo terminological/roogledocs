@@ -1,5 +1,10 @@
 # roogledocs
 
+[![R-CMD-check](https://github.com/terminological/roogledocs/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/roogledocs/actions)
+
+[![DOI](https://zenodo.org/badge/475030092.svg)](https://zenodo.org/badge/latestdoi/475030092)
+
+
 R library to perform limited interactions with google docs (and maybe one day slides)
 in R via the Java API library. The purpose being to support google docs as a 
 platform for interactive development and documentation of data analysis in R for scientific

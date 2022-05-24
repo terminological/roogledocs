@@ -27,7 +27,7 @@ Programmatically substitute images, data and tables into a google doc. R library
 
 Version: 0.1.0
 
-Generated: 2022-05-19T09:47:25.520
+Generated: 2022-05-24T12:06:30.944
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}

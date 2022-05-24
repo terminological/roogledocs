@@ -10,7 +10,9 @@ LazyData: true
 VignetteBuilder: knitr
 Suggests: 
 	here,
-	knitr
+	knitr,
+	rmarkdown,
+	testthat
 Imports:
 	huxtable,
 	tidyverse,

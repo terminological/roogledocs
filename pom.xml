@@ -119,6 +119,8 @@ numeric results, tabular data and figures in word documents manually becomes ann
 you can automate this a bit like a RMarkdown document, but with the added benefit that the content
 can be updated independently of the analysis, by the wider team.
 						</description>
+						<url>https://terminological.github.io/roogledocs/docs/</url>
+						<doi>10.5281/zenodo.6576096</doi>
 						<debug>false</debug>
 						<usePkgdown>true</usePkgdown>
 						<useJavadoc>true</useJavadoc>
