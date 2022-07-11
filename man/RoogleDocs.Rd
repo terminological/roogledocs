@@ -8,7 +8,7 @@
 
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to normalizePath('~/.roogledocs', mustWork = FALSE)) - (java expects a String)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)}
 	\item{disabled}{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)}
 	\if{html}{\out{</div>}}
 }
@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.1.0
+Version: 0.0.3.9999
 
-Generated: 2022-05-24T12:06:31.002
+Generated: 2022-07-08T22:54:10.915
 }
 
 \details{
@@ -56,11 +56,23 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 ## -----------------------------------
 
 ## -----------------------------------
+## Method `RoogleDocs$docById`
+## -----------------------------------
+
+## -----------------------------------
 ## Method `RoogleDocs$findOrCreateDocument`
 ## -----------------------------------
 
 ## -----------------------------------
+## Method `RoogleDocs$docByName`
+## -----------------------------------
+
+## -----------------------------------
 ## Method `RoogleDocs$findOrCloneTemplate`
+## -----------------------------------
+
+## -----------------------------------
+## Method `RoogleDocs$docFromTemplate`
 ## -----------------------------------
 
 ## -----------------------------------
@@ -119,7 +131,11 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 	}
 	\subsection{Static methods}{
 		\itemize{
-			\item{none}
+			\item \href{#method-docById}{\code{J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)}}
+			\item \href{#method-docByName}{\code{J$RoogleDocs$docByName(title, tokenDirectory, disabled)}}
+			\item \href{#method-docFromTemplate}{\code{J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)}}
+			\item \href{#method-searchForDocuments}{\code{J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)}}
+			\item \href{#method-deleteDocument}{\code{J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)}}
 		}
 	}
 	\subsection{Instance methods}{
@@ -130,7 +146,6 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 			\item \href{#method-withDocument}{\code{instance$withDocument(shareUrlOrDocId)}}
 			\item \href{#method-findOrCreateDocument}{\code{instance$findOrCreateDocument(title)}}
 			\item \href{#method-findOrCloneTemplate}{\code{instance$findOrCloneTemplate(title, templateUri)}}
-			\item \href{#method-searchForDocuments}{\code{instance$searchForDocuments(titleMatch)}}
 			\item \href{#method-tagsDefined}{\code{instance$tagsDefined()}}
 			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
 			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, dpi)}}
@@ -138,7 +153,6 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 			\item \href{#method-updateTable}{\code{instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)}}
 			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi)}}
 			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath)}}
-			\item \href{#method-deleteDocument}{\code{instance$deleteDocument(docName, areYouSure)}}
 			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
 			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
 			\item \code{instance$clone()}
@@ -150,7 +164,7 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 	\if{html}{\out{<a id="method-new"></a>}}
 	
 	\subsection{Method \code{new()}}{
-		no description
+		Create a Roogledocs object for managing the interaction.
 	
 
 		\subsection{Usage}{
@@ -165,7 +179,7 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to normalizePath('~/.roogledocs', mustWork = FALSE))}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
 				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
@@ -334,10 +348,48 @@ not available
 		}
 	}
 	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-docById"></a>}}
+	
+	\subsection{Method \code{docById()}}{
+		Select a document by its share url or id.
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-findOrCreateDocument"></a>}}
 	
 	\subsection{Method \code{findOrCreateDocument()}}{
-		Search for or create a document if it is missing.
+		Search for a document by name or create one if missing.
 	
 
 		\subsection{Usage}{
@@ -355,6 +407,44 @@ instance$findOrCreateDocument(title)
 			\itemize{
 				\item{title a document title. If there is an exact match in google drive then that document will be used 
 otherwise a new one will be created.}{ - (java expects a String)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-docByName"></a>}}
+	
+	\subsection{Method \code{docByName()}}{
+		Search for a document by name or create one if missing.
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$docByName(title, tokenDirectory, disabled)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -411,6 +501,46 @@ not available
 		}
 	}
 	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-docFromTemplate"></a>}}
+	
+	\subsection{Method \code{docFromTemplate()}}{
+		Search for a document by name or create one if missing.
+	
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{title a document title. If there is an exact match in google drive then that document will be used
+otherwise a new one will be created.}{ - (java expects a String)}
+				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: itself - a fluent method
+		}
+
+		\subsection{Examples}{
+			\if{html}{\out{<div class="r example copy">}}
+			\preformatted{
+not available
+			}
+			\if{html}{\out{</div>}}
+		}
+	}
+	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-searchForDocuments"></a>}}
 	
 	\subsection{Method \code{searchForDocuments()}}{
@@ -421,8 +551,7 @@ not available
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
-instance$searchForDocuments(titleMatch)
+J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -431,6 +560,7 @@ instance$searchForDocuments(titleMatch)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -730,8 +860,7 @@ not available
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
-instance$deleteDocument(docName, areYouSure)
+J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -741,12 +870,14 @@ instance$deleteDocument(docName, areYouSure)
 			\itemize{
 				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
 				\item{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+			void: nothing, called for side efffects
 		}
 
 		\subsection{Examples}{

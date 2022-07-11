@@ -4,7 +4,24 @@
 # The precise result of this is a little uncertain as it depends on whether rJava has already been
 # initialised and what other libraries are using it.
 .onLoad <- function(libname, pkgname) {
+	
 		# add in specific java options from the maven file
 	jOpts = getOption("java.parameters")[!grepl(x = getOption("java.parameters"),pattern = "-Xmx.*")]
 	options(java.parameters = c("-Xmx512M",jOpts))
+	
 }
+
+#' Pipe operator
+#'
+#' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom magrittr %>%
+#' @usage lhs \%>\% rhs
+#' @param lhs A value or the magrittr placeholder.
+#' @param rhs A function call using the magrittr semantics.
+#' @return The result of calling `rhs(lhs)`.
+NULL

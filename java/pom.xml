@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.terminological</groupId>
+	<artifactId>roogledocs</artifactId>
+	<version>0.1.0</version>
+	<description>R wrapper for Google docs API java library</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Must be Java 8 for standard rJava implementation -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<r6.version>0.5.1</r6.version>
+    </properties>
+
+	<name>R Google Docs integration</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.github.terminological</groupId>
+			<artifactId>r6-generator-runtime</artifactId>
+			<version>${r6.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.33.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.32.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-docs -->
+		<dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-docs</artifactId>
+		    <version>v1-rev20210707-1.32.1</version>
+		</dependency>
+		<dependency>
+	      <groupId>com.google.apis</groupId>
+	      <artifactId>google-api-services-drive</artifactId>
+	      <version>v3-rev20211107-1.32.1</version>
+	    </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<argLine>-Xmx4096m</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.github.terminological</groupId>
+				<artifactId>r6-generator-maven-plugin</artifactId>
+				<version>${r6.version}</version>
+				<configuration>
+					<packageData>
+						<title>R wrapper for Googledocs java library</title>
+						<version>${version}</version>
+						<description>
+Programmatically substitute images, data and tables into a google doc. 
+R library to perform limited interactions with google docs (and maybe one day slides)
+in R via the Java API library. The purpose being to support google docs as a
+platform for interactive development and documentation of data analysis in R for scientific
+publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis
+where a team of people are working collaboratively on documentation, whilst at the same time analysis
+is being performed and results updated repeatedly as a result of new data. In this environment updating
+numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs
+you can automate this a bit like a RMarkdown document, but with the added benefit that the content
+can be updated independently of the analysis, by the wider team.
+						</description>
+						<url>https://terminological.github.io/roogledocs/docs/</url>
+						<doi>10.5281/zenodo.6576096</doi>
+						<debug>false</debug>
+						<usePkgdown>false</usePkgdown>
+						<useJavadoc>false</useJavadoc>
+<!-- 						<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
+						<rjavaOpts>
+							<rjavaOpt>-Xmx512M</rjavaOpt>
+						</rjavaOpts>
+						<packageName>roogledocs</packageName>
+						<license>MIT</license>
+						<preCompileBinary>true</preCompileBinary>
+						<packageAllDependencies>false</packageAllDependencies>
+						<maintainerName>Rob</maintainerName>
+						<maintainerFamilyName>Challen</maintainerFamilyName>
+						<maintainerEmail>rob.challen@bristol.ac.uk</maintainerEmail>
+						<maintainerOrganisation>University of Bristol</maintainerOrganisation>
+						<maintainerORCID>0000-0002-5504-7768</maintainerORCID>
+					</packageData>
+					<outputDirectory>${project.basedir}/..</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>clean-r-library</id>
+						<goals>
+							<goal>clean-r-library</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten-pom</id>
+						<goals>
+							<goal>flatten-pom</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-r-library</id>
+						<goals>
+							<goal>generate-r-library</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -28,20 +28,25 @@ here::i_am("vignettes/web-only/roogledocs.Rmd")
 Prior to doing any analysis we may have some form of template. This might be a document skeleton or report template. It can contain empty tables, placeholder images, and double-brace tags, all of which can be replaced by real content from R. To do this we initialise the Roogledocs library. There is a global flag to disable roogledocs in case you want to develop and test offline. Before pushing the result of the analysis to the google doc.
 
 ```{r}
-J = roogledocs::JavaApi$get()
 options('roogledocs.disabled'=FALSE)
-doc = J$RoogleDocs$new()
+options("roogledocs.tokenDirectory"="~/.roogledocs-test")
 ```
 
-Most of the time you will be creating or updating a single document. For this vignettes sake it is useful to be able to delete previous versions. The posint of roogledocs though is actually to work with a continuously updated document and therefore deleting documents is usually not what you want to do. Likewise for this vignette it is useful to get a copy of the googledoc as a PDF from R. This may not be that useful in real life. The main functoin here though is the "findOfCloneTemplate" which lets you find a google doc by name, or clone a template document if you can't find it. There are also equivalent methods to find or create blank documents, or just find google docs by name or sharing URL if they already exist.
+```{r}
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$new()
+```
+
+Most of the time you will be creating or updating a single document. For this vignettes sake it is useful to be able to delete previous versions. The posint of roogledocs though is actually to work with a continuously updated document and therefore deleting documents is usually not what you want to do. Likewise for this vignette it is useful to get a copy of the googledoc as a PDF from R. This may not be that useful in real life. The main function here though is the "findOfCloneTemplate" which lets you find a google doc by name, or clone a template document if you can't find it. There are also equivalent methods to find or create blank documents, or just find google docs by name or sharing URL if they already exist.
 
 ```{r}
-doc$deleteDocument("roogledocs-demo",TRUE)
-doc$findOrCloneTemplate("roogledocs-demo","https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing")
+roogledocs::delete_document("roogledocs-demo",areYouSure = TRUE)
+
+doc = roogledocs::doc_from_template("roogledocs-demo","https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing")
 doc$saveAsPdf(here::here("docs/articles/example-template-doc.pdf"))
 ```
 
-Running the chunk above should authenticate you and grab a publically shared template I created, and make a copy of it in your google drive under the name "roogledocs-demo". [The document template can be seen here](example-template-doc.pdf), or as the [original google doc](https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing).
+Running the chunk above should authenticate you and grab a publicly shared template I created, and make a copy of it in your google drive under the name "roogledocs-demo". [The document template can be seen here](example-template-doc.pdf), or as the [original google doc](https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing).
 
 # Tabular data
 
@@ -79,6 +84,7 @@ ggsave(filename, g2, width=4, height=3)
 filename %>% doc$updateFigure(figureIndex = 2)
 g2
 ```
+
 # Updating tagged text
 
 If you want to update small textual results - e.g. results in the abstract of a paper (similar to RMarkdown inline chunks) you can place a double-brace tag into the google doc and replace this with text generated in R. The result is held as a named range in the google doc so that further changes or updates in code will be propagated through. This named range however can be lost if a user copy and pastes the replaced tagged text. In this case the tags will have to be manually put back in. You can get a list of the tags present in a document like this:
@@ -135,10 +141,10 @@ There are a lot of possible ways to extend this. The current implementation is a
 
 * For example, additional formatting options such as text colour, or table padding is not implemented but would be relatively straightforward. 
 * It feels simple to extend the tables to handle flextables and possibly others. 
-* Currently there is no support for bulleted lists, which is fairly simple. 
-* Absolutely positioned images are ignored completely. This is probably a good thing as it lets you have a logo for example without messing up the dynamic images from R.
-* Building a google docs based drop in for the officer library for MS word could be good if it means we can leverage that interface for other uses (e.g. knitr support). 
-* A fairly complex development would be support for google slides, although a very simple tagged text and image substitution equivalent might be possible.
+* Currently there is no support for bulleted lists, which is fairly simple, but I didn't have a good use case. 
+* Absolutely positioned images are ignored completely. This is probably a good thing as it lets you have a logo within the document for example without messing up the dynamic images from R.
+* Building a google docs based drop in for the `officer` library for MS word could be good if it means we can leverage that interface for other uses (e.g. knitr support). 
+* A fairly complex development would be support for google slides, although a very simple tagged text and image substitution equivalent might be simple, in reality for this you are likely to want to do more complex operations.
 
 
 

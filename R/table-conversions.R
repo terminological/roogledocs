@@ -1,3 +1,7 @@
+# NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.
+
+#' Convert a table to long format
+#'
 #' Converts a square display table format to a long format suitable for applying as a sequence of formatting operations
 #' in a google doc or as a ggplot. Currently only plain dataframes and huxtables are supported but flextables look very doable.
 #' Only a limited subset of formatting features is implemented at present as supported by roogledocs. The output format
@@ -27,6 +31,7 @@
 #' alignment on a decimal point, complex content / markup in cells.
 #'
 #' @param table the input table (e.g. a huxtable)
+#' @param ... passed onto subclass methods
 #'
 #' @return a format that is considered valid for roogledocs::RoogleDocs$updateTable()
 #' @export
@@ -34,8 +39,14 @@ as.long_format_table = function(table, ...) {
   UseMethod("as.long_format_table", table)
 }
 
+# NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.
+
+#' @method as.long_format_table long_format_table
+#' @export
 as.long_format_table.long_format_table = function(table,...) {return(table)}
 
+#' @method as.long_format_table data.frame
+#' @export
 as.long_format_table.data.frame = function(table, fontName = "Roboto", fontSize = 8, alignment = "START", valignment = "TOP", colWidths = NULL, ...) {
 
   tidy = table %>%
@@ -74,8 +85,6 @@ as.long_format_table.data.frame = function(table, fontName = "Roboto", fontSize 
     valignment = valignment
   )
 
-
-
   class(tidy) = c("long_format_table",class(tidy))
   if (is.null(colWidths)) colWidths = fit_col_widths(tidy)
   attr(tidy,"colWidths") = colWidths
@@ -83,7 +92,11 @@ as.long_format_table.data.frame = function(table, fontName = "Roboto", fontSize 
   return(tidy)
 }
 
-as.long_format_table.huxtable = function(table, ...) {
+# NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.
+
+#' @method as.long_format_table huxtable
+#' @export
+as.long_format_table.huxtable = function(table, fontName = "Roboto", fontSize = 8, ...) {
   # a huxtable is fully described including merged cells:
   tidy = table %>%
     as_tibble() %>%
@@ -108,8 +121,8 @@ as.long_format_table.huxtable = function(table, ...) {
       attr(table,"valign") %>% as.vector() == "bottom" ~ "BOTTOM",
       TRUE ~ "TOP"
     ),
-    fontName = attr(table,"font") %>% as.vector() %>% tidyr::replace_na("Roboto"),
-    fontSize = attr(table,"font_size") %>% as.vector() %>% tidyr::replace_na(8),
+    fontName = attr(table,"font") %>% as.vector() %>% tidyr::replace_na(fontName),
+    fontSize = attr(table,"font_size") %>% as.vector() %>% tidyr::replace_na(fontSize),
     fillColour = attr(table,"background_color") %>% as.vector() %>% tidyr::replace_na("#FFFFFF"),
     bold = attr(table,"bold") %>% as.vector() %>% tidyr::replace_na(FALSE),
     italic = attr(table,"italic") %>% as.vector() %>% tidyr::replace_na(FALSE),
@@ -130,6 +143,8 @@ as.long_format_table.huxtable = function(table, ...) {
   class(tidy2) = c("long_format_table",class(tidy2))
   return(tidy2)
 }
+
+# NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.
 
 .remove_spans = function(tidy) {
   # assumes a row,col,rowSpan,colSpan dataframe, with rowSpan and colSpan only defined in the top left cell of a merged cell
@@ -165,5 +180,5 @@ as.long_format_table.huxtable = function(table, ...) {
     ) %>% select(-ends_with(".new"))
 }
 
-
+# NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.
 

@@ -2,11 +2,11 @@
 #' This is the main entry point of the roogledocs generated R library.
 #'
 #' @description
-#' R wrapper for Googledocs java library
+#' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.1.0
+#' Version: 0.0.3.9999
 #'
-#' Generated: 2022-05-24T12:06:30.964
+#' Generated: 2022-07-08T22:54:10.734
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import huxtable
@@ -23,74 +23,78 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 	.toJava = NULL,
 	#' @field .reg the list of references to java objects created by this API 
 	.reg = list(),
+	#' @field RoogleDocs the RoogleDocs class contructors and static methods
 	RoogleDocs = NULL,
 
 	#' @description
-    #' change the java logging level
-    #' @param logLevel A string such as "DEBUG", "INFO", "WARN"
-    #' @return nothing
-  	changeLogLevel = function(logLevel) {
-  		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "changeLogLevel" , logLevel)
-  		invisible(NULL)
-    },
-	
-	#' @description
-    #' change the java logging level using a log4j configuration file
-    #' @param log4jproperties An absolute filepath to the log4j propertied file
-    #' @return nothing
-	reconfigureLog = function(log4jproperties) {
-  		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "reconfigureLog" , log4jproperties)
-  		invisible(NULL)
-    },
-	
-	#' @description
-    #' print java system messages to the R console and flush the message cache. This is generally called automatically,
-    #' @return nothing
-	printMessages = function() {
-		# check = FALSE here to stop exceptions being cleared from the stack.
-		cat(.jcall("uk/co/terminological/rjava/LogController", returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE))
+	#' change the java logging level
+	#' @param logLevel A string such as "DEBUG", "INFO", "WARN"
+	#' @return nothing
+	changeLogLevel = function(logLevel) {
+		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "changeLogLevel" , logLevel)
 		invisible(NULL)
 	},
 	
+	#' @description
+	#' change the java logging level using a log4j configuration file
+	#' @param log4jproperties An absolute filepath to the log4j propertied file
+	#' @return nothing
+	reconfigureLog = function(log4jproperties) {
+		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "reconfigureLog" , log4jproperties)
+		invisible(NULL)
+	},
+	
+	#' @description
+	#' print java system messages to the R console and flush the message cache. This is generally called automatically,
+	#' @return nothing
+	printMessages = function() {
+		# check = FALSE here to stop exceptions being cleared from the stack.
+		msg = .jcall("uk/co/terminological/rjava/LogController", returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE)
+		if (!is.null(msg) && trimws(msg) != "") message(trimws(msg))
+		invisible(NULL)
+	},
 	
  	#### constructor ----
  	#' @description
  	#' Create the R6 api library class. This is the entry point to all Java related classes and methods in this package.
-    #' @param logLevel One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL". (defaults to "INFO") 
-    #' @examples
-    #' \dontrun{
-    #' J = roogledocs::JavaApi$get();
+	#' @param logLevel One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL". (defaults to "INFO") 
+	#' @examples
+	#' \dontrun{
+	#' J = roogledocs::JavaApi$get();
 	#' }
-    #' @return nothing
+	#' @return nothing
  	initialize = function(logLevel = "INFO") {
  		if (is.null(JavaApi$singleton)) stop("Startup the java api with JavaApi$get() rather than using this constructor directly")
  	
- 		message("Initialising R wrapper for Googledocs java library")
- 		message("Version: 0.1.0")
-		message("Generated: 2022-05-24T12:06:30.964")
+ 		message("Initialising R Wrapper For Googledocs Java Library")
+ 		message("Version: 0.0.3.9999")
+		message("Generated: 2022-07-08T22:54:10.735")
  	
  	
-		if (!.jniInitialized) 
-	        .jinit(parameters=getOption("java.parameters"),silent = TRUE, force.init = FALSE)
+ 		tryCatch({
+			if (!.jniInitialized) 
+				.jinit(parameters=getOption("java.parameters"),silent = TRUE, force.init = FALSE)
+		}, error = function(e) stop("Java cannot be initialised: ",e$message)
+		)
 		
-		# add in all the jars that come with the library
-	    classes <- system.file("java", package = "roogledocs")
-	    if (nchar(classes)) {
-	        .jaddClassPath(classes)
-	        jars <- grep(".*\\.jar", list.files(classes, full.names = TRUE), TRUE, value = TRUE)
-	        message(paste0("Adding to classpath: ",jars,collapse='\n'))
-	        .jaddClassPath(jars)
-	    }
-	    
-	    # configure logging
+		# Java dependencies
+		jars = .checkDependencies(quiet = TRUE)
+		.jaddClassPath(jars)
+		
+		# configure logging
  		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "setupRConsole")
  		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "configureLog" , logLevel)
- 		# TODO: this is the library build date code byut it requires testing
+ 		# TODO: this is the library build date code but it requires testing
  		buildDate = .jcall("uk/co/terminological/rjava/LogController", returnSig = "S", method = "getClassBuildTime")
-    	self$.log = .jcall("org/slf4j/LoggerFactory", returnSig = "Lorg/slf4j/Logger;", method = "getLogger", "roogledocs");
-    	.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","Version: 0.1.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-05-24T12:06:30.964");
+		self$.log = .jcall("org/slf4j/LoggerFactory", returnSig = "Lorg/slf4j/Logger;", method = "getLogger", "roogledocs");
+		.jcall(self$.log,returnSig = "V",method = "debug", "Adding to classpath: ")
+		for (jar in jars) {
+		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
+		}
+		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.0.3.9999");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-07-08T22:54:10.735");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.0.3-SNAPSHOT");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -106,18 +110,18 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmpDim = dim(rObj)
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumericArray',rJava::.jarray(tmpVec),rJava::.jarray(tmpDim)))
 			},
+			RDateVector=function(rObj) {
+				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
+				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
+				tmp = as.character(rObj,format='%C%y-%m-%d')
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
+			},
 			RDate=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RDate'))
 				if (length(rObj) > 1) stop('input too long')
 			   if (rObj<'0001-01-01') message('dates smaller than 0001-01-01 will be converted to NA')
 				tmp = as.character(rObj,format='%C%y-%m-%d')[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDate',tmp))
-			},
-			RDateVector=function(rObj) {
-				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
-				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
-				tmp = as.character(rObj,format='%C%y-%m-%d')
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
 			},
 			RCharacterVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacterVector'))
@@ -132,13 +136,6 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmp = as.numeric(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumeric',tmp))
 			},
-			RFactor=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
-				if (length(rObj) > 1) stop('input too long')
-				tmp = as.integer(rObj)[[1]]
-				tmpLabel = levels(rObj)[[tmp]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
-			},
 			RLogical=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
 				if (length(rObj) > 1) stop('input too long')
@@ -146,20 +143,27 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmp = as.integer(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
 			},
-			RCharacter=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter'))
-				tmp = as.character(rObj)[[1]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter',tmp))
-			},
-			RNull=function(rObj) {
-				if (!is.null(rObj)) stop('input expected to be NULL')
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RNull'))
+			RFactor=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
+				if (length(rObj) > 1) stop('input too long')
+				tmp = as.integer(rObj)[[1]]
+				tmpLabel = levels(rObj)[[tmp]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
 			},
 			RLogicalVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector'))
 				if (!is.logical(rObj)) stop('expected a vector of logicals')
 				tmp = as.integer(rObj)
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector',rJava::.jarray(tmp)))
+			},
+			RNull=function(rObj) {
+				if (!is.null(rObj)) stop('input expected to be NULL')
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RNull'))
+			},
+			RCharacter=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter'))
+				tmp = as.character(rObj)[[1]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter',tmp))
 			},
 			String=function(rObj) return(as.character(rObj)),
 			void=function(rObj) stop('no input expected'),
@@ -214,6 +218,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			    if (!is.logical(rObj)) stop('not a logical')
 			    return(as.logical(rObj[[1]]))
 			},
+			RInteger=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RInteger'))
+				if (length(rObj) > 1) stop('input too long')
+				tmp = as.integer(rObj)[[1]]
+				if (rObj[[1]]!=tmp) stop('cannot cast to integer: ',rObj)
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RInteger',tmp))
+			},
 			RBoundDataframe=function(rObj) {
 				jout = rJava::.jnew('uk/co/terminological/rjava/types/RDataframe')
 				lapply(colnames(rObj), function(x) {
@@ -229,13 +240,6 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				})
 				rJava::.jcall(jout,returnSig='Luk/co/terminological/rjava/types/RDataframe;',method='groupBy',rJava::.jarray(dplyr::group_vars(rObj)))
 				return(jout)
-			},
-			RInteger=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RInteger'))
-				if (length(rObj) > 1) stop('input too long')
-				tmp = as.integer(rObj)[[1]]
-				if (rObj[[1]]!=tmp) stop('cannot cast to integer: ',rObj)
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RInteger',tmp))
 			},
 			RDataframe=function(rObj) {
 				jout = rJava::.jnew('uk/co/terminological/rjava/types/RDataframe')
@@ -307,16 +311,16 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			   if (length(tmpDim)==2) return(matrix(tmpVec,tmpDim))
 				return(array(tmpVec,tmpDim))
 			},
-			RDate=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RDateVector=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
+			RDate=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RCharacterVector=function(jObj) as.character(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive')),
 			RoogleDocs=function(jObj) return(jObj),
 			RNumeric=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='D',method='rPrimitive')),
-			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
 			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
-			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
-			RNull=function(jObj) return(NULL),
+			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
 			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
+			RNull=function(jObj) return(NULL),
+			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
 			String=function(jObj) return(as.character(jObj)),
 			void=function(jObj) invisible(NULL),
 			double=function(jObj) return(as.numeric(jObj)),
@@ -327,12 +331,12 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RNumericVector=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='[D',method='rPrimitive')),
 			int=function(jObj) return(as.integer(jObj)),
 			boolean=function(jObj) return(as.logical(jObj)),
+			RInteger=function(jObj) as.integer(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RBoundDataframe=function(jObj) {
 				convDf = eval(parse(text=rJava::.jcall(jObj,'rConversion', returnSig='Ljava/lang/String;')))
 				groups = rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='getGroups')
 				return(dplyr::group_by(convDf(jObj),!!!sapply(groups,as.symbol)))
 			},
-			RInteger=function(jObj) as.integer(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RDataframe=function(jObj) {
 				convDf = eval(parse(text=rJava::.jcall(jObj,'rConversion', returnSig='Ljava/lang/String;')))
 				groups = rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='getGroups')
@@ -353,7 +357,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		# initialise java class constructors and static method definitions
 		
 		self$RoogleDocs = list(
-			new = function(tokenDirectory=normalizePath('~/.roogledocs', mustWork = FALSE), disabled=getOption('roogledocs.disabled',FALSE)) {
+			new = function(tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# constructor
 				# convert parameters to java
 				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
@@ -368,8 +372,84 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 					self
 				);
 				return(tmp_r6)
-			}
-	)
+			},
+			docById = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
+				# copy parameters
+				tmp_shareUrlOrDocId = self$.toJava$String(shareUrlOrDocId);
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				tmp_disabled = self$.toJava$boolean(disabled);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docById" , tmp_shareUrlOrDocId, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# wrap return java object in R6 class 
+				out = RoogleDocs$new(
+					self$.fromJava$RoogleDocs(tmp_out),
+					self
+				);
+				return(out)
+			},
+			docByName = function(title, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
+				# copy parameters
+				tmp_title = self$.toJava$String(title);
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				tmp_disabled = self$.toJava$boolean(disabled);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docByName" , tmp_title, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# wrap return java object in R6 class 
+				out = RoogleDocs$new(
+					self$.fromJava$RoogleDocs(tmp_out),
+					self
+				);
+				return(out)
+			},
+			docFromTemplate = function(title, templateUri, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
+				# copy parameters
+				tmp_title = self$.toJava$String(title);
+				tmp_templateUri = self$.toJava$String(templateUri);
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				tmp_disabled = self$.toJava$boolean(disabled);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docFromTemplate" , tmp_title, tmp_templateUri, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# wrap return java object in R6 class 
+				out = RoogleDocs$new(
+					self$.fromJava$RoogleDocs(tmp_out),
+					self
+				);
+				return(out)
+			},
+			searchForDocuments = function(titleMatch, tokenDirectory=.tokenDirectory()) {
+				# copy parameters
+				tmp_titleMatch = self$.toJava$String(titleMatch);
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="searchForDocuments" , tmp_titleMatch, tmp_tokenDirectory, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# convert java object back to R
+				out = self$.fromJava$RDataframe(tmp_out);
+				if(is.null(out)) return(invisible(out))
+				return(out)
+			},
+			deleteDocument = function(docName, areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE), tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
+				# copy parameters
+				tmp_docName = self$.toJava$String(docName);
+				tmp_areYouSure = self$.toJava$boolean(areYouSure);
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				tmp_disabled = self$.toJava$boolean(disabled);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "V", method="deleteDocument" , tmp_docName, tmp_areYouSure, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# convert java object back to R
+				out = self$.fromJava$void(tmp_out);
+				if(is.null(out)) return(invisible(out))
+				return(out)
+			}	)
 	}
 ))
 
@@ -384,4 +464,198 @@ JavaApi$get = function(logLevel = "INFO") {
 	return(JavaApi$singleton)
 }
 
+JavaApi$rebuildDependencies = function( ... ) {
+	# remove working directory
+	unlink(.workingDir(), recursive = TRUE)
+	# rebuild everything
+	classpath = .checkDependencies(quiet = FALSE, ...)
+	
+	# find the jars that come bundled with the library:
+	jars = list.files(.here("java"), pattern=".*\\.jar", full.names = TRUE)
+	jars = jars[!endsWith(jars,"sources.jar") & !endsWith(jars,"javadoc.jar") & !endsWith(jars,"src.jar")]
+	
+	# and add any that have been resolved and downloaded by maven:
+	jars = unique(c(jars,classpath))
+	
+	if (!all(file.exists(jars))) {
+		warning("The library has been rebuilt but there is still some missing dependencies: Out of the following")
+		warning(paste0(jars,collapse="\n"))
+		warning("The missing dependencies are:")
+		warning(paste0(jars[file.exists(jars)],collapse="\n"))
+		warning("Please double check this is not an issue with your connections etc")
+		warning("The output of roogledocs::JavaApi$rebuildDependencies(debug=TRUE) may help diagnose the problem")
+	}
+	
+	return(jars)
+}
+
+
+## package private utility functions for managing maven dependencies ----
+# as this is generated code configuration is hard coded here
+# i.e. these functions are specific for the configuration of this package.
+
+.checkDependencies = function(...) {
+	# Java dependencies
+	# the main java library has been compiled but external dependencies must be resolved by maven
+	# successful resolution of the classpath libraries depends on the runtime machine and requires
+	# access to the internet at a minimum.
+	pomLoc = .extractPom()
+	classpath = .resolveDependencies(pomLoc, ...) 
+	
+	# find the jars that come bundled with the library:
+	jars = list.files(.here("java"), pattern=".*\\.jar", full.names = TRUE)
+	jars = jars[!endsWith(jars,"sources.jar") & !endsWith(jars,"javadoc.jar") & !endsWith(jars,"src.jar")]
+	
+	# and add any that have been resolved and downloaded by maven:
+	jars = unique(c(jars,classpath))
+	return(jars)
+}
+
+# package working directory
+.workingDir = function() {
+	tmp = path.expand(rappdirs::user_cache_dir("roogledocs-0.0.3.9999"))
+	fs::dir_create(tmp)
+	return(tmp)
+}
+
+# package installation directory
+.here = function(paths) {
+	path.expand(system.file(paths, package="roogledocs"))
+}
+
+# loads a maven wrapper distribution from the internet and unzips it into the package working directory
+.loadMavenWrapper = function() {
+	dir = .workingDir()
+	if (!file.exists(paste0(dir,"/mvnw"))) {
+		destfile = paste0(dir,"/wrapper.zip")
+		message("Bootstrapping maven wrapper.")
+		utils::download.file(
+			"https://repo1.maven.org/maven2/org/apache/maven/wrapper/maven-wrapper-distribution/3.1.1/maven-wrapper-distribution-3.1.1-bin.zip",
+			destfile = destfile,
+			quiet = TRUE
+		)
+		utils::unzip(destfile,exdir=dir)
+		unlink(destfile)
+		if(!file.exists(paste0(dir,"/mvnw"))) stop("downloading maven wrapper has not been successful")
+	}
+	if(.Platform$OS.type == "windows") {
+		mvnPath = paste0(dir,"/mvnw.cmd")
+	} else {
+		mvnPath = paste0(dir,"/mvnw")
+	}
+	write(c(
+		"distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.3.9/apache-maven-3.3.9-bin.zip",
+		"wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.1/maven-wrapper-3.1.1.jar"
+	), paste0(dir,"/.mvn/wrapper/maven-wrapper.properties"))
+	Sys.chmod(mvnPath)
+	return(mvnPath)
+}
+
+# detect if `test` file exists and is newer that `original`
+.fileNewer = function(original, test) {
+	if (!file.exists(original)) stop("source file doesn't exist")
+	if (!file.exists(test)) return(FALSE)
+	as.POSIXct(file.info(original)$mtime) < as.POSIXct(file.info(test)$mtime)
+}
+
+# gets the pom.xml file for io.github.terminological:roogledocs:0.0.3-SNAPSHOT from a thin jar
+.extractPom = function() {
+	dir = .workingDir()
+	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.0.3-SNAPSHOT\\.jar", full.names = TRUE)
+	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.0.3-SNAPSHOT")
+	jarLoc = jarLoc[[1]]
+	pomPath = paste0(dir,"/pom.xml")
+	if (!.fileNewer(jarLoc, pomPath)) {
+		utils::unzip(jarLoc, files = "META-INF/maven/io.github.terminological/roogledocs/pom.xml", junkpaths = TRUE, exdir = dir)
+		if (!file.exists(pomPath)) stop("couldn't extract META-INF/maven/io.github.terminological/roogledocs/pom.xml from ",jarLoc)
+	}
+	return(pomPath)
+}
+
+# gets the pom.xml file for io.github.terminological:roogledocs:0.0.3-SNAPSHOT which is the library version we exepct to be bundled in the 
+.extractSources = function() {
+	dir = .workingDir()
+	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.0.3-SNAPSHOT-src\\.jar", full.names = TRUE)
+	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.0.3-SNAPSHOT-src.jar")
+	jarLoc = jarLoc[[1]]
+	pomPath = paste0(dir,"/roogledocs-0.0.3-SNAPSHOT/pom.xml")
+	if (!.fileNewer(jarLoc, pomPath)) {
+		utils::unzip(jarLoc, exdir = dir)
+		if (!file.exists(pomPath)) stop("couldn't extract source files from ",jarLoc)
+	}
+	return(pomPath)
+}
+
+# executes maven assembly plugin and relocates resulting fat jar into java library directory
+.compileFatJar = function(pomPath, ...) {
+	fatJarFinal = fs::path(.here("java"),"roogledocs-0.0.3-SNAPSHOT-jar-with-dependencies.jar")
+	if (!.fileNewer(pomPath, fatJarFinal)) {
+		message("Compiling java library and downloading dependencies, please be patient.")
+		.executeMaven(
+			pomPath, 
+			goal = c("compile","assembly:assembly"),
+			opts = c(
+				"-DdescriptorId=jar-with-dependencies",
+				"-Dmaven.test.skip=true"
+			),
+			...
+		)
+		message("Compilation complete")
+		fatJar = fs::path_norm(fs::path(pomPath, "../target/roogledocs-0.0.3-SNAPSHOT-jar-with-dependencies.jar"))
+		fs::file_move(fatJar, fatJarFinal)
+	}
+	return(fatJarFinal)
+}
+
+# execute a `dependency:build-classpath` maven goal on the `pom.xml`
+.resolveDependencies = function(pomPath, ...) {
+	classpathLoc = paste0(.workingDir(), "/classpath.txt" )
+	# If the classpath file is already there we need to check that the entries on the class path are indeed available on this machine
+	# as they may have been moved or deleted
+	if(file.exists(classpathLoc)) {
+		classpathString = unique(readLines(classpathLoc,warn = FALSE))
+		if (!all(file.exists(classpathString))) {
+			# we need to rebuild the classpath file as some dependencies are not available
+			unlink(classpathLoc)
+		}
+	} 
+	if(!.fileNewer(pomPath,classpathLoc)) {
+		message("Calculating classpath and updating dependencies, please be patient.")
+		.executeMaven(
+			pomPath, 
+			goal = "dependency:build-classpath",		
+			opts = c(
+				paste0("-Dmdep.outputFile=classpath.txt"),
+				paste0("-DincludeScope=runtime")
+			),
+			...
+		)
+		message("Dependencies updated")
+	}
+	
+	if(.Platform$OS.type == "windows") {
+	  classpathString = unique(scan(classpathLoc, what = "character", sep=";", quiet=TRUE))
+	} else {
+	  classpathString = unique(scan(classpathLoc, what = "character", sep=":", quiet=TRUE))
+	}
+	
+	if (!all(file.exists(classpathString))) 
+		stop("For some inexplicable reason, Maven cannot determine the classpaths of the dependencies of this library on this machine. You can try roogledocs::JavaApi$rebuildDependencies()")
+	return(classpathString)
+}
+
+# executes a maven goal plus or minus info or debugging
+.executeMaven = function(pomPath, goal, opts = c(), quiet=TRUE, debug=FALSE, ...) {
+	mvnPath = .loadMavenWrapper()
+	args = c(goal, opts) #, paste0("-f '",pomPath,"'"))
+	if (quiet) args = c(args, "-q")
+	if (debug) args = c(args, "-X")
+	java_home = rJava::.jcall( 'java/lang/System', 'S', 'getProperty', 'java.home' )
+	Sys.setenv(JAVA_HOME=java_home)
+	# required due to an issue in Mvnw.cmd on windows.
+	wd = getwd()
+	setwd(fs::path_dir(pomPath))
+	system2(mvnPath, args)
+	setwd(wd)
+}
 

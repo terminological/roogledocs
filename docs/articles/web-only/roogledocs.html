@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">roogledocs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9999</span>
       </span>
     </div>
 
@@ -90,21 +90,23 @@
 <div class="sourceCode"><pre class="downlit">
 <span class="va">J</span> <span class="op">=</span> <span class="fu">roogledocs</span><span class="fu">::</span><span class="va"><a href="../../reference/JavaApi.html">JavaApi</a></span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span>
 <span class="co">## Initialising R wrapper for Googledocs java library</span>
-<span class="co">## Version: 0.1.0</span>
-<span class="co">## Generated: 2022-05-24T12:06:30.964</span>
-<span class="co">## Adding to classpath: /home/terminological/Dropbox/Git/roogledocs/inst/java/roogledocs-0.0.3-SNAPSHOT-jar-with-dependencies.jar</span>
-<span class="co">## 2022-05-24 12:06:38,993 INFO roogledocs [main] Initialised roogledocs</span>
+<span class="co">## Version: 0.0.3.9999</span>
+<span class="co">## Generated: 2022-07-08T00:08:10.429</span>
+<span class="co">## Calculating classpath and updating dependencies, please be patient.</span>
+<span class="co">## Dependencies updated</span>
+<span class="co">## 2022-07-08 00:08:22,405 INFO roogledocs [main] Initialised roogledocs</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span><span class="st">'roogledocs.disabled'</span><span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">doc</span> <span class="op">=</span> <span class="va">J</span><span class="op">$</span><span class="va">RoogleDocs</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:06:39,012 INFO org.github.terminological.roogledocs.RService [main] Initialising RoogleDocs. Local token directory: /home/terminological/.roogledocs</span></pre></div>
-<p>Most of the time you will be creating or updating a single document. For this vignettes sake it is useful to be able to delete previous versions. The posint of roogledocs though is actually to work with a continuously updated document and therefore deleting documents is usually not what you want to do. Likewise for this vignette it is useful to get a copy of the googledoc as a PDF from R. This may not be that useful in real life. The main functoin here though is the "findOfCloneTemplate" which lets you find a google doc by name, or clone a template document if you can't find it. There are also equivalent methods to find or create blank documents, or just find google docs by name or sharing URL if they already exist.</p>
+<span class="co">## 2022-07-08 00:08:22,416 INFO org.github.terminological.roogledocs.RService [main] Initialising RoogleDocs. Local token directory: /home/terminological/.roogledocs</span></pre></div>
+<p>Most of the time you will be creating or updating a single document. For this vignettes sake it is useful to be able to delete previous versions. The posint of roogledocs though is actually to work with a continuously updated document and therefore deleting documents is usually not what you want to do. Likewise for this vignette it is useful to get a copy of the googledoc as a PDF from R. This may not be that useful in real life. The main function here though is the "findOfCloneTemplate" which lets you find a google doc by name, or clone a template document if you can't find it. There are also equivalent methods to find or create blank documents, or just find google docs by name or sharing URL if they already exist.</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="va">doc</span><span class="op">$</span><span class="fu">deleteDocument</span><span class="op">(</span><span class="st">"roogledocs-demo"</span>,<span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:06:41,036 INFO org.github.terminological.roogledocs.RService [main] Deleting file: roogledocs-demo</span>
-<span class="va">doc</span><span class="op">$</span><span class="fu">findOrCloneTemplate</span><span class="op">(</span><span class="st">"roogledocs-demo"</span>,<span class="st">"https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing"</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:06:45,992 INFO org.github.terminological.roogledocs.RService [main] Created new document with title: roogledocs-demo</span>
-<span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"docs/articles/example-template-doc.pdf"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<p>Running the chunk above should authenticate you and grab a publically shared template I created, and make a copy of it in your google drive under the name "roogledocs-demo". <a href="example-template-doc.pdf">The document template can be seen here</a>, or as the <a href="https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing">original google doc</a>.</p>
+<span class="co">## 2022-07-08 00:08:23,975 INFO org.github.terminological.roogledocs.RService [main] Deleting file: roogledocs-demo</span>
+<span class="va">doc</span><span class="op">$</span><span class="fu">findOrCloneTemplate</span><span class="op">(</span><span class="st">"roogledocs-demo"</span>,<span class="st">"https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing"</span><span class="op">)</span>
+<span class="co">## 2022-07-08 00:08:28,627 INFO org.github.terminological.roogledocs.RService [main] Created new document with title: roogledocs-demo</span>
+<span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"docs/articles/example-template-doc.pdf"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## </span></pre></div>
+<p>Running the chunk above should authenticate you and grab a publicly shared template I created, and make a copy of it in your google drive under the name "roogledocs-demo". <a href="example-template-doc.pdf">The document template can be seen here</a>, or as the <a href="https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing">original google doc</a>.</p>
 </div>
 <div id="tabular-data" class="section level1">
 <h1 class="hasAnchor">
@@ -199,9 +201,9 @@
 <span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span>
 <span class="fu">ggsave</span><span class="op">(</span><span class="va">filename</span>, <span class="va">g</span>, width<span class="op">=</span><span class="fl">6</span>, height<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
 <span class="va">filename</span> <span class="op">%&gt;%</span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateFigure</span><span class="op">(</span>figureIndex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:06:50,950 INFO org.github.terminological.roogledocs.RService [main] Uploading: file41b710b1dcbe.png; with type: image/png</span>
+<span class="co">## 2022-07-08 00:08:34,282 INFO org.github.terminological.roogledocs.RService [main] Uploading: file3f737fdb95ee.png; with type: image/png</span>
 <span class="co">## Figure 1 updated</span>
-<span class="co">## 2022-05-24 12:06:56,549 INFO org.github.terminological.roogledocs.RService [main] Deleting file: file41b710b1dcbe.png</span>
+<span class="co">## 2022-07-08 00:08:40,164 INFO org.github.terminological.roogledocs.RService [main] Deleting file: file3f737fdb95ee.png</span>
 <span class="va">g</span></pre></div>
 <p><img src="roogledocs_files/figure-html/fig1-1.png" width="700"></p>
 <p>Updating a second figure will happen in the same way. The dimensions of the image in the google doc should exactly match the dimensions of the PNG file saved from R. This means if you change the size of an image in R it will be changed in the document. Image dimensions are therefore important to decide on in R. If the figure or table had not already existed in the target google doc (e.g. because you started with a blank document) they would simply have been uploaded and added at the end of the document as a sequentially numbered image. If you rearrange the order figures in the google doc it is up to you to fix the indexes in your code. Captions are not handled here at all as it is assumed that the captions will be maintained in the google doc and not in R (see "Updating tagged text" section later).</p>
@@ -210,14 +212,19 @@
 <span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span>
 <span class="fu">ggsave</span><span class="op">(</span><span class="va">filename</span>, <span class="va">g2</span>, width<span class="op">=</span><span class="fl">4</span>, height<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
 <span class="va">filename</span> <span class="op">%&gt;%</span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateFigure</span><span class="op">(</span>figureIndex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:06:59,860 INFO org.github.terminological.roogledocs.RService [main] Uploading: file41b736db88ac.png; with type: image/png</span>
+<span class="co">## 2022-07-08 00:08:43,554 INFO org.github.terminological.roogledocs.RService [main] Uploading: file3f73578787b.png; with type: image/png</span>
 <span class="co">## Figure 2 updated</span>
-<span class="co">## 2022-05-24 12:07:04,735 INFO org.github.terminological.roogledocs.RService [main] Deleting file: file41b736db88ac.png</span>
+<span class="co">## 2022-07-08 00:08:48,818 INFO org.github.terminological.roogledocs.RService [main] Deleting file: file3f73578787b.png</span>
 <span class="va">g2</span></pre></div>
-<p><img src="roogledocs_files/figure-html/fig2-1.png" width="700"> # Updating tagged text</p>
+<p><img src="roogledocs_files/figure-html/fig2-1.png" width="700"></p>
+</div>
+<div id="updating-tagged-text" class="section level1">
+<h1 class="hasAnchor">
+<a href="#updating-tagged-text" class="anchor"></a>Updating tagged text</h1>
 <p>If you want to update small textual results - e.g. results in the abstract of a paper (similar to RMarkdown inline chunks) you can place a double-brace tag into the google doc and replace this with text generated in R. The result is held as a named range in the google doc so that further changes or updates in code will be propagated through. This named range however can be lost if a user copy and pastes the replaced tagged text. In this case the tags will have to be manually put back in. You can get a list of the tags present in a document like this:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">doc</span><span class="op">$</span><span class="fu">tagsDefined</span><span class="op">(</span><span class="op">)</span></pre></div>
+<span class="va">doc</span><span class="op">$</span><span class="fu">tagsDefined</span><span class="op">(</span><span class="op">)</span>
+<span class="co">## </span></pre></div>
 <table class="table huxtable">
 <col>
 <col>
@@ -237,10 +244,10 @@
 <p>Here we have 2 tags. The tags can be then set to specific content like this:</p>
 <div class="sourceCode"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"%d/%m/%Y"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedText</span><span class="op">(</span>tagName <span class="op">=</span> <span class="st">"table-1-update-date"</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:07:06,781 INFO org.github.terminological.roogledocs.RDocument [main] Autotext replacing: {{table-1-update-date}} with 24/05/2022</span>
+<span class="co">## 2022-07-08 00:08:51,198 INFO org.github.terminological.roogledocs.RDocument [main] Autotext replacing: {{table-1-update-date}} with 08/07/2022</span>
 <span class="co">## Text table-1-update-date updated</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%1.1f \u00B1 %1.1f"</span>,<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedText</span><span class="op">(</span>tagName <span class="op">=</span> <span class="st">"diamonds-mean-sd"</span><span class="op">)</span>
-<span class="co">## 2022-05-24 12:07:07,682 INFO org.github.terminological.roogledocs.RDocument [main] Autotext replacing: {{diamonds-mean-sd}} with 3932.8 ± 3989.4</span>
+<span class="co">## 2022-07-08 00:08:52,344 INFO org.github.terminological.roogledocs.RDocument [main] Autotext replacing: {{diamonds-mean-sd}} with 3932.8 ± 3989.4</span>
 <span class="co">## Text diamonds-mean-sd updated</span></pre></div>
 <p>If you want to do a lot of copy pasting, or the tags have become broken, you may need to revert all the tags in a document so you can easily see where the good tags are (or to identify if some tags have been lost by copy paste). This can be done with the <code>doc$revertTags()</code> function, which puts the double-brace tags back in the document removing the auto-text. It is possible to use this kind of approach to automatically add in captions for figures or tables. It is technically possible to substitute images for double-brace tags also. This is not as convenient in my view as simply updating by index but may be necessary in certain circumstances.</p>
 </div>
@@ -251,6 +258,7 @@
 <div class="sourceCode"><pre class="downlit">
 
 <span class="va">doc</span><span class="op">$</span><span class="fu">appendText</span><span class="op">(</span><span class="st">"\nAdding new content\n"</span>,<span class="st">"HEADING_3"</span><span class="op">)</span>
+<span class="co">## </span>
 
 <span class="va">content</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span>
   <span class="op">~</span><span class="va">label</span>, <span class="op">~</span><span class="va">link</span>, <span class="op">~</span><span class="va">fontName</span>, <span class="op">~</span><span class="va">fontFace</span>,
@@ -319,11 +327,13 @@
 </table>
 <div class="sourceCode"><pre class="downlit">
 
-<span class="va">doc</span><span class="op">$</span><span class="fu">appendFormattedParagraph</span><span class="op">(</span><span class="va">content</span><span class="op">)</span></pre></div>
+<span class="va">doc</span><span class="op">$</span><span class="fu">appendFormattedParagraph</span><span class="op">(</span><span class="va">content</span><span class="op">)</span>
+<span class="co">## </span></pre></div>
 <p>It could be possible to combine writing new content and updating tagged text in the same script to programmatically generate replacement content. Likewise this could be used for captions of tables and figures when they are added. When you write new content you can write in double-brace tags and these can then be updated at a later stage for example.</p>
 <p>Finally we can write out the new document to a PDF, mostly so we can see what we have done:</p>
 <div class="sourceCode"><pre class="downlit">
-<span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"docs/articles/example-after-update.pdf"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"docs/articles/example-after-update.pdf"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## </span></pre></div>
 <p>After the analysis has run we have a new version of the google document <a href="example-after-update.pdf">which should look like this</a>.</p>
 </div>
 <div id="limitations-and-further-options" class="section level1">
@@ -333,10 +343,10 @@
 <ul>
 <li>For example, additional formatting options such as text colour, or table padding is not implemented but would be relatively straightforward.</li>
 <li>It feels simple to extend the tables to handle flextables and possibly others.</li>
-<li>Currently there is no support for bulleted lists, which is fairly simple.</li>
-<li>Absolutely positioned images are ignored completely. This is probably a good thing as it lets you have a logo for example without messing up the dynamic images from R.</li>
-<li>Building a google docs based drop in for the officer library for MS word could be good if it means we can leverage that interface for other uses (e.g. knitr support).</li>
-<li>A fairly complex development would be support for google slides, although a very simple tagged text and image substitution equivalent might be possible.</li>
+<li>Currently there is no support for bulleted lists, which is fairly simple, but I didn't have a good use case.</li>
+<li>Absolutely positioned images are ignored completely. This is probably a good thing as it lets you have a logo within the document for example without messing up the dynamic images from R.</li>
+<li>Building a google docs based drop in for the <code>officer</code> library for MS word could be good if it means we can leverage that interface for other uses (e.g. knitr support).</li>
+<li>A fairly complex development would be support for google slides, although a very simple tagged text and image substitution equivalent might be simple, in reality for this you are likely to want to do more complex operations.</li>
 </ul>
 </div>
   </div>

@@ -1,9 +1,7 @@
 # roogledocs
 
 [![R-CMD-check](https://github.com/terminological/roogledocs/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/roogledocs/actions)
-
 [![DOI](https://zenodo.org/badge/475030092.svg)](https://zenodo.org/badge/latestdoi/475030092)
-
 
 R library to perform limited interactions with google docs (and maybe one day slides)
 in R via the Java API library. The purpose being to support google docs as a 
@@ -17,7 +15,7 @@ can be updated independently of the analysis, by the wider team.
 
 ## Installation instructions
 
-Roogledocs is not on cran yet. Installation from this repo can be done as follows:
+`roogledocs` is not on cran yet. Installation from this repo can be done as follows:
 
 ```R
 devtools::install_github("terminological/roogledocs")
@@ -30,13 +28,19 @@ devtools::install_github("terminological/roogledocs")
 ## Simple usage
 
 ```R
-J = roogledocs::JavaApi$get()
-paper = J$RoogleDocs$new()
-paper$findOrCreateDocument("my-new-nature-paper")
+
+# These options control whether roogledocs is disabled globally (useful for testing)
+# and where it stores the Google Drive authentication tokens
+options('roogledocs.disabled'=FALSE)
+options("roogledocs.tokenDirectory"="~/.roogledocs")
+
+paper = roogledocs::doc_by_name("my-new-nature-paper")
 paper$updateFigure("/full/path/to/figure-1.png", figureIndex = 1, dpi = 300)
 ```
 
-Which will authenticate you, create a blank document and insert an image for figure 1 at the end of the document.
+Which will authenticate you, create a blank document (or retrieve it if it exists) and 
+updates the first figure in the document, or inserts it at the end if no images exist
+already.
 
 After some editing of the document and further analysis you are ready for a new version of the figure:
 
@@ -52,9 +56,9 @@ which case the markdown can be a notebook documenting the code and methodology, 
 
 This library uses an R-code generation process `r6-generator-maven-plugin` and `rJava`. 
 
-For Google api OAuth a client id is required. This repository does not include the client_secrets.json file for this but this
+For Google API OAuth a client id is required. This repository does not include the client_secrets.json file for this but this
 must be included as a symbolic link when project is cloned and BEFORE running `mvn install`. Installation will not fail without
-it but the resulting library will not work. 
+it but the resulting library will not work. This is only of relevance for development. For use it is all bundled
 
 To do this you must get a client_secret.json file from:
 
@@ -62,7 +66,7 @@ To do this you must get a client_secret.json file from:
 - <https://console.cloud.google.com/apis/credentials?project=your_project_name>
 
 You are requesting a OAuth client id; type "desktop application". The client_secret.json file should then be saved outside of
-the github repository, and linked to some the `src/main/resources` directory. Symbolic links are implictly ignored by github, 
+the github repository, and symbolic linked to the `src/main/resources` directory. Symbolic links are implicitly ignored by github, 
 but it should also be explicitly excluded by `.gitignore`:
 
 e.g. in my case:
@@ -80,7 +84,7 @@ and then in R:
 
 
 ```R
-devtools::load_all("~/Git/roogledocs/r-library",force = TRUE)
+devtools::load_all("~/Git/roogledocs",force = TRUE)
 ```
 
 N.b. When you make changes to the java part of the library there are sometimes some caching issues. Full restart of R maybe 
