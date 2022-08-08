@@ -73,7 +73,7 @@ jobs:
         run: "echo export PATH=$PATH > reconf.sh; echo export JAVA_HOME=$JAVA_HOME >> reconf.sh; echo R CMD javareconf >> reconf.sh; sudo bash reconf.sh"
 
       - name: Set up secrets dir
-        run: "bash -c 'mkdir ~/.roogledocs-test'"
+        run: "bash -c 'mkdir .roogledocs-test'"
 
       # Decode the secret to ~/.roogledocs-test
       - name: Decode secrets
@@ -81,13 +81,14 @@ jobs:
         uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'StoredCredential'
-          fileDir: '.roogledocs-test'
+          fileDir: './.roogledocs-test/'
           encodedString: ${{ secrets.STOREDCREDENTIAL }}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           args: 'c("--no-manual", "--no-multiarch", "--as-cran")'
           upload-snapshots: true
+          error-on: '"error"'
 
       - name: Upload check results
         if: failure()
