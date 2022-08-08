@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.0.3.9999
+Version: 0.1.0
 
-Generated: 2022-07-08T22:54:10.915
+Generated: 2022-08-08T17:07:49.295
 }
 
 \details{
@@ -201,7 +201,10 @@ not available
 	\if{html}{\out{<a id="method-reauth"></a>}}
 	
 	\subsection{Method \code{reauth()}}{
-		Reauthenticate the service deleting the existing OAuth tokens. Generally this would only be needed if 
+		Reauthenticate roogledocs
+
+Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+Generally this would only be needed if 
 application permission updates are needed in which case the directory can be manually deleted anyway,
 or if you want to switch google user without using a different tokenDirectory.
 	
@@ -240,7 +243,9 @@ not available
 	\if{html}{\out{<a id="method-enable"></a>}}
 	
 	\subsection{Method \code{enable()}}{
-		Enables roogledocs. It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
+		Enables roogledocs for this document. 
+
+It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
 	
 
 		\subsection{Usage}{
@@ -277,7 +282,9 @@ not available
 	\if{html}{\out{<a id="method-disable"></a>}}
 	
 	\subsection{Method \code{disable()}}{
-		disables roogledocs temporarily only for this document. While disabled all calls to roogledocs will silently fail.
+		Disables roogledocs temporarily for this document. 
+
+While disabled all calls to roogledocs will silently fail.
 	
 
 		\subsection{Usage}{
@@ -351,7 +358,7 @@ not available
 	\if{html}{\out{<a id="method-docById"></a>}}
 	
 	\subsection{Method \code{docById()}}{
-		Select a document by its share url or id.
+		Get a document by id or sharing link.
 	
 
 		\subsection{Usage}{
@@ -427,7 +434,7 @@ not available
 	\if{html}{\out{<a id="method-docByName"></a>}}
 	
 	\subsection{Method \code{docByName()}}{
-		Search for a document by name or create one if missing.
+		Get a document by name or create a blank document if missing.
 	
 
 		\subsection{Usage}{
@@ -465,7 +472,7 @@ not available
 	\if{html}{\out{<a id="method-findOrCloneTemplate"></a>}}
 	
 	\subsection{Method \code{findOrCloneTemplate()}}{
-		Search for or create a document as a copy of a template document if it is missing.
+		Get a document by name or create one from a template if missing.
 	
 
 		\subsection{Usage}{
@@ -504,7 +511,7 @@ not available
 	\if{html}{\out{<a id="method-docFromTemplate"></a>}}
 	
 	\subsection{Method \code{docFromTemplate()}}{
-		Search for a document by name or create one if missing.
+		Get a document by name or create one from a template if missing.
 	
 
 		\subsection{Usage}{
@@ -581,7 +588,9 @@ not available
 	\if{html}{\out{<a id="method-tagsDefined"></a>}}
 	
 	\subsection{Method \code{tagsDefined()}}{
-		Finds tags defined in the current document
+		List all tags
+
+Finds tags defined in the current document
 	
 
 		\subsection{Usage}{
@@ -618,7 +627,9 @@ not available
 	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
 	
 	\subsection{Method \code{updateTaggedText()}}{
-		Substitutes all occurrences of {{tag-name}} with the text parameter.
+		Relace tags for text
+
+Substitutes all occurrences of {{tag-name}} with the text parameter.
 	
 
 		\subsection{Usage}{
@@ -656,10 +667,15 @@ not available
 	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
 	
 	\subsection{Method \code{updateTaggedImage()}}{
-		Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
+		Replace a tag with an image.
+
+Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
 in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
-by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes will
-change dynamically. You have been warned.
+by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
+change dynamically.
+
+The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
+google doc, and one completed the temporary file deleted from your google drive.
 	
 
 		\subsection{Usage}{
@@ -698,7 +714,9 @@ not available
 	\if{html}{\out{<a id="method-revertTags"></a>}}
 	
 	\subsection{Method \code{revertTags()}}{
-		remove all tagged text and images inserted by roogledocs and returns the bare document. This does not affect figures and tables inserted by index (i.e. without tags) 
+		Revert tagged text and images.
+
+Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
 This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
 	
 
@@ -736,7 +754,9 @@ not available
 	\if{html}{\out{<a id="method-updateTable"></a>}}
 	
 	\subsection{Method \code{updateTable()}}{
-		Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+		Update or insert a formatted table into the document. 
+
+The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
 	
 
 		\subsection{Usage}{
@@ -777,7 +797,10 @@ not available
 	\if{html}{\out{<a id="method-updateFigure"></a>}}
 	
 	\subsection{Method \code{updateFigure()}}{
-		Update or insert a figure in the document.
+		Update or insert a figure in the document from a locally stored PNG.
+
+This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+google document. Once this is complete the temporary google drive copy of the image is deleted.
 	
 
 		\subsection{Usage}{

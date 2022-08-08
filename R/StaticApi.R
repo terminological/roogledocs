@@ -2,8 +2,8 @@
 # This is a collection of the static methods described in the Java API
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
-# Version: 0.0.3.9999
-# Generated: 2022-07-08T22:54:10.834
+# Version: 0.1.0
+# Generated: 2022-08-08T17:07:49.276
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----
@@ -11,7 +11,7 @@
 
 #' docById:
 #' 
-#' Select a document by its share url or id.
+#' Get a document by id or sharing link.
 #' @param shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method - (java expects a String)
 #' @param tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 #' @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
@@ -30,7 +30,7 @@ doc_by_id = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled
 
 #' docByName:
 #' 
-#' Search for a document by name or create one if missing.
+#' Get a document by name or create a blank document if missing.
 #' @param title a document title. If there is an exact match in google drive then that document will be used - (java expects a String)
 #' @param tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 #' @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
@@ -49,7 +49,7 @@ doc_by_name = function(title, tokenDirectory=.tokenDirectory(), disabled=getOpti
 
 #' docFromTemplate:
 #' 
-#' Search for a document by name or create one if missing.
+#' Get a document by name or create one from a template if missing.
 #' @param title a document title. If there is an exact match in google drive then that document will be used
 #' otherwise a new one will be created. - (java expects a String)
 #' @param templateUri the share link (or document id) of a template google document - (java expects a String)

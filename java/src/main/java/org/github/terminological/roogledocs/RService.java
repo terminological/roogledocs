@@ -17,13 +17,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -32,8 +36,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -103,6 +105,41 @@ public class RService {
     
     protected Path getTokenDirectory() {return tokenDirectory;}
     
+    public static class Exceptional<X> {
+    	Exception e;
+    	X result;
+    	
+    	public static <Y> Supplier<Exceptional<Y>> unsafe(UnsafeFunction<Y> function) {
+    		return () -> of(function);
+    	}
+    	
+    	public static <Y> Exceptional<Y> of(UnsafeFunction<Y> function) {
+    		Exceptional<Y> ex = new Exceptional<>();
+    		try {
+    			ex.result = function.call();
+    		} catch (RuntimeException f) {
+    			throw f;
+    		} catch (Exception f) {
+    			ex.e = f;
+    		}
+    		return ex;
+    	}
+    	
+    	public X result() throws Exception {
+    		if (e != null) throw e;
+    		return result;
+    	}
+    	
+    	public Optional<X> opt() {
+    		if (e != null) return Optional.empty();
+    		return Optional.ofNullable(result);
+    	}
+    }
+    
+    private static interface UnsafeFunction<X> {
+    	public X call() throws Exception;
+    }
+    
     // do auth stuff when RoogleDocs first called.
     private void initialiseService() throws IOException, GeneralSecurityException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -131,9 +168,35 @@ public class RService {
 //                .setRequestInitializer(timeout)
                 .build();
         // TODO: need to override local server reciever to time out if no response
-        // as this can hand R process.
+        // as this can hang R process.
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        AuthorizationCodeInstalledApp loginApp = new AuthorizationCodeInstalledApp(flow, receiver);
+        
+        Credential credential;
+        try { 
+        	flow.loadCredential("user");
+        } catch (IOException e) {
+        	log.warn("Existing credentials could not be loaded and have been deleted.");
+        	deregister(tokenDirectory.toString());
+        }
+        
+		try {
+			credential = CompletableFuture
+					.supplyAsync(Exceptional.unsafe(() -> loginApp.authorize("user")))
+					.get(20, TimeUnit.SECONDS)
+					.result();
+		} catch (InterruptedException | TimeoutException e) {
+			try {
+				receiver.stop();
+			} catch (IOException e2) {}
+			throw new IOException("Authorisation interrupted or timed out.", e.getCause() == null ? e : e.getCause());
+		} catch (Exception e) {
+			try {
+				receiver.stop();
+			} catch (IOException e2) {}
+			throw new IOException("Problem authenticating using existing credentials.", e.getCause() == null ? e : e.getCause());
+		} 
+		
         //returns an authorized Credential object.
         
         service = new Docs.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)

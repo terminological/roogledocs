@@ -2,7 +2,7 @@
 
 \name{doc_from_template}
 \alias{doc_from_template}
-\title{Search for a document by name or create one if missing.}
+\title{Get a document by name or create one from a template if missing.}
 \usage{doc_from_template(
 	title,
 	templateUri,

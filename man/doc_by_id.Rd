@@ -2,7 +2,7 @@
 
 \name{doc_by_id}
 \alias{doc_by_id}
-\title{Select a document by its share url or id.}
+\title{Get a document by id or sharing link.}
 \usage{doc_by_id(
 	shareUrlOrDocId,
 	tokenDirectory=.tokenDirectory(),

@@ -2,7 +2,7 @@
 
 \name{doc_by_name}
 \alias{doc_by_name}
-\title{Search for a document by name or create one if missing.}
+\title{Get a document by name or create a blank document if missing.}
 \usage{doc_by_name(
 	title,
 	tokenDirectory=.tokenDirectory(),

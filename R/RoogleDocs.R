@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.0.3.9999
+#' Version: 0.1.0
 #' 
-#' Generated: 2022-07-08T22:54:10.943
+#' Generated: 2022-08-08T17:07:49.307
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe one day slides)
@@ -48,7 +48,10 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	
 	#' @description 
 	#' reauth: 
-	#' Reauthenticate the service deleting the existing OAuth tokens. Generally this would only be needed if 
+	#' Reauthenticate roogledocs
+	#' 
+	#' Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+	#' Generally this would only be needed if 
 	#' application permission updates are needed in which case the directory can be manually deleted anyway,
 	#' or if you want to switch google user without using a different tokenDirectory.
 	#' @return R6 RoogleDocs object: 
@@ -76,7 +79,9 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' enable: 
-	#' Enables roogledocs. It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
+	#' Enables roogledocs for this document. 
+	#' 
+	#' It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
 	enable = function() {
@@ -102,7 +107,9 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' disable: 
-	#' disables roogledocs temporarily only for this document. While disabled all calls to roogledocs will silently fail.
+	#' Disables roogledocs temporarily for this document. 
+	#' 
+	#' While disabled all calls to roogledocs will silently fail.
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
 	disable = function() {
@@ -185,7 +192,7 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' findOrCloneTemplate: 
-	#' Search for or create a document as a copy of a template document if it is missing.
+	#' Get a document by name or create one from a template if missing.
 	#' @param title a document title. If there is an exact match in google drive then that document will be used
 	#' otherwise a new one will be created. - (java expects a String)
 	#' @param templateUri the share link (or document id) of a template google document - (java expects a String)
@@ -216,6 +223,8 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' tagsDefined: 
+	#' List all tags
+	#' 
 	#' Finds tags defined in the current document
 	#' @return RDataframe: 
 	#' a dataframe containing tag and count columns
@@ -233,6 +242,8 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateTaggedText: 
+	#' Relace tags for text
+	#' 
 	#' Substitutes all occurrences of {{tag-name}} with the text parameter.
 	#' @param text the value to replace the tag with (e.g. a result from analysis) (cannot be empty) - (java expects a String)
 	#' @param tagName the tag name - (java expects a String)
@@ -263,10 +274,15 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateTaggedImage: 
+	#' Replace a tag with an image.
+	#' 
 	#' Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
 	#' in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
-	#' by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes will
-	#' change dynamically. You have been warned.
+	#' by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
+	#' change dynamically.
+	#' 
+	#' The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
+	#' google doc, and one completed the temporary file deleted from your google drive.
 	#' @param absoluteFilePath a file path to an png image file. - (java expects a String)
 	#' @param tagName the tag name - (java expects a String)
 	#' @param dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to 300) - (java expects a double)
@@ -298,7 +314,9 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' revertTags: 
-	#' remove all tagged text and images inserted by roogledocs and returns the bare document. This does not affect figures and tables inserted by index (i.e. without tags) 
+	#' Revert tagged text and images.
+	#' 
+	#' Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
 	#' This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
@@ -325,7 +343,9 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateTable: 
-	#' Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+	#' Update or insert a formatted table into the document. 
+	#' 
+	#' The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
 	#' @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 	#' rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize. - (java expects a RDataframe)
 	#' @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to -1) - (java expects a int)
@@ -360,7 +380,10 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateFigure: 
-	#' Update or insert a figure in the document.
+	#' Update or insert a figure in the document from a locally stored PNG.
+	#' 
+	#' This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+	#' google document. Once this is complete the temporary google drive copy of the image is deleted.
 	#' @param absoluteFilePath a file path to an png image file (only png is supported at this point). - (java expects a String)
 	#' @param figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to -1) - (java expects a int)
 	#' @param dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to 300) - (java expects a double)

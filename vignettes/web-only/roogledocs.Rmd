@@ -33,8 +33,8 @@ options("roogledocs.tokenDirectory"="~/.roogledocs-test")
 ```
 
 ```{r}
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$new()
+J = roogledocs::JavaApi$get(logLevel = "DEBUG")
+x = J$RoogleDocs$new()
 ```
 
 Most of the time you will be creating or updating a single document. For this vignettes sake it is useful to be able to delete previous versions. The posint of roogledocs though is actually to work with a continuously updated document and therefore deleting documents is usually not what you want to do. Likewise for this vignette it is useful to get a copy of the googledoc as a PDF from R. This may not be that useful in real life. The main function here though is the "findOfCloneTemplate" which lets you find a google doc by name, or clone a template document if you can't find it. There are also equivalent methods to find or create blank documents, or just find google docs by name or sharing URL if they already exist.

@@ -19,6 +19,8 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.Size;
@@ -52,6 +54,7 @@ public class RoogleDocs {
 	RDocument document;
 	boolean disabled;
 	String tokenDirectory;
+	static Logger log = LoggerFactory.getLogger(RoogleDocs.class);
 	
 	private RDocument rdoc() throws IOException {
 		if (document == null) throw new IOException("The google document has not been defined yet - use the `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` method"); 
@@ -77,9 +80,13 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Reauthenticate the service deleting the existing OAuth tokens. Generally this would only be needed if 
+	 * Reauthenticate roogledocs
+	 * 
+	 * Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+	 * Generally this would only be needed if 
 	 * application permission updates are needed in which case the directory can be manually deleted anyway,
-	 * or if you want to switch google user without using a different tokenDirectory.  
+	 * or if you want to switch google user without using a different tokenDirectory.
+	 * 
 	 * @return a fluent method
 	 * @throws IOException if there is a problem deleting the old tokens
 	 * @throws GeneralSecurityException if there is a problem authenticating
@@ -94,7 +101,10 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Enables roogledocs. It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document. 
+	 * Enables roogledocs for this document. 
+	 * 
+	 * It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
+	 *  
 	 * @return itself - a fluent method
 	 * @throws GeneralSecurityException if the client cannot authenticate
 	 * @throws IOException if there is a problem communicating with google servers
@@ -107,7 +117,9 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * disables roogledocs temporarily only for this document. While disabled all calls to roogledocs will silently fail. 
+	 * Disables roogledocs temporarily for this document. 
+	 * 
+	 * While disabled all calls to roogledocs will silently fail. 
 	 * @return itself - a fluent method
 	 */
 	@RMethod 
@@ -118,9 +130,10 @@ public class RoogleDocs {
 	
 	/**
 	 * Select a document by its share url or id.
+	 * 
 	 * @param shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method
 	 * @return itself - a fluent method
-	 * @throws IOException if there is a problem communicating with google servers
+	 * @throws IOException if there is a problem communicating with google servers, or the document does not exist, or is not a google doc
 	 */
 	@RMethod
 	public RoogleDocs withDocument(String shareUrlOrDocId) throws IOException {
@@ -130,12 +143,13 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Select a document by its share url or id.
+	 * Get a document by id or sharing link.
+	 * 
 	 * @param shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method
 	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
 	 * @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)`
 	 * @return itself - a fluent method
-	 * @throws IOException if there is a problem communicating with google servers
+	 * @throws IOException if there is a problem communicating with google servers, or the document does not exist, or is not a google doc
 	 * @throws GeneralSecurityException 
 	 */
 	@RMethod
@@ -164,7 +178,8 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Search for a document by name or create one if missing.
+	 * Get a document by name or create a blank document if missing.
+	 * 
 	 * @param title a document title. If there is an exact match in google drive then that document will be used
 	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
 	 * @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)`
@@ -185,7 +200,8 @@ public class RoogleDocs {
 	
 	
 	/**
-	 * Search for or create a document as a copy of a template document if it is missing.
+	 * Get a document by name or create one from a template if missing.
+	 * 
 	 * @param title a document title. If there is an exact match in google drive then that document will be used
 	 * otherwise a new one will be created.
 	 * @param templateUri the share link (or document id) of a template google document 
@@ -200,7 +216,8 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Search for a document by name or create one if missing.
+	 * Get a document by name or create one from a template if missing.
+	 * 
 	 * @param title a document title. If there is an exact match in google drive then that document will be used
 	 * otherwise a new one will be created.
 	 * @param templateUri the share link (or document id) of a template google document 
@@ -224,6 +241,7 @@ public class RoogleDocs {
 	
 	/**
 	 * Search for documents with the given title
+	 * 
 	 * @param titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.
 	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
 	 * @return a dataframe containing "id" and "name" columns
@@ -245,7 +263,10 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * List all tags
+	 * 
 	 * Finds tags defined in the current document
+	 * 
 	 * @return a dataframe containing "tag" and "count" columns
 	 * @throws IOException if there is a problem communicating with google servers, or the text is blank
 	 */
@@ -261,7 +282,10 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * Relace tags for text
+	 * 
 	 * Substitutes all occurrences of {{tag-name}} with the text parameter.
+	 * 
 	 * @param tagName the tag name
 	 * @param text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)
 	 * @return itself - a fluent method
@@ -277,10 +301,16 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * Replace a tag with an image.
+	 * 
 	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
 	 * in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
-	 * by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes will
-	 * change dynamically. You have been warned.
+	 * by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
+	 * change dynamically.
+	 * 
+	 * The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
+	 * google doc, and one completed the temporary file deleted from your google drive. 
+	 * 
 	 * @param tagName the tag name
 	 * @param absoluteFilePath a file path to an png image file.
 	 * @param dpi the dots per inch of the image in the document (defaults to 300)
@@ -340,8 +370,11 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * remove all tagged text and images inserted by roogledocs and returns the bare document. This does not affect figures and tables inserted by index (i.e. without tags) 
-	 * This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag. 
+	 * Revert tagged text and images.
+	 * 
+	 * Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
+	 * This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
+	 *  
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
@@ -353,7 +386,10 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+	 * Update or insert a formatted table into the document. 
+	 * 
+	 * The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+	 * 
 	 * @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document.
 	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
@@ -372,7 +408,11 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Update or insert a figure in the document. 
+	 * Update or insert a figure in the document from a locally stored PNG.
+	 * 
+	 * This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+	 * google document. Once this is complete the temporary google drive copy of the image is deleted. 
+	 * 
 	 * @param figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. 
 	 * @param absoluteFilePath a file path to an png image file (only png is supported at this point).
 	 * @param dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi.

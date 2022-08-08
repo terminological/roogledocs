@@ -25,9 +25,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 
-Version: 0.0.3.9999
+Version: 0.1.0
 
-Generated: 2022-07-08T22:54:10.676
+Generated: 2022-08-08T17:07:49.201
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}
@@ -81,7 +81,7 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 	\if{html}{\out{<a id="method-RoogleDocs-docById"></a>}}
 	
 	\subsection{Method \code{RoogleDocs$docById()}}{
-		Select a document by its share url or id.
+		Get a document by id or sharing link.
 	
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -113,7 +113,7 @@ J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
 	\if{html}{\out{<a id="method-RoogleDocs-docByName"></a>}}
 	
 	\subsection{Method \code{RoogleDocs$docByName()}}{
-		Search for a document by name or create one if missing.
+		Get a document by name or create a blank document if missing.
 	
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -145,7 +145,7 @@ J$RoogleDocs$docByName(title, tokenDirectory, disabled)
 	\if{html}{\out{<a id="method-RoogleDocs-docFromTemplate"></a>}}
 	
 	\subsection{Method \code{RoogleDocs$docFromTemplate()}}{
-		Search for a document by name or create one if missing.
+		Get a document by name or create one from a template if missing.
 	
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}

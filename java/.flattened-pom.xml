@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.terminological</groupId>
   <artifactId>roogledocs</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>R Google Docs integration</name>
   <description>R wrapper for Google docs API java library</description>
   <dependencies>

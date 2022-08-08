@@ -4,9 +4,9 @@
 #' @description
 #' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.0.3.9999
+#' Version: 0.1.0
 #'
-#' Generated: 2022-07-08T22:54:10.734
+#' Generated: 2022-08-08T17:07:49.242
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import huxtable
@@ -67,8 +67,8 @@ JavaApi = R6::R6Class("JavaApi", public=list(
  		if (is.null(JavaApi$singleton)) stop("Startup the java api with JavaApi$get() rather than using this constructor directly")
  	
  		message("Initialising R Wrapper For Googledocs Java Library")
- 		message("Version: 0.0.3.9999")
-		message("Generated: 2022-07-08T22:54:10.735")
+ 		message("Version: 0.1.0")
+		message("Generated: 2022-08-08T17:07:49.243")
  	
  	
  		tryCatch({
@@ -92,9 +92,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.0.3.9999");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-07-08T22:54:10.735");
-		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.0.3-SNAPSHOT");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.1.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-08-08T17:07:49.243");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.1.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -513,7 +513,7 @@ JavaApi$rebuildDependencies = function( ... ) {
 
 # package working directory
 .workingDir = function() {
-	tmp = path.expand(rappdirs::user_cache_dir("roogledocs-0.0.3.9999"))
+	tmp = path.expand(rappdirs::user_cache_dir("roogledocs-0.1.0"))
 	fs::dir_create(tmp)
 	return(tmp)
 }
@@ -558,11 +558,11 @@ JavaApi$rebuildDependencies = function( ... ) {
 	as.POSIXct(file.info(original)$mtime) < as.POSIXct(file.info(test)$mtime)
 }
 
-# gets the pom.xml file for io.github.terminological:roogledocs:0.0.3-SNAPSHOT from a thin jar
+# gets the pom.xml file for io.github.terminological:roogledocs:0.1.0 from a thin jar
 .extractPom = function() {
 	dir = .workingDir()
-	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.0.3-SNAPSHOT\\.jar", full.names = TRUE)
-	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.0.3-SNAPSHOT")
+	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.1.0\\.jar", full.names = TRUE)
+	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.1.0")
 	jarLoc = jarLoc[[1]]
 	pomPath = paste0(dir,"/pom.xml")
 	if (!.fileNewer(jarLoc, pomPath)) {
@@ -572,13 +572,13 @@ JavaApi$rebuildDependencies = function( ... ) {
 	return(pomPath)
 }
 
-# gets the pom.xml file for io.github.terminological:roogledocs:0.0.3-SNAPSHOT which is the library version we exepct to be bundled in the 
+# gets the pom.xml file for io.github.terminological:roogledocs:0.1.0 which is the library version we exepct to be bundled in the 
 .extractSources = function() {
 	dir = .workingDir()
-	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.0.3-SNAPSHOT-src\\.jar", full.names = TRUE)
-	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.0.3-SNAPSHOT-src.jar")
+	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.1.0-src\\.jar", full.names = TRUE)
+	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.1.0-src.jar")
 	jarLoc = jarLoc[[1]]
-	pomPath = paste0(dir,"/roogledocs-0.0.3-SNAPSHOT/pom.xml")
+	pomPath = paste0(dir,"/roogledocs-0.1.0/pom.xml")
 	if (!.fileNewer(jarLoc, pomPath)) {
 		utils::unzip(jarLoc, exdir = dir)
 		if (!file.exists(pomPath)) stop("couldn't extract source files from ",jarLoc)
@@ -588,7 +588,7 @@ JavaApi$rebuildDependencies = function( ... ) {
 
 # executes maven assembly plugin and relocates resulting fat jar into java library directory
 .compileFatJar = function(pomPath, ...) {
-	fatJarFinal = fs::path(.here("java"),"roogledocs-0.0.3-SNAPSHOT-jar-with-dependencies.jar")
+	fatJarFinal = fs::path(.here("java"),"roogledocs-0.1.0-jar-with-dependencies.jar")
 	if (!.fileNewer(pomPath, fatJarFinal)) {
 		message("Compiling java library and downloading dependencies, please be patient.")
 		.executeMaven(
@@ -601,7 +601,7 @@ JavaApi$rebuildDependencies = function( ... ) {
 			...
 		)
 		message("Compilation complete")
-		fatJar = fs::path_norm(fs::path(pomPath, "../target/roogledocs-0.0.3-SNAPSHOT-jar-with-dependencies.jar"))
+		fatJar = fs::path_norm(fs::path(pomPath, "../target/roogledocs-0.1.0-jar-with-dependencies.jar"))
 		fs::file_move(fatJar, fatJarFinal)
 	}
 	return(fatJarFinal)

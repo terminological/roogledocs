@@ -3,6 +3,7 @@ package org.github.terminological.roogledocs;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
+import org.github.terminological.roogledocs.RService.Exceptional;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -209,7 +211,8 @@ class TestApi {
 	
 	@Test
 	final void testClone() throws IOException {
-		RDocument d = singleton.getOrClone("roogledocs-demo", "https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing");
+		//RDocument d = 
+		singleton.getOrClone("roogledocs-demo", "https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing");
 		// d.saveAsPdf("/home/terminological/tmp/template.pdf");
 	}
 	
@@ -244,5 +247,19 @@ class TestApi {
 				.withCol("fontFace", RVector.with("plain", "plain", "plain", "bold", "italic", "underlined", "plain"));
 
 		test2.appendText(df2);
+	}
+	
+	public static void main(String[] args) throws IOException, GeneralSecurityException {
+		Path tkn  = //Files.createTempDirectory("test-token");
+			Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
+		// RService singleton = 
+		RService.with(tkn.toString());
+		Files.walk(tkn).filter(p -> p != tkn).forEach(p -> {
+			try {
+				Files.deleteIfExists(p);
+			} catch (IOException e) {
+			}
+		});
+		Files.delete(tkn);
 	}
 }
