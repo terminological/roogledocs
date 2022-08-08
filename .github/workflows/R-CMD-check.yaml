@@ -81,7 +81,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'StoredCredential'
-          fileDir: '~/.roogledocs-test'
+          fileDir: '.roogledocs-test'
           encodedString: ${{ secrets.STOREDCREDENTIAL }}
 
       - uses: r-lib/actions/check-r-package@v2
