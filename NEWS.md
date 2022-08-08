@@ -11,8 +11,10 @@
      - replace double brace tags with test
      - append formatted text to document
      - CI and testing setup.
+     - fix rJava hang if authentication fails / is not completed. times out after 20 seconds.
      
 * TODO prior to general usefulness: 
      - Verify app with google
-     - investigate rJava hang if authentication fails / is not completed. (RService$initialiseService()) Some sort fo timeout required
      - add testers here:  https://console.cloud.google.com/apis/credentials/consent?project=roogledocs
+     - investigate https://api.imgbb.com/ instead of google drive...?
+     
