@@ -41,8 +41,8 @@
 
 <meta property="og:title" content="RoogleDocs — RoogleDocs" />
 <meta property="og:description" content="Programmatically substitute images, data and tables into a google doc.
-Version: 0.0.3.9999
-Generated: 2022-07-08T00:08:10.518" />
+Version: 0.1.0
+Generated: 2022-08-11T15:57:43.335589" />
 
 
 
@@ -74,7 +74,7 @@ Generated: 2022-07-08T00:08:10.518" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">roogledocs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -101,6 +101,9 @@ Generated: 2022-07-08T00:08:10.518" />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -124,8 +127,8 @@ Generated: 2022-07-08T00:08:10.518" />
 
     <div class="ref-description">
     <p>Programmatically substitute images, data and tables into a google doc.</p>
-<p>Version: 0.0.3.9999</p>
-<p>Generated: 2022-07-08T00:08:10.518</p>
+<p>Version: 0.1.0</p>
+<p>Generated: 2022-08-11T15:57:43.335589</p>
     </div>
 
 
@@ -134,7 +137,7 @@ Generated: 2022-07-08T00:08:10.518" />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>tokenDirectory</th>
-      <td><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to normalizePath('~/.roogledocs', mustWork = FALSE)) - (java expects a String)</p></td>
+      <td><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></td>
     </tr>
     <tr>
       <th>disabled</th>
@@ -162,7 +165,11 @@ can be updated independently of the analysis, by the wider team.</p>
 <li><p><a href='#method-new'><code>J$RoogleDocs$new(tokenDirectory, disabled)</code></a></p></li>
 </ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Static methods</h3>
 <p></p><ul>
-<li><p>none</p></li>
+<li><p><a href='#method-docById'><code>J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-docByName'><code>J$RoogleDocs$docByName(title, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-docFromTemplate'><code>J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-searchForDocuments'><code>J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)</code></a></p></li>
+<li><p><a href='#method-deleteDocument'><code>J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)</code></a></p></li>
 </ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Instance methods</h3>
 <p></p><ul>
 <li><p><a href='#method-reauth'><code>instance$reauth()</code></a></p></li>
@@ -171,7 +178,6 @@ can be updated independently of the analysis, by the wider team.</p>
 <li><p><a href='#method-withDocument'><code>instance$withDocument(shareUrlOrDocId)</code></a></p></li>
 <li><p><a href='#method-findOrCreateDocument'><code>instance$findOrCreateDocument(title)</code></a></p></li>
 <li><p><a href='#method-findOrCloneTemplate'><code>instance$findOrCloneTemplate(title, templateUri)</code></a></p></li>
-<li><p><a href='#method-searchForDocuments'><code>instance$searchForDocuments(titleMatch)</code></a></p></li>
 <li><p><a href='#method-tagsDefined'><code>instance$tagsDefined()</code></a></p></li>
 <li><p><a href='#method-updateTaggedText'><code>instance$updateTaggedText(text, tagName)</code></a></p></li>
 <li><p><a href='#method-updateTaggedImage'><code>instance$updateTaggedImage(absoluteFilePath, tagName, dpi)</code></a></p></li>
@@ -179,7 +185,6 @@ can be updated independently of the analysis, by the wider team.</p>
 <li><p><a href='#method-updateTable'><code>instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)</code></a></p></li>
 <li><p><a href='#method-updateFigure'><code>instance$updateFigure(absoluteFilePath, figureIndex, dpi)</code></a></p></li>
 <li><p><a href='#method-saveAsPdf'><code>instance$saveAsPdf(absoluteFilePath)</code></a></p></li>
-<li><p><a href='#method-deleteDocument'><code>instance$deleteDocument(docName, areYouSure)</code></a></p></li>
 <li><p><a href='#method-appendText'><code>instance$appendText(text, style)</code></a></p></li>
 <li><p><a href='#method-appendFormattedParagraph'><code>instance$appendFormattedParagraph(formattedTextDf)</code></a></p></li>
 <li><p><code>instance$clone()</code></p></li>
@@ -189,7 +194,7 @@ can be updated independently of the analysis, by the wider team.</p>
 <p><hr>
 	<a id="method-new"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>no description</p>	
+<p>Create a Roogledocs object for managing the interaction.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -199,7 +204,7 @@ can be updated independently of the analysis, by the wider team.</p>
 	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><ul>
-<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to normalizePath('~/.roogledocs', mustWork = FALSE)) - (java expects a String)</p></li>
+<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
 <li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
 </ul><p></div></p>
 
@@ -212,7 +217,9 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-reauth"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>reauth()</code></h3>
-<p>Reauthenticate the service deleting the existing OAuth tokens. Generally this would only be needed if 
+<p>Reauthenticate roogledocs</p>
+<p>Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+Generally this would only be needed if 
 application permission updates are needed in which case the directory can be manually deleted anyway,
 or if you want to switch google user without using a different tokenDirectory.</p>	
 
@@ -237,7 +244,8 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-enable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>enable()</code></h3>
-<p>Enables roogledocs. It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.</p>	
+<p>Enables roogledocs for this document.</p>
+<p>It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -260,7 +268,8 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-disable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>disable()</code></h3>
-<p>disables roogledocs temporarily only for this document. While disabled all calls to roogledocs will silently fail.</p>	
+<p>Disables roogledocs temporarily for this document.</p>
+<p>While disabled all calls to roogledocs will silently fail.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -304,9 +313,33 @@ not available
 <p><div class="r example copy"></p><pre>
 not available
 			</pre><p></div></p><p></p><p><hr>
+	<a id="method-docById"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docById()</code></h3>
+<p>Get a document by id or sharing link.</p>	
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docById</span><span class='op'>(</span><span class='va'>shareUrlOrDocId</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><ul>
+<li><p>shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method - (java expects a String)</p></li>
+<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
+<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
+</ul><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>
+not available
+			</pre><p></div></p><p></p><p><hr>
 	<a id="method-findOrCreateDocument"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>findOrCreateDocument()</code></h3>
-<p>Search for or create a document if it is missing.</p>	
+<p>Search for a document by name or create one if missing.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -328,9 +361,33 @@ otherwise a new one will be created. - (java expects a String)</p></li>
 <p><div class="r example copy"></p><pre>
 not available
 			</pre><p></div></p><p></p><p><hr>
+	<a id="method-docByName"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docByName()</code></h3>
+<p>Get a document by name or create a blank document if missing.</p>	
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docByName</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><ul>
+<li><p>title a document title. If there is an exact match in google drive then that document will be used - (java expects a String)</p></li>
+<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
+<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
+</ul><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>
+not available
+			</pre><p></div></p><p></p><p><hr>
 	<a id="method-findOrCloneTemplate"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>findOrCloneTemplate()</code></h3>
-<p>Search for or create a document as a copy of a template document if it is missing.</p>	
+<p>Get a document by name or create one from a template if missing.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -353,6 +410,32 @@ otherwise a new one will be created. - (java expects a String)</p></li>
 <p><div class="r example copy"></p><pre>
 not available
 			</pre><p></div></p><p></p><p><hr>
+	<a id="method-docFromTemplate"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docFromTemplate()</code></h3>
+<p>Get a document by name or create one from a template if missing.</p>	
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docFromTemplate</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>templateUri</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><ul>
+<li><p>title a document title. If there is an exact match in google drive then that document will be used
+otherwise a new one will be created. - (java expects a String)</p></li>
+<li><p>templateUri the share link (or document id) of a template google document - (java expects a String)</p></li>
+<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
+<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
+</ul><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>
+not available
+			</pre><p></div></p><p></p><p><hr>
 	<a id="method-searchForDocuments"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>searchForDocuments()</code></h3>
 <p>Search for documents with the given title</p>	
@@ -360,13 +443,13 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
-<span class='va'>instance</span><span class='op'>$</span><span class='fu'>searchForDocuments</span><span class='op'>(</span><span class='va'>titleMatch</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>searchForDocuments</span><span class='op'>(</span><span class='va'>titleMatch</span>, <span class='va'>tokenDirectory</span><span class='op'>)</span>
         </pre><p></div></p>
 	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><ul>
 <li><p>titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)</p></li>
+<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
 </ul><p></div></p>
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
@@ -378,6 +461,7 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-tagsDefined"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>tagsDefined()</code></h3>
+<p>List all tags</p>
 <p>Finds tags defined in the current document</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -401,6 +485,7 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-updateTaggedText"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTaggedText()</code></h3>
+<p>Relace tags for text</p>
 <p>Substitutes all occurrences of tag-name with the text parameter.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -425,10 +510,13 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-updateTaggedImage"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTaggedImage()</code></h3>
+<p>Replace a tag with an image.</p>
 <p>Substitutes all occurrences of tag-name with an image from the local storage. There are limited circumstances
 in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
-by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes will
-change dynamically. You have been warned.</p>	
+by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
+change dynamically.</p>
+<p>The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
+google doc, and one completed the temporary file deleted from your google drive.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -453,7 +541,8 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-revertTags"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>revertTags()</code></h3>
-<p>remove all tagged text and images inserted by roogledocs and returns the bare document. This does not affect figures and tables inserted by index (i.e. without tags) 
+<p>Revert tagged text and images.</p>
+<p>Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
 This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -477,7 +566,8 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-updateTable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTable()</code></h3>
-<p>Update or insert a formatted table into the document. The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.</p>	
+<p>Update or insert a formatted table into the document.</p>
+<p>The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -504,7 +594,9 @@ not available
 			</pre><p></div></p><p></p><p><hr>
 	<a id="method-updateFigure"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateFigure()</code></h3>
-<p>Update or insert a figure in the document.</p>	
+<p>Update or insert a figure in the document from a locally stored PNG.</p>
+<p>This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+google document. Once this is complete the temporary google drive copy of the image is deleted.</p>	
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
@@ -557,18 +649,19 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
-<span class='va'>instance</span><span class='op'>$</span><span class='fu'>deleteDocument</span><span class='op'>(</span><span class='va'>docName</span>, <span class='va'>areYouSure</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>deleteDocument</span><span class='op'>(</span><span class='va'>docName</span>, <span class='va'>areYouSure</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
         </pre><p></div></p>
 	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><ul>
 <li><p>docName - the name of a document to delete. must be an exact and unique match. - (java expects a String)</p></li>
 <li><p>areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)) - (java expects a boolean)</p></li>
+<li><p>tokenDirectory - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
+<li><p>disabled - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
 </ul><p></div></p>
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>R6 RoogleDocs object: itself - a fluent method</p>
+<p>void: nothing, called for side efffects</p>
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
 <p><div class="r example copy"></p><pre>
@@ -646,11 +739,23 @@ not available
 <span class='co'>## -----------------------------------</span>
 
 <span class='co'>## -----------------------------------</span>
+<span class='co'>## Method `RoogleDocs$docById`</span>
+<span class='co'>## -----------------------------------</span>
+
+<span class='co'>## -----------------------------------</span>
 <span class='co'>## Method `RoogleDocs$findOrCreateDocument`</span>
 <span class='co'>## -----------------------------------</span>
 
 <span class='co'>## -----------------------------------</span>
+<span class='co'>## Method `RoogleDocs$docByName`</span>
+<span class='co'>## -----------------------------------</span>
+
+<span class='co'>## -----------------------------------</span>
 <span class='co'>## Method `RoogleDocs$findOrCloneTemplate`</span>
+<span class='co'>## -----------------------------------</span>
+
+<span class='co'>## -----------------------------------</span>
+<span class='co'>## Method `RoogleDocs$docFromTemplate`</span>
 <span class='co'>## -----------------------------------</span>
 
 <span class='co'>## -----------------------------------</span>

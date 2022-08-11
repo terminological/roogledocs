@@ -21,7 +21,8 @@
 # they have been packaged into a XX-sources.jar and placed in inst/java
 ^java/src$
 ^java/pom.xml$
-
+^java/.factorypath$
+^java/.flattened-pom.xml$
 
 index.html
 

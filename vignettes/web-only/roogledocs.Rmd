@@ -7,8 +7,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 resource_files:
-  - images/example-template-doc.pdf
-  - images/example-after-update.pdf
+  - docs/articles/example-template-doc.pdf
+  - docs/articles/example-after-update.pdf
 ---
 
 ```{r setup, include=FALSE}

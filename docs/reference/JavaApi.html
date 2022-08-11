@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>R wrapper for Googledocs java library — JavaApi • roogledocs</title>
+<title>R Wrapper For Googledocs Java Library — JavaApi • roogledocs</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="R wrapper for Googledocs java library — JavaApi" />
+<meta property="og:title" content="R Wrapper For Googledocs Java Library — JavaApi" />
 <meta property="og:description" content="Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
-Version: 0.0.3.9999
-Generated: 2022-07-08T00:08:10.373" />
+Version: 0.1.0
+Generated: 2022-08-11T15:57:43.205727" />
 
 
 
@@ -74,7 +74,7 @@ Generated: 2022-07-08T00:08:10.373" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">roogledocs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -101,6 +101,9 @@ Generated: 2022-07-08T00:08:10.373" />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -117,15 +120,15 @@ Generated: 2022-07-08T00:08:10.373" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>R wrapper for Googledocs java library</h1>
+    <h1>R Wrapper For Googledocs Java Library</h1>
     
     <div class="hidden name"><code>JavaApi.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.</p>
-<p>Version: 0.0.3.9999</p>
-<p>Generated: 2022-07-08T00:08:10.373</p>
+<p>Version: 0.1.0</p>
+<p>Generated: 2022-08-11T15:57:43.205727</p>
     </div>
 
 
@@ -153,13 +156,18 @@ Generated: 2022-07-08T00:08:10.373" />
     <p></p><ul>
 <li><p><code>JavaApi$get()</code></p></li>
 <li><p><a href='#method-RoogleDocs-new'><code>J$RoogleDocs$new(tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-RoogleDocs-docById'><code>J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-RoogleDocs-docByName'><code>J$RoogleDocs$docByName(title, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-RoogleDocs-docFromTemplate'><code>J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)</code></a></p></li>
+<li><p><a href='#method-RoogleDocs-searchForDocuments'><code>J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)</code></a></p></li>
+<li><p><a href='#method-RoogleDocs-deleteDocument'><code>J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)</code></a></p></li>
 </ul>
 	
 
 <p><hr>
 	<a id="method-RoogleDocs-new"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$new()</code></h3>
-<p>no description</p>	
+<p>Create a Roogledocs object for managing the interaction.</p>	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
@@ -169,7 +177,7 @@ Generated: 2022-07-08T00:08:10.373" />
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 				
-					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to normalizePath('~/.roogledocs', mustWork = FALSE)) - (java expects a String)
+					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 					disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
 				
 			
@@ -177,6 +185,123 @@ Generated: 2022-07-08T00:08:10.373" />
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object:</p><p></p>
+
+<p><hr>
+	<a id="method-RoogleDocs-docById"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$docById()</code></h3>
+<p>Get a document by id or sharing link.</p>	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docById</span><span class='op'>(</span><span class='va'>shareUrlOrDocId</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+				
+					shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method - (java expects a String)
+					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
+					disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
+				
+			
+</dl><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p><p></p>
+
+<p><hr>
+	<a id="method-RoogleDocs-docByName"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$docByName()</code></h3>
+<p>Get a document by name or create a blank document if missing.</p>	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docByName</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+				
+					title a document title. If there is an exact match in google drive then that document will be used - (java expects a String)
+					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
+					disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
+				
+			
+</dl><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p><p></p>
+
+<p><hr>
+	<a id="method-RoogleDocs-docFromTemplate"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$docFromTemplate()</code></h3>
+<p>Get a document by name or create one from a template if missing.</p>	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docFromTemplate</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>templateUri</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+				
+					title a document title. If there is an exact match in google drive then that document will be used
+otherwise a new one will be created. - (java expects a String)
+					templateUri the share link (or document id) of a template google document - (java expects a String)
+					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
+					disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
+				
+			
+</dl><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>R6 RoogleDocs object: itself - a fluent method</p><p></p>
+
+<p><hr>
+	<a id="method-RoogleDocs-searchForDocuments"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$searchForDocuments()</code></h3>
+<p>Search for documents with the given title</p>	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>searchForDocuments</span><span class='op'>(</span><span class='va'>titleMatch</span>, <span class='va'>tokenDirectory</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+				
+					titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)
+					tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
+				
+			
+</dl><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>RDataframe: a dataframe containing id and name columns</p><p></p>
+
+<p><hr>
+	<a id="method-RoogleDocs-deleteDocument"></a></p>	
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>RoogleDocs$deleteDocument()</code></h3>
+<p>Deletes a google document by name.</p>	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'>JavaApi</span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>deleteDocument</span><span class='op'>(</span><span class='va'>docName</span>, <span class='va'>areYouSure</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+        </pre><p></div></p>
+	
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+				
+					docName - the name of a document to delete. must be an exact and unique match. - (java expects a String)
+					areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)) - (java expects a boolean)
+					tokenDirectory - (defaulting to .tokenDirectory()) - (java expects a String)
+					disabled - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
+				
+			
+</dl><p></div></p>
+
+<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>void: nothing, called for side efffects</p><p></p>
 
 
 

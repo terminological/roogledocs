@@ -3,7 +3,7 @@
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
 # Version: 0.1.0
-# Generated: 2022-08-08T17:07:49.276
+# Generated: 2022-08-11T15:57:43.296270
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----

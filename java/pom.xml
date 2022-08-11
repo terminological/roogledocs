@@ -105,7 +105,7 @@ can be updated independently of the analysis, by the wider team.
 						<url>https://terminological.github.io/roogledocs/docs/</url>
 						<doi>10.5281/zenodo.6576096</doi>
 						<debug>false</debug>
-						<usePkgdown>false</usePkgdown>
+						<usePkgdown>true</usePkgdown>
 						<useJavadoc>false</useJavadoc>
 <!-- 						<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
 						<rjavaOpts>

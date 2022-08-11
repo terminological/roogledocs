@@ -6,7 +6,7 @@
 #'
 #' Version: 0.1.0
 #'
-#' Generated: 2022-08-08T17:07:49.242
+#' Generated: 2022-08-11T15:57:43.245245
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import huxtable
@@ -68,7 +68,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
  	
  		message("Initialising R Wrapper For Googledocs Java Library")
  		message("Version: 0.1.0")
-		message("Generated: 2022-08-08T17:07:49.243")
+		message("Generated: 2022-08-11T15:57:43.245575")
  	
  	
  		tryCatch({
@@ -93,7 +93,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.1.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-08-08T17:07:49.243");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-08-11T15:57:43.245886");
 		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.1.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");

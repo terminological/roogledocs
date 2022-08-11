@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • roogledocs</title>
+<title>Get a document by name or create one from a template if missing. — doc_from_template • roogledocs</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Get a document by name or create one from a template if missing. — doc_from_template" />
+<meta property="og:description" content="no description" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -115,84 +116,51 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Get a document by name or create one from a template if missing.</h1>
+    
+    <div class="hidden name"><code>doc_from_template.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>no description</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>doc_from_template</span><span class='op'>(</span>
+  <span class='va'>title</span>,
+  <span class='va'>templateUri</span>,
+  tokenDirectory<span class='op'>=</span><span class='fu'>.tokenDirectory</span><span class='op'>(</span><span class='op'>)</span>,
+  disabled<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>'roogledocs.disabled'</span>,<span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="JavaApi.html">JavaApi</a></code> </p>
-        </td>
-        <td><p>R Wrapper For Googledocs Java Library</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="RoogleDocs.html">RoogleDocs</a></code> </p>
-        </td>
-        <td><p>RoogleDocs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="delete_document.html">delete_document()</a></code> </p>
-        </td>
-        <td><p>Deletes a google document by name.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="doc_by_id.html">doc_by_id()</a></code> </p>
-        </td>
-        <td><p>Get a document by id or sharing link.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="doc_by_name.html">doc_by_name()</a></code> </p>
-        </td>
-        <td><p>Get a document by name or create a blank document if missing.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="doc_from_template.html">doc_from_template()</a></code> </p>
-        </td>
-        <td><p>Get a document by name or create one from a template if missing.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="roogledocs-package.html">roogledocs-package</a></code> </p>
-        </td>
-        <td><p>roogledocs: R Wrapper For Googledocs Java Library</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="search_for_documents.html">search_for_documents()</a></code> </p>
-        </td>
-        <td><p>Search for documents with the given title</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>title</th>
+      <td><p>title a document title. If there is an exact match in google drive then that document will be used
+otherwise a new one will be created. - (java expects a String)</p></td>
+    </tr>
+    <tr>
+      <th>templateUri</th>
+      <td><p>templateUri the share link (or document id) of a template google document - (java expects a String)</p></td>
+    </tr>
+    <tr>
+      <th>tokenDirectory</th>
+      <td><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></td>
+    </tr>
+    <tr>
+      <th>disabled</th>
+      <td><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>R6 RoogleDocs object: itself - a fluent method</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
