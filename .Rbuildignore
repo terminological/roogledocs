@@ -8,7 +8,7 @@
 ^LICENSE\.md$
 ^privacy-policy\.md$
 ^terms-of-service\.md$
-
+^.roogledocs-test$
 
 # Java maven directory layouts
 

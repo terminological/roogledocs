@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.1.0
 #' 
-#' Generated: 2022-09-26T21:38:19.116417
+#' Generated: 2022-09-26T22:25:24.236661
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe one day slides)

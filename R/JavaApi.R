@@ -6,7 +6,7 @@
 #'
 #' Version: 0.1.0
 #'
-#' Generated: 2022-09-26T21:38:19.024997
+#' Generated: 2022-09-26T22:25:24.175057
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import rJava 
@@ -81,7 +81,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.1.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-09-26T21:38:19.028359");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-09-26T22:25:24.175260");
 		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.1.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
@@ -477,7 +477,7 @@ JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
 		r_package_version = "0.1.0",
-		r_package_generated = "2022-09-26T21:38:19.059784",
+		r_package_generated = "2022-09-26T22:25:24.201984",
 		java_library_version = "io.github.terminological:roogledocs:0.1.0",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)

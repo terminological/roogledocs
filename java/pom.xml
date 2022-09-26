@@ -64,6 +64,21 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>Sonatype OSSRH</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+	<!-- Resolve maven plugin on sonatype OSSRH -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Sonatype OSSRH</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	
 	<build>
 		<plugins>
 			<plugin>
