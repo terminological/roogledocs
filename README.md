@@ -18,7 +18,7 @@ can be updated independently of the analysis, by the wider team.
 `roogledocs` is not on cran yet. Installation from this repo can be done as follows:
 
 ```R
-devtools::install_github("terminological/roogledocs")
+devtools::install_github("terminological/roogledocs", build_opts = c("--no-multiarch"))
 ```
 
 ## R library documentation

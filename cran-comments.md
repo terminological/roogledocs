@@ -6,7 +6,7 @@ GitHub actions test environments:
 * os: macOS Big Sur 11, R: 4.1.0, Java 11
 * os: Ubuntu 20.04; R: 4.1.0, Java 11
 * os: Ubuntu 20.04, R: 3.6.1, Java 8
-* os: Windows Server 2022, R: 4.1.0, Java 11
+* os: Windows Server 2022, R: 4.2.0, Java 11
 * os: Ubuntu 20.04, R: 4.2.0, Java 17
 * os: Ubuntu 20.04, R: devel, Java 17
 

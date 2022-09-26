@@ -27,16 +27,109 @@ Programmatically substitute images, data and tables into a google doc. R library
 
 Version: 0.1.0
 
-Generated: 2022-08-11T15:57:43.205727
+Generated: 2022-09-26T21:38:18.976016
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}
 
+\examples{
+## -----------------------------------
+## Check library dependencies for roogledocs
+## -----------------------------------
+roogledocs::JavaApi$installDependencies()
+
+## -----------------------------------
+## Construct a roogledocs Java API instance
+## -----------------------------------
+
+J = roogledocs::JavaApi$get()
+# or a more verbose configuration
+# J = roogledocs::JavaApi$get("DEBUG")
+
+
+## -----------------------------------
+## Method `J$RoogleDocs$new(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$new(tokenDirectory, disabled)
+# or alternatively:
+roogledocs::new(tokenDirectory, disabled)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$docById(...)`
+## Aliased as `roogledocs::doc_by_id(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
+# or alternatively:
+roogledocs::doc_by_id(shareUrlOrDocId, tokenDirectory, disabled)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$docByName(...)`
+## Aliased as `roogledocs::doc_by_name(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$docByName(title, tokenDirectory, disabled)
+# or alternatively:
+roogledocs::doc_by_name(title, tokenDirectory, disabled)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$docFromTemplate(...)`
+## Aliased as `roogledocs::doc_from_template(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)
+# or alternatively:
+roogledocs::doc_from_template(title, templateUri, tokenDirectory, disabled)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$searchForDocuments(...)`
+## Aliased as `roogledocs::search_for_documents(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
+# or alternatively:
+roogledocs::search_for_documents(titleMatch, tokenDirectory)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$deleteDocument(...)`
+## Aliased as `roogledocs::delete_document(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)
+# or alternatively:
+roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
+}
+}
+
 \keyword{java api}
 
-\section{Static methods and constructors}{
+\section{Package initialisation and control}{
 	\itemize{
-		\item \code{JavaApi$get()}
+		\item \href{#method-api-installDependencies}{\code{JavaApi$installDependencies()}}
+		\item \href{#method-api-rebuildDependencies}{\code{JavaApi$rebuildDependencies()}}
+		\item \href{#method-api-versionInformation}{\code{JavaApi$versionInformation()}}
+		\item \href{#method-api-get}{\code{J = JavaApi$get(logLevel)}}
+		\item \href{#method-api-changeLogLevel}{\code{J$changeLogLevel(logLevel)}}
+		\item \href{#method-api-reconfigureLog}{\code{J$reconfigureLog(log4jproperties)}}
+		\item \href{#method-api-printMessages}{\code{J$printMessages()}}
+	}
+}
+
+\section{Package classes and static methods}{
+	\if{html}{\out{<hr>}}
+	\itemize{
 		\item \href{#method-RoogleDocs-new}{\code{J$RoogleDocs$new(tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docById}{\code{J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docByName}{\code{J$RoogleDocs$docByName(title, tokenDirectory, disabled)}}
@@ -44,8 +137,207 @@ Generated: 2022-08-11T15:57:43.205727
 		\item \href{#method-RoogleDocs-searchForDocuments}{\code{J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)}}
 		\item \href{#method-RoogleDocs-deleteDocument}{\code{J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)}}
 	}
-	
+}
 
+\section{Package initialisation and control}{
+	\if{html}{\out{<a id="method-api-installDependencies"></a>}}
+	\subsection{Package method \code{JavaApi$installDependencies()}}{
+		This package level method checks for, and installs any dependencies needed for the running of the package.
+		It is called automatically on first package load and so in general does not need to be used directly.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+roogledocs::JavaApi$installDependencies()
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{none}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+nothing. called for side effects.
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-rebuildDependencies"></a>}}
+	\subsection{Package method \code{JavaApi$rebuildDependencies()}}{
+		This package level method removes existing dependencies and re-installs dependencies needed for the running of the package.
+		It is called automatically on first package load and so in general does not need to be called.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+roogledocs::JavaApi$rebuildDependencies()
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{none}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+nothing. called for side effects.
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-versionInformation"></a>}}
+	\subsection{Package method \code{JavaApi$versionInformation()}}{
+		This package level method returns debugging version information for the package
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+roogledocs::JavaApi$versionInformation()
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{none}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+A list containing a set of versioning information about this package.
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-get"></a>}}
+	\subsection{Package method \code{JavaApi$get()}}{
+		This is the main entry point for the package and the root of the Java API in this package. All classes defined in the package
+		are made available as items under this root. The JavaApi object manages the communication between R and Java.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+# package classes and functions are nested under the `J` api object.
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{logLevel}{ The desired verbosity of the package. One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL".}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+A R6 roogledocs::JavaApi object containing the access point to the objects and functions defined in this package 
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-changeLogLevel"></a>}}
+	\subsection{Api method \code{J$changeLogLevel(logLevel)}}{
+		Once the package is initialised the log level can be changed to increase the level of messages from the api.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$changeLogLevel("DEBUG")
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{logLevel}{ The desired verbosity of the package. One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL".}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+nothing. used for side effects.
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-reconfigreLog"></a>}}
+	\subsection{Api method \code{J$reconfigureLog(log4jproperties)}}{
+		Experimental / Advanced use: Once the package is initialised the log configureation can be changed to log to 
+		an external file for example.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+prp = fs::path(getwd(),"log4j.properties")
+if (fs::file_exists(prp)) {
+	J$changeLogLevel(prp)
+}
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{log4jproperties}{ a full path to a log4jproperies file}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+nothing. used for side effects.
+		}
+	}
+	
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-api-printMessages"></a>}}
+	\subsection{Api method \code{J$printMessages()}}{
+		Experimental / Internal use: Messages from Java to R are queued and
+		printed after each function call. It is unlikely that any will be not printed
+		so in normal circumstances this function should do nothing.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$printMessages()
+			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{none}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+nothing. used for side effects.
+		}
+	}
+	
+}
+
+
+\section{Static methods and constructors}{
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-new"></a>}}
 	
@@ -63,11 +355,9 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-					\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-				}
+			\itemize{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -76,6 +366,7 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 			R6 RoogleDocs object: 
 		}
 	}
+
 
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-docById"></a>}}
@@ -88,18 +379,18 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 			\preformatted{
 J = roogledocs::JavaApi$get()
 J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
+# this method is also exposed as a package function:
+roogledocs::doc_by_id(shareUrlOrDocId, tokenDirectory, disabled)
 	  		}
 			\if{html}{\out{</div>}}
 		}
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
-					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-					\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-				}
+			\itemize{
+				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -108,6 +399,7 @@ J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
 			R6 RoogleDocs object: itself - a fluent method
 		}
 	}
+
 
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-docByName"></a>}}
@@ -120,18 +412,18 @@ J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
 			\preformatted{
 J = roogledocs::JavaApi$get()
 J$RoogleDocs$docByName(title, tokenDirectory, disabled)
+# this method is also exposed as a package function:
+roogledocs::doc_by_name(title, tokenDirectory, disabled)
 	  		}
 			\if{html}{\out{</div>}}
 		}
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
-					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-					\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-				}
+			\itemize{
+				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -140,6 +432,7 @@ J$RoogleDocs$docByName(title, tokenDirectory, disabled)
 			R6 RoogleDocs object: itself - a fluent method
 		}
 	}
+
 
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-docFromTemplate"></a>}}
@@ -152,20 +445,20 @@ J$RoogleDocs$docByName(title, tokenDirectory, disabled)
 			\preformatted{
 J = roogledocs::JavaApi$get()
 J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)
+# this method is also exposed as a package function:
+roogledocs::doc_from_template(title, templateUri, tokenDirectory, disabled)
 	  		}
 			\if{html}{\out{</div>}}
 		}
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{title a document title. If there is an exact match in google drive then that document will be used
+			\itemize{
+				\item{title a document title. If there is an exact match in google drive then that document will be used
 otherwise a new one will be created.}{ - (java expects a String)}
-					\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
-					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-					\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-				}
+				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -174,6 +467,7 @@ otherwise a new one will be created.}{ - (java expects a String)}
 			R6 RoogleDocs object: itself - a fluent method
 		}
 	}
+
 
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-searchForDocuments"></a>}}
@@ -186,17 +480,17 @@ otherwise a new one will be created.}{ - (java expects a String)}
 			\preformatted{
 J = roogledocs::JavaApi$get()
 J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
+# this method is also exposed as a package function:
+roogledocs::search_for_documents(titleMatch, tokenDirectory)
 	  		}
 			\if{html}{\out{</div>}}
 		}
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
-					\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				}
+			\itemize{
+				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -205,6 +499,7 @@ J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
 			RDataframe: a dataframe containing id and name columns
 		}
 	}
+
 
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-deleteDocument"></a>}}
@@ -217,19 +512,19 @@ J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
 			\preformatted{
 J = roogledocs::JavaApi$get()
 J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)
+# this method is also exposed as a package function:
+roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 	  		}
 			\if{html}{\out{</div>}}
 		}
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\itemize{
-					\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
-					\item{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE))}{ - (java expects a boolean)}
-					\item{tokenDirectory - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-					\item{disabled - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-				}
+			\itemize{
+				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
+				\item{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{disabled - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -238,5 +533,7 @@ J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)
 			void: nothing, called for side efffects
 		}
 	}
+
+
 
 }

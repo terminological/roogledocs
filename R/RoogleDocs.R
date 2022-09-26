@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.1.0
 #' 
-#' Generated: 2022-08-11T15:57:43.345097
+#' Generated: 2022-09-26T21:38:19.116417
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe one day slides)
@@ -39,8 +39,11 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @param api The R6 api library class.
 	#' @return A new RoogleDocs object.
 	#' @examples
-	#' J = roogledocs::JavaApi$get();
+	#' \dontrun{
+	#' J = roogledocs::JavaApi$get()
+	#' # This constructor must be called via the JavaApi where an appropriate set of parameters must be provided.
 	#' instance = J$RoogleDocs$new(tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE))
+	#' }	
 	initialize = function(jobj,api){
 		self$.jobj = jobj;
 		self$.api = api;

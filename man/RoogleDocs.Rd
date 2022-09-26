@@ -19,7 +19,7 @@ Programmatically substitute images, data and tables into a google doc.
 
 Version: 0.1.0
 
-Generated: 2022-08-11T15:57:43.335589
+Generated: 2022-09-26T21:38:19.101816
 }
 
 \details{
@@ -35,91 +35,136 @@ you can automate this a bit like a RMarkdown document, but with the added benefi
 can be updated independently of the analysis, by the wider team.
 }
 
-\examples{\dontrun{
-J = roogledocs::JavaApi$get();
+\examples{
+## -----------------------------------
+## Construct new instance of RoogleDocs
+## -----------------------------------
+\dontrun{
+J = roogledocs::JavaApi$get()
+# appropriate parameter values must be provided
 instance = J$RoogleDocs$new(tokenDirectory, disabled)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$reauth`
+## Method `RoogleDocs$reauth()`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$reauth()
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$enable`
+## Method `RoogleDocs$enable()`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$enable()
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$disable`
+## Method `RoogleDocs$disable()`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$disable()
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$withDocument`
+## Method `RoogleDocs$withDocument(shareUrlOrDocId)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$withDocument(shareUrlOrDocId)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$docById`
+## Method `RoogleDocs$findOrCreateDocument(title)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$findOrCreateDocument(title)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$findOrCreateDocument`
+## Method `RoogleDocs$findOrCloneTemplate(title, templateUri)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$findOrCloneTemplate(title, templateUri)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$docByName`
+## Method `RoogleDocs$tagsDefined()`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$tagsDefined()
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$findOrCloneTemplate`
+## Method `RoogleDocs$updateTaggedText(text, tagName)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTaggedText(text, tagName)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$docFromTemplate`
+## Method `RoogleDocs$updateTaggedImage(absoluteFilePath, tagName, dpi)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTaggedImage(absoluteFilePath, tagName, dpi)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$searchForDocuments`
+## Method `RoogleDocs$revertTags()`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$revertTags()
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$tagsDefined`
+## Method `RoogleDocs$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$updateTaggedText`
+## Method `RoogleDocs$updateFigure(absoluteFilePath, figureIndex, dpi)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateFigure(absoluteFilePath, figureIndex, dpi)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$updateTaggedImage`
+## Method `RoogleDocs$saveAsPdf(absoluteFilePath)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$saveAsPdf(absoluteFilePath)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$revertTags`
+## Method `RoogleDocs$appendText(text, style)`
 ## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$appendText(text, style)
+}
 
 ## -----------------------------------
-## Method `RoogleDocs$updateTable`
+## Method `RoogleDocs$appendFormattedParagraph(formattedTextDf)`
 ## -----------------------------------
-
-## -----------------------------------
-## Method `RoogleDocs$updateFigure`
-## -----------------------------------
-
-## -----------------------------------
-## Method `RoogleDocs$saveAsPdf`
-## -----------------------------------
-
-## -----------------------------------
-## Method `RoogleDocs$deleteDocument`
-## -----------------------------------
-
-## -----------------------------------
-## Method `RoogleDocs$appendText`
-## -----------------------------------
-
-## -----------------------------------
-## Method `RoogleDocs$appendFormattedParagraph`
-## -----------------------------------
-
-}}
+\dontrun{
+# appropriate parameter values must be provided
+instance$appendFormattedParagraph(formattedTextDf)
+}
+}
 
 \keyword{java api}
 
@@ -129,16 +174,7 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 			\item \href{#method-new}{\code{J$RoogleDocs$new(tokenDirectory, disabled)}}
 		}
 	}
-	\subsection{Static methods}{
-		\itemize{
-			\item \href{#method-docById}{\code{J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)}}
-			\item \href{#method-docByName}{\code{J$RoogleDocs$docByName(title, tokenDirectory, disabled)}}
-			\item \href{#method-docFromTemplate}{\code{J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)}}
-			\item \href{#method-searchForDocuments}{\code{J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)}}
-			\item \href{#method-deleteDocument}{\code{J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)}}
-		}
-	}
-	\subsection{Instance methods}{
+	\subsection{Class methods}{
 		\itemize{
 			\item \href{#method-reauth}{\code{instance$reauth()}}
 			\item \href{#method-enable}{\code{instance$enable()}}
@@ -163,15 +199,14 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled)
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-new"></a>}}
 	
-	\subsection{Method \code{new()}}{
-		Create a Roogledocs object for managing the interaction.
-	
+	\subsection{Constructor \code{new()}}{
+Create a Roogledocs object for managing the interaction.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-J$RoogleDocs$new(tokenDirectory, disabled)
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -186,34 +221,27 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: 
+the new R6 RoogleDocs object
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
+
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-reauth"></a>}}
 	
 	\subsection{Method \code{reauth()}}{
-		Reauthenticate roogledocs
+Reauthenticate roogledocs
 
 Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
 Generally this would only be needed if 
 application permission updates are needed in which case the directory can be manually deleted anyway,
 or if you want to switch google user without using a different tokenDirectory.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$reauth()
   			}
 			\if{html}{\out{</div>}}
@@ -228,31 +256,23 @@ instance$reauth()
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: a fluent method
+R6 RoogleDocs object: a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-enable"></a>}}
 	
 	\subsection{Method \code{enable()}}{
-		Enables roogledocs for this document. 
+Enables roogledocs for this document. 
 
 It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$enable()
   			}
 			\if{html}{\out{</div>}}
@@ -267,31 +287,23 @@ instance$enable()
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-disable"></a>}}
 	
 	\subsection{Method \code{disable()}}{
-		Disables roogledocs temporarily for this document. 
+Disables roogledocs temporarily for this document. 
 
 While disabled all calls to roogledocs will silently fail.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$disable()
   			}
 			\if{html}{\out{</div>}}
@@ -306,29 +318,21 @@ instance$disable()
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-withDocument"></a>}}
 	
 	\subsection{Method \code{withDocument()}}{
-		Select a document by its share url or id.
-	
+Select a document by its share url or id.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$withDocument(shareUrlOrDocId)
   			}
 			\if{html}{\out{</div>}}
@@ -343,67 +347,21 @@ instance$withDocument(shareUrlOrDocId)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-docById"></a>}}
-	
-	\subsection{Method \code{docById()}}{
-		Get a document by id or sharing link.
-	
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
-		}
-
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-findOrCreateDocument"></a>}}
 	
 	\subsection{Method \code{findOrCreateDocument()}}{
-		Search for a document by name or create one if missing.
-	
+Search for a document by name or create one if missing.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$findOrCreateDocument(title)
   			}
 			\if{html}{\out{</div>}}
@@ -419,67 +377,21 @@ otherwise a new one will be created.}{ - (java expects a String)}
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-docByName"></a>}}
-	
-	\subsection{Method \code{docByName()}}{
-		Get a document by name or create a blank document if missing.
-	
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$docByName(title, tokenDirectory, disabled)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
-		}
-
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-findOrCloneTemplate"></a>}}
 	
 	\subsection{Method \code{findOrCloneTemplate()}}{
-		Get a document by name or create one from a template if missing.
-	
+Get a document by name or create one from a template if missing.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$findOrCloneTemplate(title, templateUri)
   			}
 			\if{html}{\out{</div>}}
@@ -496,108 +408,23 @@ otherwise a new one will be created.}{ - (java expects a String)}
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-docFromTemplate"></a>}}
-	
-	\subsection{Method \code{docFromTemplate()}}{
-		Get a document by name or create one from a template if missing.
-	
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{title a document title. If there is an exact match in google drive then that document will be used
-otherwise a new one will be created.}{ - (java expects a String)}
-				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
-		}
-
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-searchForDocuments"></a>}}
-	
-	\subsection{Method \code{searchForDocuments()}}{
-		Search for documents with the given title
-	
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			RDataframe: a dataframe containing id and name columns
-		}
-
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-tagsDefined"></a>}}
 	
 	\subsection{Method \code{tagsDefined()}}{
-		List all tags
+List all tags
 
 Finds tags defined in the current document
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$tagsDefined()
   			}
 			\if{html}{\out{</div>}}
@@ -612,31 +439,23 @@ instance$tagsDefined()
 		}
 
 		\subsection{Returns}{
-			RDataframe: a dataframe containing tag and count columns
+RDataframe: a dataframe containing tag and count columns
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
 	
 	\subsection{Method \code{updateTaggedText()}}{
-		Relace tags for text
+Relace tags for text
 
 Substitutes all occurrences of {{tag-name}} with the text parameter.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$updateTaggedText(text, tagName)
   			}
 			\if{html}{\out{</div>}}
@@ -652,22 +471,15 @@ instance$updateTaggedText(text, tagName)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
 	
 	\subsection{Method \code{updateTaggedImage()}}{
-		Replace a tag with an image.
+Replace a tag with an image.
 
 Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
 in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
@@ -676,13 +488,12 @@ change dynamically.
 
 The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
 google doc, and one completed the temporary file deleted from your google drive.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$updateTaggedImage(absoluteFilePath, tagName, dpi)
   			}
 			\if{html}{\out{</div>}}
@@ -699,32 +510,24 @@ instance$updateTaggedImage(absoluteFilePath, tagName, dpi)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-revertTags"></a>}}
 	
 	\subsection{Method \code{revertTags()}}{
-		Revert tagged text and images.
+Revert tagged text and images.
 
 Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
 This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$revertTags()
   			}
 			\if{html}{\out{</div>}}
@@ -739,31 +542,23 @@ instance$revertTags()
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateTable"></a>}}
 	
 	\subsection{Method \code{updateTable()}}{
-		Update or insert a formatted table into the document. 
+Update or insert a formatted table into the document. 
 
 The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
   			}
 			\if{html}{\out{</div>}}
@@ -782,32 +577,24 @@ rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateFigure"></a>}}
 	
 	\subsection{Method \code{updateFigure()}}{
-		Update or insert a figure in the document from a locally stored PNG.
+Update or insert a figure in the document from a locally stored PNG.
 
 This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
 google document. Once this is complete the temporary google drive copy of the image is deleted.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$updateFigure(absoluteFilePath, figureIndex, dpi)
   			}
 			\if{html}{\out{</div>}}
@@ -824,29 +611,21 @@ instance$updateFigure(absoluteFilePath, figureIndex, dpi)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
 	
 	\subsection{Method \code{saveAsPdf()}}{
-		Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing.
-	
+Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$saveAsPdf(absoluteFilePath)
   			}
 			\if{html}{\out{</div>}}
@@ -861,69 +640,22 @@ instance$saveAsPdf(absoluteFilePath)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-deleteDocument"></a>}}
-	
-	\subsection{Method \code{deleteDocument()}}{
-		Deletes a google document by name.
-	
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
-				\item{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE))}{ - (java expects a boolean)}
-				\item{tokenDirectory - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			void: nothing, called for side efffects
-		}
-
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-appendText"></a>}}
 	
 	\subsection{Method \code{appendText()}}{
-		Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
 would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
-	
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$appendText(text, style)
   			}
 			\if{html}{\out{</div>}}
@@ -939,29 +671,21 @@ instance$appendText(text, style)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-appendFormattedParagraph"></a>}}
 	
 	\subsection{Method \code{appendFormattedParagraph()}}{
-		Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
-	
+Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(...);
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
 instance$appendFormattedParagraph(formattedTextDf)
   			}
 			\if{html}{\out{</div>}}
@@ -976,15 +700,8 @@ instance$appendFormattedParagraph(formattedTextDf)
 		}
 
 		\subsection{Returns}{
-			R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: itself - a fluent method
 		}
 
-		\subsection{Examples}{
-			\if{html}{\out{<div class="r example copy">}}
-			\preformatted{
-not available
-			}
-			\if{html}{\out{</div>}}
-		}
 	}
 }

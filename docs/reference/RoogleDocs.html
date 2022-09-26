@@ -42,7 +42,7 @@
 <meta property="og:title" content="RoogleDocs — RoogleDocs" />
 <meta property="og:description" content="Programmatically substitute images, data and tables into a google doc.
 Version: 0.1.0
-Generated: 2022-08-11T15:57:43.335589" />
+Generated: 2022-09-26T21:38:19.101816" />
 
 
 
@@ -97,6 +97,9 @@ Generated: 2022-08-11T15:57:43.335589" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/placeholder.html">Placeholder</a>
+    </li>
+    <li>
       <a href="../articles/web-only/roogledocs.html">Using roogledocs</a>
     </li>
   </ul>
@@ -106,7 +109,12 @@ Generated: 2022-08-11T15:57:43.335589" />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/terminological/roogledocs/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,7 +136,7 @@ Generated: 2022-08-11T15:57:43.335589" />
     <div class="ref-description">
     <p>Programmatically substitute images, data and tables into a google doc.</p>
 <p>Version: 0.1.0</p>
-<p>Generated: 2022-08-11T15:57:43.335589</p>
+<p>Generated: 2022-09-26T21:38:19.101816</p>
     </div>
 
 
@@ -163,14 +171,7 @@ can be updated independently of the analysis, by the wider team.</p>
     <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Constructors</h3>
 <p></p><ul>
 <li><p><a href='#method-new'><code>J$RoogleDocs$new(tokenDirectory, disabled)</code></a></p></li>
-</ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Static methods</h3>
-<p></p><ul>
-<li><p><a href='#method-docById'><code>J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)</code></a></p></li>
-<li><p><a href='#method-docByName'><code>J$RoogleDocs$docByName(title, tokenDirectory, disabled)</code></a></p></li>
-<li><p><a href='#method-docFromTemplate'><code>J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)</code></a></p></li>
-<li><p><a href='#method-searchForDocuments'><code>J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)</code></a></p></li>
-<li><p><a href='#method-deleteDocument'><code>J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)</code></a></p></li>
-</ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Instance methods</h3>
+</ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Class methods</h3>
 <p></p><ul>
 <li><p><a href='#method-reauth'><code>instance$reauth()</code></a></p></li>
 <li><p><a href='#method-enable'><code>instance$enable()</code></a></p></li>
@@ -193,13 +194,12 @@ can be updated independently of the analysis, by the wider team.</p>
 
 <p><hr>
 	<a id="method-new"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>Create a Roogledocs object for managing the interaction.</p>	
-
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Constructor <code>new()</code></h3>
+<p>Create a Roogledocs object for managing the interaction.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
         </pre><p></div></p>
 	
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -209,24 +209,22 @@ can be updated independently of the analysis, by the wider team.</p>
 </ul><p></div></p>
 
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>R6 RoogleDocs object:</p>
+<p>the new R6 RoogleDocs object</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p>
+
+<p><hr>
 	<a id="method-reauth"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>reauth()</code></h3>
 <p>Reauthenticate roogledocs</p>
 <p>Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
 Generally this would only be needed if 
 application permission updates are needed in which case the directory can be manually deleted anyway,
-or if you want to switch google user without using a different tokenDirectory.</p>	
-
+or if you want to switch google user without using a different tokenDirectory.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>reauth</span><span class='op'>(</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -238,19 +236,15 @@ or if you want to switch google user without using a different tokenDirectory.</
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-enable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>enable()</code></h3>
 <p>Enables roogledocs for this document.</p>
-<p>It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.</p>	
-
+<p>It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>enable</span><span class='op'>(</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -262,19 +256,15 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-disable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>disable()</code></h3>
 <p>Disables roogledocs temporarily for this document.</p>
-<p>While disabled all calls to roogledocs will silently fail.</p>	
-
+<p>While disabled all calls to roogledocs will silently fail.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>disable</span><span class='op'>(</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -286,18 +276,14 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-withDocument"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>withDocument()</code></h3>
-<p>Select a document by its share url or id.</p>	
-
+<p>Select a document by its share url or id.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>withDocument</span><span class='op'>(</span><span class='va'>shareUrlOrDocId</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -309,42 +295,14 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
-	<a id="method-docById"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docById()</code></h3>
-<p>Get a document by id or sharing link.</p>	
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docById</span><span class='op'>(</span><span class='va'>shareUrlOrDocId</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
-        </pre><p></div></p>
-	
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><ul>
-<li><p>shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method - (java expects a String)</p></li>
-<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
-<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
-</ul><p></div></p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>R6 RoogleDocs object: itself - a fluent method</p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-findOrCreateDocument"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>findOrCreateDocument()</code></h3>
-<p>Search for a document by name or create one if missing.</p>	
-
+<p>Search for a document by name or create one if missing.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>findOrCreateDocument</span><span class='op'>(</span><span class='va'>title</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -357,42 +315,14 @@ otherwise a new one will be created. - (java expects a String)</p></li>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
-	<a id="method-docByName"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docByName()</code></h3>
-<p>Get a document by name or create a blank document if missing.</p>	
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docByName</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
-        </pre><p></div></p>
-	
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><ul>
-<li><p>title a document title. If there is an exact match in google drive then that document will be used - (java expects a String)</p></li>
-<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
-<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
-</ul><p></div></p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>R6 RoogleDocs object: itself - a fluent method</p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-findOrCloneTemplate"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>findOrCloneTemplate()</code></h3>
-<p>Get a document by name or create one from a template if missing.</p>	
-
+<p>Get a document by name or create one from a template if missing.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>findOrCloneTemplate</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>templateUri</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -406,68 +336,15 @@ otherwise a new one will be created. - (java expects a String)</p></li>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
-	<a id="method-docFromTemplate"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>docFromTemplate()</code></h3>
-<p>Get a document by name or create one from a template if missing.</p>	
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>docFromTemplate</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>templateUri</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
-        </pre><p></div></p>
-	
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><ul>
-<li><p>title a document title. If there is an exact match in google drive then that document will be used
-otherwise a new one will be created. - (java expects a String)</p></li>
-<li><p>templateUri the share link (or document id) of a template google document - (java expects a String)</p></li>
-<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
-<li><p>disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
-</ul><p></div></p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>R6 RoogleDocs object: itself - a fluent method</p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
-	<a id="method-searchForDocuments"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>searchForDocuments()</code></h3>
-<p>Search for documents with the given title</p>	
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>searchForDocuments</span><span class='op'>(</span><span class='va'>titleMatch</span>, <span class='va'>tokenDirectory</span><span class='op'>)</span>
-        </pre><p></div></p>
-	
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><ul>
-<li><p>titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)</p></li>
-<li><p>tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
-</ul><p></div></p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>RDataframe: a dataframe containing id and name columns</p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-tagsDefined"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>tagsDefined()</code></h3>
 <p>List all tags</p>
-<p>Finds tags defined in the current document</p>	
-
+<p>Finds tags defined in the current document</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>tagsDefined</span><span class='op'>(</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -479,19 +356,15 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>RDataframe: a dataframe containing tag and count columns</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-updateTaggedText"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTaggedText()</code></h3>
 <p>Relace tags for text</p>
-<p>Substitutes all occurrences of tag-name with the text parameter.</p>	
-
+<p>Substitutes all occurrences of tag-name with the text parameter.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTaggedText</span><span class='op'>(</span><span class='va'>text</span>, <span class='va'>tagName</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -504,10 +377,7 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-updateTaggedImage"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTaggedImage()</code></h3>
 <p>Replace a tag with an image.</p>
@@ -516,12 +386,11 @@ in which using this is a good idea. It will almost always be better to use `upda
 by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
 change dynamically.</p>
 <p>The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
-google doc, and one completed the temporary file deleted from your google drive.</p>	
-
+google doc, and one completed the temporary file deleted from your google drive.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTaggedImage</span><span class='op'>(</span><span class='va'>absoluteFilePath</span>, <span class='va'>tagName</span>, <span class='va'>dpi</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -535,20 +404,16 @@ google doc, and one completed the temporary file deleted from your google drive.
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-revertTags"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>revertTags()</code></h3>
 <p>Revert tagged text and images.</p>
 <p>Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
-This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.</p>	
-
+This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>revertTags</span><span class='op'>(</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -560,19 +425,15 @@ This is needed if content is being moved around as cut and paste of tagged conte
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-updateTable"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateTable()</code></h3>
 <p>Update or insert a formatted table into the document.</p>
-<p>The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.</p>	
-
+<p>The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTable</span><span class='op'>(</span><span class='va'>longFormatTable</span>, <span class='va'>tableIndex</span>, <span class='va'>colWidths</span>, <span class='va'>tableWidthInches</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -588,20 +449,16 @@ rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-updateFigure"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>updateFigure()</code></h3>
 <p>Update or insert a figure in the document from a locally stored PNG.</p>
 <p>This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
-google document. Once this is complete the temporary google drive copy of the image is deleted.</p>	
-
+google document. Once this is complete the temporary google drive copy of the image is deleted.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateFigure</span><span class='op'>(</span><span class='va'>absoluteFilePath</span>, <span class='va'>figureIndex</span>, <span class='va'>dpi</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -615,18 +472,14 @@ google document. Once this is complete the temporary google drive copy of the im
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-saveAsPdf"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>saveAsPdf()</code></h3>
-<p>Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing.</p>	
-
+<p>Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>saveAsPdf</span><span class='op'>(</span><span class='va'>absoluteFilePath</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -638,44 +491,15 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
-	<a id="method-deleteDocument"></a></p>	
-<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>deleteDocument()</code></h3>
-<p>Deletes a google document by name.</p>	
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>deleteDocument</span><span class='op'>(</span><span class='va'>docName</span>, <span class='va'>areYouSure</span>, <span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
-        </pre><p></div></p>
-	
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><ul>
-<li><p>docName - the name of a document to delete. must be an exact and unique match. - (java expects a String)</p></li>
-<li><p>areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)) - (java expects a boolean)</p></li>
-<li><p>tokenDirectory - (defaulting to .tokenDirectory()) - (java expects a String)</p></li>
-<li><p>disabled - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)</p></li>
-</ul><p></div></p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>void: nothing, called for side efffects</p>
-
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-appendText"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>appendText()</code></h3>
 <p>Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
-would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.</p>	
-
+would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendText</span><span class='op'>(</span><span class='va'>text</span>, <span class='va'>style</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -688,18 +512,14 @@ would normally not want this so it is up to you to end paragraphs with a new lin
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p><p><hr>
+<p></p><p><hr>
 	<a id="method-appendFormattedParagraph"></a></p>	
 <p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>appendFormattedParagraph()</code></h3>
-<p>Append a new paragraph, with text from the 'label' column with optional formating in the other columns.</p>	
-
+<p>Append a new paragraph, with text from the 'label' column with optional formating in the other columns.</p>
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre>
 <span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>;
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>;
 <span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendFormattedParagraph</span><span class='op'>(</span><span class='va'>formattedTextDf</span><span class='op'>)</span>
         </pre><p></div></p>
 	
@@ -711,98 +531,139 @@ not available
 <p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>R6 RoogleDocs object: itself - a fluent method</p>
 
-<p></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre>
-not available
-			</pre><p></div></p><p></p>
+<p></p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>;
+    <pre class="examples"><div class='input'><span class='co'>## -----------------------------------</span>
+<span class='co'>## Construct new instance of RoogleDocs</span>
+<span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>J</span> <span class='op'>=</span> <span class='fu'>roogledocs</span><span class='fu'>::</span><span class='va'><a href='JavaApi.html'>JavaApi</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='op'>)</span>
+<span class='co'># appropriate parameter values must be provided</span>
 <span class='va'>instance</span> <span class='op'>=</span> <span class='va'>J</span><span class='op'>$</span><span class='va'>RoogleDocs</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>tokenDirectory</span>, <span class='va'>disabled</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$reauth`</span>
+<span class='co'>## Method `RoogleDocs$reauth()`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>reauth</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$enable`</span>
+<span class='co'>## Method `RoogleDocs$enable()`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>enable</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$disable`</span>
+<span class='co'>## Method `RoogleDocs$disable()`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>disable</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$withDocument`</span>
+<span class='co'>## Method `RoogleDocs$withDocument(shareUrlOrDocId)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>withDocument</span><span class='op'>(</span><span class='va'>shareUrlOrDocId</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$docById`</span>
+<span class='co'>## Method `RoogleDocs$findOrCreateDocument(title)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>findOrCreateDocument</span><span class='op'>(</span><span class='va'>title</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$findOrCreateDocument`</span>
+<span class='co'>## Method `RoogleDocs$findOrCloneTemplate(title, templateUri)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>findOrCloneTemplate</span><span class='op'>(</span><span class='va'>title</span>, <span class='va'>templateUri</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$docByName`</span>
+<span class='co'>## Method `RoogleDocs$tagsDefined()`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>tagsDefined</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$findOrCloneTemplate`</span>
+<span class='co'>## Method `RoogleDocs$updateTaggedText(text, tagName)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTaggedText</span><span class='op'>(</span><span class='va'>text</span>, <span class='va'>tagName</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$docFromTemplate`</span>
+<span class='co'>## Method `RoogleDocs$updateTaggedImage(absoluteFilePath, tagName, dpi)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTaggedImage</span><span class='op'>(</span><span class='va'>absoluteFilePath</span>, <span class='va'>tagName</span>, <span class='va'>dpi</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$searchForDocuments`</span>
+<span class='co'>## Method `RoogleDocs$revertTags()`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>revertTags</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$tagsDefined`</span>
+<span class='co'>## Method `RoogleDocs$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateTable</span><span class='op'>(</span><span class='va'>longFormatTable</span>, <span class='va'>tableIndex</span>, <span class='va'>colWidths</span>, <span class='va'>tableWidthInches</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$updateTaggedText`</span>
+<span class='co'>## Method `RoogleDocs$updateFigure(absoluteFilePath, figureIndex, dpi)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>updateFigure</span><span class='op'>(</span><span class='va'>absoluteFilePath</span>, <span class='va'>figureIndex</span>, <span class='va'>dpi</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$updateTaggedImage`</span>
+<span class='co'>## Method `RoogleDocs$saveAsPdf(absoluteFilePath)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>saveAsPdf</span><span class='op'>(</span><span class='va'>absoluteFilePath</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$revertTags`</span>
+<span class='co'>## Method `RoogleDocs$appendText(text, style)`</span>
 <span class='co'>## -----------------------------------</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendText</span><span class='op'>(</span><span class='va'>text</span>, <span class='va'>style</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$updateTable`</span>
+<span class='co'>## Method `RoogleDocs$appendFormattedParagraph(formattedTextDf)`</span>
 <span class='co'>## -----------------------------------</span>
-
-<span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$updateFigure`</span>
-<span class='co'>## -----------------------------------</span>
-
-<span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$saveAsPdf`</span>
-<span class='co'>## -----------------------------------</span>
-
-<span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$deleteDocument`</span>
-<span class='co'>## -----------------------------------</span>
-
-<span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$appendText`</span>
-<span class='co'>## -----------------------------------</span>
-
-<span class='co'>## -----------------------------------</span>
-<span class='co'>## Method `RoogleDocs$appendFormattedParagraph`</span>
-<span class='co'>## -----------------------------------</span>
-
-<span class='op'>}</span></div></pre>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># appropriate parameter values must be provided</span>
+<span class='va'>instance</span><span class='op'>$</span><span class='fu'>appendFormattedParagraph</span><span class='op'>(</span><span class='va'>formattedTextDf</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

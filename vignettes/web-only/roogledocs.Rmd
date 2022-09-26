@@ -17,8 +17,8 @@ knitr::opts_chunk$set(
   collapse = TRUE
 )
 
-library(tidyverse)
-library(huxtable)
+suppressWarnings(library(tidyverse))
+suppressWarnings(library(huxtable))
 devtools::load_all("~/Git/roogledocs/")
 here::i_am("vignettes/web-only/roogledocs.Rmd")
 ```

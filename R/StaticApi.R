@@ -3,15 +3,15 @@
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
 # Version: 0.1.0
-# Generated: 2022-08-11T15:57:43.296270
+# Generated: 2022-09-26T21:38:19.061972
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----
 
 
-#' docById:
+#' docById: Get a document by id or sharing link.
 #' 
-#' Get a document by id or sharing link.
+#' no description
 #' @param shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method - (java expects a String)
 #' @param tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 #' @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
@@ -28,9 +28,9 @@ doc_by_id = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled
 }
 
 
-#' docByName:
+#' docByName: Get a document by name or create a blank document if missing.
 #' 
-#' Get a document by name or create a blank document if missing.
+#' no description
 #' @param title a document title. If there is an exact match in google drive then that document will be used - (java expects a String)
 #' @param tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 #' @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)
@@ -47,9 +47,9 @@ doc_by_name = function(title, tokenDirectory=.tokenDirectory(), disabled=getOpti
 }
 
 
-#' docFromTemplate:
+#' docFromTemplate: Get a document by name or create one from a template if missing.
 #' 
-#' Get a document by name or create one from a template if missing.
+#' no description
 #' @param title a document title. If there is an exact match in google drive then that document will be used
 #' otherwise a new one will be created. - (java expects a String)
 #' @param templateUri the share link (or document id) of a template google document - (java expects a String)
@@ -68,9 +68,9 @@ doc_from_template = function(title, templateUri, tokenDirectory=.tokenDirectory(
 }
 
 
-#' searchForDocuments:
+#' searchForDocuments: Search for documents with the given title
 #' 
-#' Search for documents with the given title
+#' no description
 #' @param titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)
 #' @param tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)
 #' @return RDataframe: 
@@ -86,9 +86,9 @@ search_for_documents = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 }
 
 
-#' deleteDocument:
+#' deleteDocument: Deletes a google document by name.
 #' 
-#' Deletes a google document by name.
+#' no description
 #' @param docName - the name of a document to delete. must be an exact and unique match. - (java expects a String)
 #' @param areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)) - (java expects a boolean)
 #' @param tokenDirectory - (defaulting to .tokenDirectory()) - (java expects a String)

@@ -12,7 +12,7 @@
 		<!-- Must be Java 8 for standard rJava implementation -->
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<r6.version>0.5.1</r6.version>
+		<r6.version>main-SNAPSHOT</r6.version>
     </properties>
 
 	<name>R Google Docs integration</name>
@@ -105,6 +105,8 @@ can be updated independently of the analysis, by the wider team.
 						<url>https://terminological.github.io/roogledocs/docs/</url>
 						<doi>10.5281/zenodo.6576096</doi>
 						<debug>false</debug>
+						<useRoxygen2>true</useRoxygen2>
+						<useCmdCheck>true</useCmdCheck>
 						<usePkgdown>true</usePkgdown>
 						<useJavadoc>false</useJavadoc>
 <!-- 						<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
@@ -120,6 +122,8 @@ can be updated independently of the analysis, by the wider team.
 						<maintainerEmail>rob.challen@bristol.ac.uk</maintainerEmail>
 						<maintainerOrganisation>University of Bristol</maintainerOrganisation>
 						<maintainerORCID>0000-0002-5504-7768</maintainerORCID>
+						<githubOrganisation>terminological</githubOrganisation>
+						<githubRepository>roogledocs</githubRepository>
 					</packageData>
 					<outputDirectory>${project.basedir}/..</outputDirectory>
 				</configuration>

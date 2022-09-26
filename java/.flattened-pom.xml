@@ -11,7 +11,7 @@
     <dependency>
       <groupId>io.github.terminological</groupId>
       <artifactId>r6-generator-runtime</artifactId>
-      <version>0.5.1</version>
+      <version>main-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

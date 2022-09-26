@@ -6,12 +6,10 @@
 #'
 #' Version: 0.1.0
 #'
-#' Generated: 2022-08-11T15:57:43.245245
+#' Generated: 2022-09-26T21:38:19.024997
 #'
 #' Contact: rob.challen@bristol.ac.uk
-#' @import huxtable
-#' @import tidyverse
-#' @import rJava
+#' @import rJava 
 #' @export
 JavaApi = R6::R6Class("JavaApi", public=list( 
 	#### fields ----
@@ -59,23 +57,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
  	#' Create the R6 api library class. This is the entry point to all Java related classes and methods in this package.
 	#' @param logLevel One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL". (defaults to "INFO") 
 	#' @examples
-	#' \dontrun{
 	#' J = roogledocs::JavaApi$get();
-	#' }
 	#' @return nothing
  	initialize = function(logLevel = "INFO") {
  		if (is.null(JavaApi$singleton)) stop("Startup the java api with JavaApi$get() rather than using this constructor directly")
  	
- 		message("Initialising R Wrapper For Googledocs Java Library")
- 		message("Version: 0.1.0")
-		message("Generated: 2022-08-11T15:57:43.245575")
  	
- 	
- 		tryCatch({
-			if (!.jniInitialized) 
-				.jinit(parameters=getOption("java.parameters"),silent = TRUE, force.init = FALSE)
-		}, error = function(e) stop("Java cannot be initialised: ",e$message)
-		)
+ 		.startJvm()
 		
 		# Java dependencies
 		jars = .checkDependencies(quiet = TRUE)
@@ -93,7 +81,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.1.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-08-11T15:57:43.245886");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-09-26T21:38:19.028359");
 		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.1.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
@@ -136,13 +124,6 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmp = as.numeric(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumeric',tmp))
 			},
-			RLogical=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
-				if (length(rObj) > 1) stop('input too long')
-				if (!is.logical(rObj)) stop('expected a logical')
-				tmp = as.integer(rObj)[[1]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
-			},
 			RFactor=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
 				if (length(rObj) > 1) stop('input too long')
@@ -150,15 +131,22 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmpLabel = levels(rObj)[[tmp]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
 			},
+			RLogical=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
+				if (length(rObj) > 1) stop('input too long')
+				if (!is.logical(rObj)) stop('expected a logical')
+				tmp = as.integer(rObj)[[1]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
+			},
+			RNull=function(rObj) {
+				if (!is.null(rObj)) stop('input expected to be NULL')
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RNull'))
+			},
 			RLogicalVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector'))
 				if (!is.logical(rObj)) stop('expected a vector of logicals')
 				tmp = as.integer(rObj)
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogicalVector',rJava::.jarray(tmp)))
-			},
-			RNull=function(rObj) {
-				if (!is.null(rObj)) stop('input expected to be NULL')
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RNull'))
 			},
 			RCharacter=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacter'))
@@ -316,10 +304,10 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RCharacterVector=function(jObj) as.character(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive')),
 			RoogleDocs=function(jObj) return(jObj),
 			RNumeric=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='D',method='rPrimitive')),
-			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
-			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
+			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RNull=function(jObj) return(NULL),
+			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
 			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
 			String=function(jObj) return(as.character(jObj)),
 			void=function(jObj) invisible(NULL),
@@ -465,18 +453,8 @@ JavaApi$get = function(logLevel = "INFO") {
 }
 
 JavaApi$rebuildDependencies = function( ... ) {
-	# remove working directory
-	unlink(.workingDir(), recursive = TRUE)
-	# rebuild everything
-	classpath = .checkDependencies(quiet = FALSE, ...)
-	
-	# find the jars that come bundled with the library:
-	jars = list.files(.here("java"), pattern=".*\\.jar", full.names = TRUE)
-	jars = jars[!endsWith(jars,"sources.jar") & !endsWith(jars,"javadoc.jar") & !endsWith(jars,"src.jar")]
-	
-	# and add any that have been resolved and downloaded by maven:
-	jars = unique(c(jars,classpath))
-	
+	.startJvm()
+	jars = .checkDependencies(nocache=TRUE, quiet=FALSE)
 	if (!all(file.exists(jars))) {
 		warning("The library has been rebuilt but there is still some missing dependencies: Out of the following")
 		warning(paste0(jars,collapse="\n"))
@@ -489,173 +467,52 @@ JavaApi$rebuildDependencies = function( ... ) {
 	return(jars)
 }
 
+JavaApi$installDependencies = function() {
+	.startJvm()
+	jars = .checkDependencies(nocache=FALSE, quiet=FALSE)
+	.jaddClassPath(jars)
+}
+
+JavaApi$versionInformation = function() {
+	out = list(
+		package = "roogledocs",
+		r_package_version = "0.1.0",
+		r_package_generated = "2022-09-26T21:38:19.059784",
+		java_library_version = "io.github.terminological:roogledocs:0.1.0",
+		maintainer = "rob.challen@bristol.ac.uk"
+	)
+	# try and get complilation information if library is loaded
+	try({
+		out$java_library_compiled = .jcall("uk/co/terminological/rjava/LogController", returnSig = "S", method = "getClassBuildTime")
+	}, silent=TRUE)
+	return(out)
+}
 
 ## package private utility functions for managing maven dependencies ----
 # as this is generated code configuration is hard coded here
 # i.e. these functions are specific for the configuration of this package.
 
-.checkDependencies = function(...) {
+
+.checkDependencies = function(nocache = FALSE, ...) {
+	package_jar = .package_jars(package_name="roogledocs",types="thin-jar")
+	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.1.0")]
+	
 	# Java dependencies
 	# the main java library has been compiled but external dependencies must be resolved by maven
 	# successful resolution of the classpath libraries depends on the runtime machine and requires
 	# access to the internet at a minimum.
-	pomLoc = .extractPom()
-	classpath = .resolveDependencies(pomLoc, ...) 
+	maven_dependencies = .resolve_dependencies(artifact="io.github.terminological:roogledocs:0.1.0", nocache=nocache, path=package_jar, ...)
+	jars = .package_jars(package_name="roogledocs",types="thin-jar")
+	# all jars in R package and maven dependencies
+	jars = unique(c(jars,maven_dependencies))
 	
 	# find the jars that come bundled with the library:
-	jars = list.files(.here("java"), pattern=".*\\.jar", full.names = TRUE)
-	jars = jars[!endsWith(jars,"sources.jar") & !endsWith(jars,"javadoc.jar") & !endsWith(jars,"src.jar")]
-	
 	# and add any that have been resolved and downloaded by maven:
-	jars = unique(c(jars,classpath))
 	return(jars)
 }
 
-# package working directory
-.workingDir = function() {
-	tmp = path.expand(rappdirs::user_cache_dir("roogledocs-0.1.0"))
-	fs::dir_create(tmp)
-	return(tmp)
-}
 
-# package installation directory
-.here = function(paths) {
-	path.expand(system.file(paths, package="roogledocs"))
-}
-
-# loads a maven wrapper distribution from the internet and unzips it into the package working directory
-.loadMavenWrapper = function() {
-	dir = .workingDir()
-	if (!file.exists(paste0(dir,"/mvnw"))) {
-		destfile = paste0(dir,"/wrapper.zip")
-		message("Bootstrapping maven wrapper.")
-		utils::download.file(
-			"https://repo1.maven.org/maven2/org/apache/maven/wrapper/maven-wrapper-distribution/3.1.1/maven-wrapper-distribution-3.1.1-bin.zip",
-			destfile = destfile,
-			quiet = TRUE
-		)
-		utils::unzip(destfile,exdir=dir)
-		unlink(destfile)
-		if(!file.exists(paste0(dir,"/mvnw"))) stop("downloading maven wrapper has not been successful")
-	}
-	if(.Platform$OS.type == "windows") {
-		mvnPath = paste0(dir,"/mvnw.cmd")
-	} else {
-		mvnPath = paste0(dir,"/mvnw")
-	}
-	write(c(
-		"distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.3.9/apache-maven-3.3.9-bin.zip",
-		"wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.1/maven-wrapper-3.1.1.jar"
-	), paste0(dir,"/.mvn/wrapper/maven-wrapper.properties"))
-	Sys.chmod(mvnPath)
-	return(mvnPath)
-}
-
-# detect if `test` file exists and is newer that `original`
-.fileNewer = function(original, test) {
-	if (!file.exists(original)) stop("source file doesn't exist")
-	if (!file.exists(test)) return(FALSE)
-	as.POSIXct(file.info(original)$mtime) < as.POSIXct(file.info(test)$mtime)
-}
-
-# gets the pom.xml file for io.github.terminological:roogledocs:0.1.0 from a thin jar
-.extractPom = function() {
-	dir = .workingDir()
-	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.1.0\\.jar", full.names = TRUE)
-	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.1.0")
-	jarLoc = jarLoc[[1]]
-	pomPath = paste0(dir,"/pom.xml")
-	if (!.fileNewer(jarLoc, pomPath)) {
-		utils::unzip(jarLoc, files = "META-INF/maven/io.github.terminological/roogledocs/pom.xml", junkpaths = TRUE, exdir = dir)
-		if (!file.exists(pomPath)) stop("couldn't extract META-INF/maven/io.github.terminological/roogledocs/pom.xml from ",jarLoc)
-	}
-	return(pomPath)
-}
-
-# gets the pom.xml file for io.github.terminological:roogledocs:0.1.0 which is the library version we exepct to be bundled in the 
-.extractSources = function() {
-	dir = .workingDir()
-	jarLoc = list.files(.here(c("inst/java","java")), pattern = "roogledocs-0.1.0-src\\.jar", full.names = TRUE)
-	if (length(jarLoc)==0) stop("couldn't find jar for artifact: roogledocs-0.1.0-src.jar")
-	jarLoc = jarLoc[[1]]
-	pomPath = paste0(dir,"/roogledocs-0.1.0/pom.xml")
-	if (!.fileNewer(jarLoc, pomPath)) {
-		utils::unzip(jarLoc, exdir = dir)
-		if (!file.exists(pomPath)) stop("couldn't extract source files from ",jarLoc)
-	}
-	return(pomPath)
-}
-
-# executes maven assembly plugin and relocates resulting fat jar into java library directory
-.compileFatJar = function(pomPath, ...) {
-	fatJarFinal = fs::path(.here("java"),"roogledocs-0.1.0-jar-with-dependencies.jar")
-	if (!.fileNewer(pomPath, fatJarFinal)) {
-		message("Compiling java library and downloading dependencies, please be patient.")
-		.executeMaven(
-			pomPath, 
-			goal = c("compile","assembly:assembly"),
-			opts = c(
-				"-DdescriptorId=jar-with-dependencies",
-				"-Dmaven.test.skip=true"
-			),
-			...
-		)
-		message("Compilation complete")
-		fatJar = fs::path_norm(fs::path(pomPath, "../target/roogledocs-0.1.0-jar-with-dependencies.jar"))
-		fs::file_move(fatJar, fatJarFinal)
-	}
-	return(fatJarFinal)
-}
-
-# execute a `dependency:build-classpath` maven goal on the `pom.xml`
-.resolveDependencies = function(pomPath, ...) {
-	classpathLoc = paste0(.workingDir(), "/classpath.txt" )
-	# If the classpath file is already there we need to check that the entries on the class path are indeed available on this machine
-	# as they may have been moved or deleted
-	if(file.exists(classpathLoc)) {
-		classpathString = unique(readLines(classpathLoc,warn = FALSE))
-		if (!all(file.exists(classpathString))) {
-			# we need to rebuild the classpath file as some dependencies are not available
-			unlink(classpathLoc)
-		}
-	} 
-	if(!.fileNewer(pomPath,classpathLoc)) {
-		message("Calculating classpath and updating dependencies, please be patient.")
-		.executeMaven(
-			pomPath, 
-			goal = "dependency:build-classpath",		
-			opts = c(
-				paste0("-Dmdep.outputFile=classpath.txt"),
-				paste0("-DincludeScope=runtime")
-			),
-			...
-		)
-		message("Dependencies updated")
-	}
-	
-	if(.Platform$OS.type == "windows") {
-	  classpathString = unique(scan(classpathLoc, what = "character", sep=";", quiet=TRUE))
-	} else {
-	  classpathString = unique(scan(classpathLoc, what = "character", sep=":", quiet=TRUE))
-	}
-	
-	if (!all(file.exists(classpathString))) 
-		stop("For some inexplicable reason, Maven cannot determine the classpaths of the dependencies of this library on this machine. You can try roogledocs::JavaApi$rebuildDependencies()")
-	return(classpathString)
-}
-
-# executes a maven goal plus or minus info or debugging
-.executeMaven = function(pomPath, goal, opts = c(), quiet=TRUE, debug=FALSE, ...) {
-	mvnPath = .loadMavenWrapper()
-	args = c(goal, opts) #, paste0("-f '",pomPath,"'"))
-	if (quiet) args = c(args, "-q")
-	if (debug) args = c(args, "-X")
-	java_home = rJava::.jcall( 'java/lang/System', 'S', 'getProperty', 'java.home' )
-	Sys.setenv(JAVA_HOME=java_home)
-	# required due to an issue in Mvnw.cmd on windows.
-	wd = getwd()
-	setwd(fs::path_dir(pomPath))
-	system2(mvnPath, args)
-	setwd(wd)
+.startJvm = function() {
+	.start_jvm(debug=FALSE)
 }
 
