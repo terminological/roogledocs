@@ -88,12 +88,15 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#roogledocs" class="anchor"></a>roogledocs</h1></div>
 
+<p>ROOGLEDOCS IS IN BETA TEST.</p>
+<p>I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR GOOGLE’S REVIEW.</p>
+<p>PLEASE SUBMIT A GITHUB ISSUE WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.</p>
 <p>R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.</p>
 <div id="installation-instructions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-instructions" class="anchor"></a>Installation instructions</h2>
 <p><code>roogledocs</code> is not on cran yet. Installation from this repo can be done as follows:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"terminological/roogledocs"</span>, build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--no-multiarch"</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 <div id="r-library-documentation" class="section level2">
@@ -104,7 +107,7 @@
 <div id="simple-usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simple-usage" class="anchor"></a>Simple usage</h2>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb2"><pre class="downlit">
 
 <span class="co"># These options control whether roogledocs is disabled globally (useful for testing)</span>
 <span class="co"># and where it stores the Google Drive authentication tokens</span>
@@ -137,7 +140,7 @@ ln -s ~/Dropbox/roogledocs/client_secret.json
 cd ~/Git/roogledocs
 mvn install</code></pre>
 <p>and then in R:</p>
-<div class="sourceCode"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"~/Git/roogledocs"</span>,force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p>N.b. When you make changes to the java part of the library there are sometimes some caching issues. Full restart of R maybe required, and rebuild all data. Tweaking the library whilst doing a complex analysis is generally not a good idea (from experience).</p>
 <div id="client-secrets" class="section level3">
@@ -147,7 +150,7 @@ mvn install</code></pre>
 <p>Generic answer for google secrets:</p>
 <p><a href="https://stackoverflow.com/questions/62315535/are-there-any-security-concerns-with-sharing-the-client-secrets-of-a-google-api" class="uri">https://stackoverflow.com/questions/62315535/are-there-any-security-concerns-with-sharing-the-client-secrets-of-a-google-api</a></p>
 <p>But difference between OAuth client id secret and types discussed on <a href="https://developers.google.com/identity/protocols/oauth2">this page</a> which states:</p>
-<p>“Installed applications: The Google OAuth 2.0 endpoint supports applications that are installed on devices such as computers, mobile devices, and tablets. When you create a client ID through the Google API Console, specify that this is an Installed application, then select Android, Chrome app, iOS, Universal Windows Platform (UWP), or Desktop app as the application type.</p>
+<p>"Installed applications: The Google OAuth 2.0 endpoint supports applications that are installed on devices such as computers, mobile devices, and tablets. When you create a client ID through the Google API Console, specify that this is an Installed application, then select Android, Chrome app, iOS, Universal Windows Platform (UWP), or Desktop app as the application type.</p>
 <p>The process results in a client ID and, in some cases, a client secret, which you embed in the source code of your application. (In this context, the client secret is obviously not treated as a secret.)"</p>
 <p>Which suggests this is not an issue in this situation. In either event storing the raw client_secrets.json file in github seems lika a bad idea. However as github is the distribution method of the library it is not actually possible to totally avoid all security issues.</p>
 </div>
