@@ -7,7 +7,8 @@
 ROOGLEDOCS IS IN BETA TEST. 
 
 I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR GOOGLE'S REVIEW.
-PLEASE SUBMIT A GITHUB ISSUE WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.
+PLEASE HEAD TO THE [BETA TEST DISCUSSION](https://github.com/terminological/roogledocs/discussions/2) 
+WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.
 
 R library to perform limited interactions with Google docs (and maybe one day slides)
 in R via the Java API library. The purpose being to support Google docs as a 
