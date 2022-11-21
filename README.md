@@ -1,4 +1,4 @@
-# roogledocs
+# roogledocs: Embed Analysis in Google Docs <a href='https://terminological.github.io/roogledocs/index.html'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 [![R-CMD-check](https://github.com/terminological/roogledocs/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/roogledocs/actions)
 [![DOI](https://zenodo.org/badge/475030092.svg)](https://zenodo.org/badge/latestdoi/475030092)
@@ -6,12 +6,12 @@
 
 ROOGLEDOCS IS IN BETA TEST. 
 
-I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR GOOGLE'S REVIEW.
+I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR Google'S REVIEW.
 
 PLEASE SUBMIT A GITHUB ISSUE WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.
 
-R library to perform limited interactions with google docs (and maybe one day slides)
-in R via the Java API library. The purpose being to support google docs as a 
+R library to perform limited interactions with Google docs (and maybe one day slides)
+in R via the Java API library. The purpose being to support Google docs as a 
 platform for interactive development and documentation of data analysis in R for scientific
 publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis
 where a team of people are working collaboratively on documentation, whilst at the same time analysis 
@@ -22,20 +22,47 @@ can be updated independently of the analysis, by the wider team.
 
 ## Installation instructions
 
-`roogledocs` is not on cran yet. Installation from this repo can be done as follows:
+`roogledocs` is not on CRAN and probably will never be as the Java libraries that
+it uses are bigger than CRAN's stringent policies. Instead we have a R-universe
+repository.
+
+`roogledocs` depends on `rJava` which in turn depends on having a working Java
+installation. I recommend installing both those first. The following commands 
+can help you determine if your `rJava` installation is working:
 
 ```R
+install.packages("rJava")
+rJava::.jinit()
+rJava::J("java.lang.System")$getProperty("java.version")
+```
+
+Once `rJava` is working, stable releases of `roogledocs` can be
+installed with the following:
+
+```R
+# Enable repository from terminological
+options(repos = c(
+  terminological = 'https://terminological.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+
+# Download and install roogledocs in R
+install.packages('roogledocs')
+```
+
+Alternatively unstable development branches can be found here:
+
+```R
+# the --no-multiarch option is required on windows.
 devtools::install_github("terminological/roogledocs", build_opts = c("--no-multiarch"))
 ```
 
 ## R library documentation
 
-[The R package site is here](https://terminological.github.io/roogledocs/docs/)
+[The R package site is here](https://terminological.github.io/roogledocs/)
 
 ## Simple usage
 
 ```R
-
 # These options control whether roogledocs is disabled globally (useful for testing)
 # and where it stores the Google Drive authentication tokens
 options('roogledocs.disabled'=FALSE)
@@ -49,72 +76,23 @@ Which will authenticate you, create a blank document (or retrieve it if it exist
 updates the first figure in the document, or inserts it at the end if no images exist
 already.
 
-After some editing of the document and further analysis you are ready for a new version of the figure:
+After some editing of the document and further analysis you are ready for a new
+version of the figure:
 
 ```{R}
 paper$updateFigure("/full/path/to/figure-1-v2.png", figureIndex = 1, dpi = 300)
 ```
 
-Which updates the figure leaving the rest of the google doc content in place. Clearly this can be combined with ggplot 
-to produce a seamless scripted data pipeline, one output of which is a google doc. This can be executed in RMarkdown, in 
-which case the markdown can be a notebook documenting the code and methodology, and the google doc is the write up.   
+Which updates the figure leaving the rest of the Google doc content in place.
+Clearly this can be combined with ggplot to produce a seamless scripted data
+pipeline, one output of which is a Google doc. This can be executed in
+RMarkdown, in which case the markdown can be a notebook documenting the code and
+methodology, and the Google doc is the write up.
 
-## Development notes
+## Legal stuff
 
-This library uses an R-code generation process `r6-generator-maven-plugin` and `rJava`. 
+As we interact with the Google Docs api we are required to have the following 
+policies and terms of service. By using the library you agree to these:
 
-For Google API OAuth a client id is required. This repository does not include the client_secrets.json file for this but this
-must be included as a symbolic link when project is cloned and BEFORE running `mvn install`. Installation will not fail without
-it but the resulting library will not work. This is only of relevance for development. For use it is all bundled
-
-To do this you must get a client_secret.json file from:
-
-- <https://developers.google.com/identity/protocols/oauth2>
-- <https://console.cloud.google.com/apis/credentials?project=your_project_name>
-
-You are requesting a OAuth client id; type "desktop application". The client_secret.json file should then be saved outside of
-the github repository, and symbolic linked to the `src/main/resources` directory. Symbolic links are implicitly ignored by github, 
-but it should also be explicitly excluded by `.gitignore`:
-
-e.g. in my case:
-
-```
-cd ~/Git/roogledocs/src/main
-mkdir resources
-cd resources
-ln -s ~/Dropbox/roogledocs/client_secret.json
-cd ~/Git/roogledocs
-mvn install
-```
-
-and then in R:
-
-
-```R
-devtools::load_all("~/Git/roogledocs",force = TRUE)
-```
-
-N.b. When you make changes to the java part of the library there are sometimes some caching issues. Full restart of R maybe 
-required, and rebuild all data. Tweaking the library whilst doing a complex analysis is generally not a good idea (from experience).
-
-### Client secrets
-
-Are the OAuth client secrets really necessarily secret?
-
-Generic answer for google secrets:
-
-<https://stackoverflow.com/questions/62315535/are-there-any-security-concerns-with-sharing-the-client-secrets-of-a-google-api>
-
-But difference between OAuth client id secret and types discussed on [this page](https://developers.google.com/identity/protocols/oauth2)
-which states:
-
-"Installed applications: The Google OAuth 2.0 endpoint supports applications that are installed on devices such as computers, mobile devices, 
-and tablets. When you create a client ID through the Google API Console, specify that this is an Installed application, then select Android, 
-Chrome app, iOS, Universal Windows Platform (UWP), or Desktop app as the application type.
-
-The process results in a client ID and, in some cases, a client secret, which you embed in the source code of your application. (In this context, 
-the client secret is obviously not treated as a secret.)"
-
-Which suggests this is not an issue in this situation. In either event storing the raw client_secrets.json file in github seems lika a bad idea. However 
-as github is the distribution method of the library it is not actually possible to totally avoid all security issues.
-
+* [Privacy policy](privacy-policy.html)
+* [Terms of service](terms-of-service.html)

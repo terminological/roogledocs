@@ -14,11 +14,14 @@ import java.util.stream.Stream;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
 
+import com.google.api.services.docs.v1.model.Color;
 import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.InlineObjectProperties;
 import com.google.api.services.docs.v1.model.Location;
+import com.google.api.services.docs.v1.model.OptionalColor;
 import com.google.api.services.docs.v1.model.ParagraphElement;
 import com.google.api.services.docs.v1.model.Range;
+import com.google.api.services.docs.v1.model.RgbColor;
 import com.google.api.services.docs.v1.model.Size;
 import com.google.api.services.docs.v1.model.Table;
 import com.google.api.services.docs.v1.model.TableCell;
@@ -162,4 +165,44 @@ public class DocumentHelper {
 			.map(tr -> tr.getTextStyle());
 	}
 	
+	static Map<String,TupleList<Integer,Integer>> findLinks(Document doc) {
+		
+		Map<String,TupleList<Integer,Integer>> tl = new HashMap<>();
+		
+		// RDocument.TEXT_LINK_ELEMENTS
+		
+		elements(doc)
+			.forEach(el -> {
+				boolean linked = ofNullable(el.getTextRun())
+						.flatMap(tr -> ofNullable(tr.getTextStyle().getLink()))
+						.anyMatch(l -> l.getUrl().startsWith(RequestBuilder.LINKBASE));
+				if (linked) {
+					String url = el.getTextRun().getTextStyle().getLink().getUrl();
+					String name = RequestBuilder.nameOfLink(url);
+					if (!tl.containsKey(name))	tl.put(name, TupleList.create());
+					TupleList<Integer, Integer> tl2 = tl.get(name);
+					Tuple<Integer, Integer> match = Tuple.create(el.getStartIndex(), el.getEndIndex());
+					tl2.add(match);
+				}
+				
+				boolean linkedImage = ofNullable(el.getInlineObjectElement())
+						.flatMap(tr -> ofNullable(tr.getTextStyle().getLink()))
+						.anyMatch(l -> l.getUrl().startsWith(RequestBuilder.LINKBASE));
+				if (linkedImage) {
+					String url = el.getInlineObjectElement().getTextStyle().getLink().getUrl();
+					String name = RequestBuilder.nameOfLink(url);
+					if (!tl.containsKey(name))	tl.put(name, TupleList.create());
+					TupleList<Integer, Integer> tl2 = tl.get(name);
+					Tuple<Integer, Integer> match = Tuple.create(el.getStartIndex(), el.getEndIndex());
+					tl2.add(match);
+				}
+			});
+		
+		return(tl);
+	}
+	
+	
+	static OptionalColor col(Float r, Float g, Float b) {
+		return new OptionalColor().setColor(new Color().setRgbColor(new RgbColor().setRed(r).setBlue(b).setGreen(g)));
+	}
 }

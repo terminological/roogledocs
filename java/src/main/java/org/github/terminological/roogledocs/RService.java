@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.slf4j.Logger;
@@ -183,7 +185,7 @@ public class RService {
 		try {
 			credential = CompletableFuture
 					.supplyAsync(Exceptional.unsafe(() -> loginApp.authorize("user")))
-					.get(20, TimeUnit.SECONDS)
+					.get(60, TimeUnit.SECONDS)
 					.result();
 		} catch (InterruptedException | TimeoutException e) {
 			try {
@@ -215,6 +217,10 @@ public class RService {
     }
     
     public List<Tuple<String,String>> search(String documentName, String mimeType, boolean exact) throws IOException {
+    	return search(documentName, mimeType, exact, Collections.emptyList());
+    }
+    
+    public List<Tuple<String,String>> search(String documentName, String mimeType, boolean exact, List<String> parents) throws IOException {
     	// https://developers.google.com/drive/api/guides/search-files
     	List<Tuple<String,String>> out = new ArrayList<>();
     	String pageToken = null;
@@ -222,6 +228,8 @@ public class RService {
     			"name "+(exact ? "=" : "contains")+" '"+documentName+"'" +
     			(mimeType!=null ? " and mimeType = '"+mimeType+"'" : "")+
     			" and trashed = false";
+    	String pQry = parents.stream().map(p -> " and '"+p+"' in parents").collect(Collectors.joining());
+    	qry = qry+pQry;
     	do {
     	  FileList result = getDrive().files().list()
     	      .setQ(qry)
@@ -302,10 +310,22 @@ public class RService {
     			file);
     }
     
+    //TODO: A copy to same directory 
+    
+    public List<String> getFileParents(String driveId) throws IOException {
+    	File f = driveService.files().get(driveId).setFields("id,kind,mimeType,name,createdTime,modifiedTime,size,parents").execute();
+    	return f.getParents() == null ? Collections.emptyList() : f.getParents();
+    }
+    
     public String upload(String documentName, Path file) throws IOException {
-    	File fileMetadata = new File().setName(documentName);
+    	return upload(documentName, file, Collections.emptyList());
+    }
+    
+    public String upload(String documentName, Path file, List<String> parents) throws IOException {
     	URLConnection connection = file.toUri().toURL().openConnection();
         String mimeType = connection.getContentType();
+        
+    	File fileMetadata = new File().setName(documentName).setParents(parents);
         log.info("Uploading: "+file.getFileName()+"; with type: "+mimeType); 
         FileContent mediaContent = new FileContent(mimeType, file.toFile());
     	File newFile = driveService.files().create(fileMetadata, mediaContent)
@@ -411,7 +431,7 @@ public class RService {
 				try {
 					Files.delete(f);
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					System.out.println("problem deleting "+f.toString());
 				}
 			});
 		services.remove(tokenDirectory);

@@ -4,11 +4,14 @@
 #' @description
 #' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.1.0
+#' Version: 0.2.0
 #'
-#' Generated: 2022-09-26T22:25:24.175057
+#' Generated: 2022-11-21T13:35:06.543
 #'
 #' Contact: rob.challen@bristol.ac.uk
+#' @import R6
+#' @import tidyr
+#' @import dplyr
 #' @import rJava 
 #' @export
 JavaApi = R6::R6Class("JavaApi", public=list( 
@@ -80,9 +83,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.1.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-09-26T22:25:24.175260");
-		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.1.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.2.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-11-21T13:35:06.544");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.2.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -98,18 +101,18 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmpDim = dim(rObj)
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumericArray',rJava::.jarray(tmpVec),rJava::.jarray(tmpDim)))
 			},
-			RDateVector=function(rObj) {
-				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
-				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
-				tmp = as.character(rObj,format='%C%y-%m-%d')
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
-			},
 			RDate=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RDate'))
 				if (length(rObj) > 1) stop('input too long')
 			   if (rObj<'0001-01-01') message('dates smaller than 0001-01-01 will be converted to NA')
 				tmp = as.character(rObj,format='%C%y-%m-%d')[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDate',tmp))
+			},
+			RDateVector=function(rObj) {
+				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
+				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
+				tmp = as.character(rObj,format='%C%y-%m-%d')
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
 			},
 			RCharacterVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RCharacterVector'))
@@ -124,19 +127,19 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				tmp = as.numeric(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RNumeric',tmp))
 			},
-			RFactor=function(rObj) {
-				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
-				if (length(rObj) > 1) stop('input too long')
-				tmp = as.integer(rObj)[[1]]
-				tmpLabel = levels(rObj)[[tmp]]
-				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
-			},
 			RLogical=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical'))
 				if (length(rObj) > 1) stop('input too long')
 				if (!is.logical(rObj)) stop('expected a logical')
 				tmp = as.integer(rObj)[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RLogical',tmp))
+			},
+			RFactor=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor'))
+				if (length(rObj) > 1) stop('input too long')
+				tmp = as.integer(rObj)[[1]]
+				tmpLabel = levels(rObj)[[tmp]]
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RFactor',tmp, tmpLabel))
 			},
 			RNull=function(rObj) {
 				if (!is.null(rObj)) stop('input expected to be NULL')
@@ -299,13 +302,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			   if (length(tmpDim)==2) return(matrix(tmpVec,tmpDim))
 				return(array(tmpVec,tmpDim))
 			},
-			RDateVector=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RDate=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
+			RDateVector=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RCharacterVector=function(jObj) as.character(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive')),
 			RoogleDocs=function(jObj) return(jObj),
 			RNumeric=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='D',method='rPrimitive')),
-			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
 			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
+			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
 			RNull=function(jObj) return(NULL),
 			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
 			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
@@ -360,6 +363,20 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 					self
 				);
 				return(tmp_r6)
+			},
+			reauth = function(tokenDirectory=.tokenDirectory()) {
+				# copy parameters
+				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
+				#execute static call
+				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="reauth" , tmp_tokenDirectory, check=FALSE);
+				self$printMessages()
+				.jcheck() 
+				# wrap return java object in R6 class 
+				out = RoogleDocs$new(
+					self$.fromJava$RoogleDocs(tmp_out),
+					self
+				);
+				return(out)
 			},
 			docById = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
@@ -476,9 +493,9 @@ JavaApi$installDependencies = function() {
 JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
-		r_package_version = "0.1.0",
-		r_package_generated = "2022-09-26T22:25:24.201984",
-		java_library_version = "io.github.terminological:roogledocs:0.1.0",
+		r_package_version = "0.2.0",
+		r_package_generated = "2022-11-21T13:35:06.569",
+		java_library_version = "io.github.terminological:roogledocs:0.2.0",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)
 	# try and get complilation information if library is loaded
@@ -494,17 +511,13 @@ JavaApi$versionInformation = function() {
 
 
 .checkDependencies = function(nocache = FALSE, ...) {
-	package_jar = .package_jars(package_name="roogledocs",types="thin-jar")
-	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.1.0")]
+	package_jar = .package_jars(package_name="roogledocs",types="fat-jar")
+	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.2.0")]
 	
 	# Java dependencies
-	# the main java library has been compiled but external dependencies must be resolved by maven
-	# successful resolution of the classpath libraries depends on the runtime machine and requires
-	# access to the internet at a minimum.
-	maven_dependencies = .resolve_dependencies(artifact="io.github.terminological:roogledocs:0.1.0", nocache=nocache, path=package_jar, ...)
-	jars = .package_jars(package_name="roogledocs",types="thin-jar")
-	# all jars in R package and maven dependencies
-	jars = unique(c(jars,maven_dependencies))
+	# all java library code and dependencies have already been bundled into a single fat jar
+	# compilation was done on the library developers machine and has no external dependencies
+	jars = package_jar
 	
 	# find the jars that come bundled with the library:
 	# and add any that have been resolved and downloaded by maven:

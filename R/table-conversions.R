@@ -86,7 +86,11 @@ as.long_format_table.data.frame = function(table, fontName = "Roboto", fontSize 
     fontSize = as.numeric(fontSize),
     fillColour = "#FFFFFF",
     alignment = alignment,
-    valignment = valignment
+    valignment = valignment,
+    bottomPadding = 0,
+    topPadding = 0,
+    leftPadding = 1,
+    rightPadding = 1
   )
 
   class(tidy) = c("long_format_table",class(tidy))
@@ -141,7 +145,11 @@ as.long_format_table.huxtable = function(table, fontName = "Roboto", fontSize = 
     topBorderWeight = utils::head(attr(table,"tb_borders")$thickness,-1) %>% as.vector() %>% tidyr::replace_na(0),
     bottomBorderWeight = attr(table,"tb_borders")$thickness[-1,] %>% as.vector() %>% tidyr::replace_na(0),
     leftBorderWeight = t(utils::head(t(attr(table,"lr_borders")$thickness),-1)) %>% as.vector() %>% tidyr::replace_na(0),
-    rightBorderWeight = attr(table,"lr_borders")$thickness[,-1] %>% as.vector() %>% tidyr::replace_na(0)
+    rightBorderWeight = attr(table,"lr_borders")$thickness[,-1] %>% as.vector() %>% tidyr::replace_na(0),
+    bottomPadding = attr(table,"bottom_padding") %>% as.vector() %>% tidyr::replace_na(0),
+    topPadding = attr(table,"top_padding") %>% as.vector() %>% tidyr::replace_na(0),
+    leftPadding = attr(table,"left_padding") %>% as.vector() %>% tidyr::replace_na(1),
+    rightPadding = attr(table,"right_padding") %>% as.vector() %>% tidyr::replace_na(1)
   ) %>% dplyr::select(-bold,-italic)
 
   tidy2 = tidy2 %>% .remove_spans()

@@ -25,9 +25,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 
-Version: 0.1.0
+Version: 0.2.0
 
-Generated: 2022-09-26T22:25:24.096789
+Generated: 2022-11-21T13:35:06.517
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}
@@ -55,6 +55,17 @@ J = roogledocs::JavaApi$get()
 J$RoogleDocs$new(tokenDirectory, disabled)
 # or alternatively:
 roogledocs::new(tokenDirectory, disabled)
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$reauth(...)`
+## Aliased as `roogledocs::reauth(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$reauth(tokenDirectory)
+# or alternatively:
+roogledocs::reauth(tokenDirectory)
 }
 
 ## -----------------------------------
@@ -131,6 +142,7 @@ roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 	\if{html}{\out{<hr>}}
 	\itemize{
 		\item \href{#method-RoogleDocs-new}{\code{J$RoogleDocs$new(tokenDirectory, disabled)}}
+		\item \href{#method-RoogleDocs-reauth}{\code{J$RoogleDocs$reauth(tokenDirectory)}}
 		\item \href{#method-RoogleDocs-docById}{\code{J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docByName}{\code{J$RoogleDocs$docByName(title, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docFromTemplate}{\code{J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)}}
@@ -356,14 +368,51 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
 
 		\subsection{Returns}{
 			R6 RoogleDocs object: 
+		}
+	}
+
+
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-RoogleDocs-reauth"></a>}}
+	
+	\subsection{Method \code{RoogleDocs$reauth()}}{
+		Re-authenticate roogledocs library
+
+Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+
+Generally this is only be needed if  
+application permission updates are needed in which case the directory can be manually deleted anyway,
+or if you want to switch google user without using a different tokenDirectory.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$reauth(tokenDirectory)
+# this method is also exposed as a package function:
+roogledocs::reauth(tokenDirectory)
+	  		}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: a new RoogleDocs instance without an active document
 		}
 	}
 
@@ -389,8 +438,8 @@ roogledocs::doc_by_id(shareUrlOrDocId, tokenDirectory, disabled)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -422,8 +471,8 @@ roogledocs::doc_by_name(title, tokenDirectory, disabled)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -457,8 +506,8 @@ roogledocs::doc_from_template(title, templateUri, tokenDirectory, disabled)
 				\item{title a document title. If there is an exact match in google drive then that document will be used
 otherwise a new one will be created.}{ - (java expects a String)}
 				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -490,7 +539,7 @@ roogledocs::search_for_documents(titleMatch, tokenDirectory)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -522,9 +571,9 @@ roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
-				\item{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE))}{ - (java expects a boolean)}
-				\item{tokenDirectory - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`)}{ - (java expects a boolean)}
+				\item{tokenDirectory - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}

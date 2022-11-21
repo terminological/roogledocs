@@ -1,8 +1,8 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1
+pandoc: 2.9.2.1
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   placeholder: placeholder.html
-  web-only/roogledocs: roogledocs.html
-last_built: 2022-09-26T22:04Z
+  roogledocs: web-only/roogledocs.html
+last_built: 2022-11-21T13:35Z
 

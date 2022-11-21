@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.terminological</groupId>
 	<artifactId>roogledocs</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<description>R wrapper for Google docs API java library</description>
 
 	<properties>
@@ -131,7 +131,7 @@ can be updated independently of the analysis, by the wider team.
 						<packageName>roogledocs</packageName>
 						<license>MIT</license>
 						<preCompileBinary>true</preCompileBinary>
-						<packageAllDependencies>false</packageAllDependencies>
+						<packageAllDependencies>true</packageAllDependencies>
 						<maintainerName>Rob</maintainerName>
 						<maintainerFamilyName>Challen</maintainerFamilyName>
 						<maintainerEmail>rob.challen@bristol.ac.uk</maintainerEmail>

@@ -16,8 +16,11 @@ public interface LongFormatTable extends TextFormat {
 	public RNumeric rightBorderWeight();
 	public RNumeric topBorderWeight();
 	public RNumeric bottomBorderWeight();
-	// TODO: border style and colour;
+	//TODO: border style and colour;
 	public RCharacter alignment();
 	public RCharacter valignment();
-	
+	public RNumeric leftPadding();
+	public RNumeric rightPadding();
+	public RNumeric topPadding();
+	public RNumeric bottomPadding();
  }

@@ -5,17 +5,17 @@
 \title{Deletes a google document by name.}
 \usage{delete_document(
 	docName,
-	areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE),
-	tokenDirectory=.tokenDirectory(),
-	disabled=getOption('roogledocs.disabled',FALSE)
+	areYouSure,
+	tokenDirectory,
+	disabled
 )
 }
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
 	\item{docName}{docName - the name of a document to delete. must be an exact and unique match. - (java expects a String)}
-	\item{areYouSure}{areYouSure - a boolean check. - (defaulting to utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)) - (java expects a boolean)}
-	\item{tokenDirectory}{tokenDirectory - (defaulting to .tokenDirectory()) - (java expects a String)}
-	\item{disabled}{disabled - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)}
+	\item{areYouSure}{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`) - (java expects a boolean)}
+	\item{tokenDirectory}{tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a String)}
+	\item{disabled}{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)}
 	\if{html}{\out{</div>}}
 }
 \value{

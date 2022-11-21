@@ -5,13 +5,13 @@
 \title{Search for documents with the given title}
 \usage{search_for_documents(
 	titleMatch,
-	tokenDirectory=.tokenDirectory()
+	tokenDirectory
 )
 }
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
 	\item{titleMatch}{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a String)}
 	\if{html}{\out{</div>}}
 }
 \value{

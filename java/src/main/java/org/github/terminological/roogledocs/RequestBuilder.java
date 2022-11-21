@@ -1,7 +1,10 @@
 package org.github.terminological.roogledocs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.api.services.docs.v1.model.BatchUpdateDocumentRequest;
 import com.google.api.services.docs.v1.model.Color;
-import com.google.api.services.docs.v1.model.CreateNamedRangeRequest;
 import com.google.api.services.docs.v1.model.DeleteContentRangeRequest;
 import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.EndOfSegmentLocation;
@@ -58,7 +60,6 @@ import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
 
 
-
 public class RequestBuilder extends ArrayList<Request> {
 
 	RDocument document;
@@ -81,28 +82,64 @@ public class RequestBuilder extends ArrayList<Request> {
 		}
 	}
 	
-	public void createNamedRange(String tagName, int start, int end, String segmentId) {
+	protected static String LINKBASE = "https://terminological.github.io/roogledocs/tag.html?";
+	
+	protected static String linkUrl(String tagName) {
+		try {
+			return LINKBASE+URLEncoder.encode(tagName, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	protected static String nameOfLink(String linkUrl) {
+		try {
+			return URLDecoder.decode(linkUrl.replace(RequestBuilder.LINKBASE, ""),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void createLinkTag(String tagName, int start, int end, String segmentId) {
 		Range tmp = new Range()
 				.setStartIndex(start)
 				.setEndIndex(end);
 		if (segmentId != null) {
 			tmp.setSegmentId(segmentId);
 		}
-		this.add(
-				new Request().setCreateNamedRange(
-					new CreateNamedRangeRequest()
-						.setName(tagName)
-						.setRange(tmp))
-				);
+		this.createPlainLink(tmp, linkUrl(tagName));
 	}
 	
-	public void createNamedRange(String tagName, int start, int end) {
-		createNamedRange(tagName,start,end,null);
+	public void createLinkTag(String tagName, int start, int end) {
+		createLinkTag(tagName,start,end,null);
 	}
 	
-	public void createNamedRange(String tagName, Range range) {
-		createNamedRange(tagName,range.getStartIndex(), range.getEndIndex(), range.getSegmentId());
+	public void createLinkTag(String tagName, Range range) {
+		createLinkTag(tagName,range.getStartIndex(), range.getEndIndex(), range.getSegmentId());
 	}
+	
+//	public void createNamedRange(String tagName, int start, int end, String segmentId) {
+//		Range tmp = new Range()
+//				.setStartIndex(start)
+//				.setEndIndex(end);
+//		if (segmentId != null) {
+//			tmp.setSegmentId(segmentId);
+//		}
+//		this.add(
+//				new Request().setCreateNamedRange(
+//					new CreateNamedRangeRequest()
+//						.setName(tagName)
+//						.setRange(tmp))
+//				);
+//	}
+//	
+//	public void createNamedRange(String tagName, int start, int end) {
+//		createNamedRange(tagName,start,end,null);
+//	}
+//	
+//	public void createNamedRange(String tagName, Range range) {
+//		createNamedRange(tagName,range.getStartIndex(), range.getEndIndex(), range.getSegmentId());
+//	}
 
 	public boolean any() {
 		return this.size() > 0;
@@ -232,13 +269,13 @@ public class RequestBuilder extends ArrayList<Request> {
 										.setBorderTop(border(c.topBorderWeight().opt().orElse(0D)))
 										.setBorderLeft(border(c.leftBorderWeight().opt().orElse(0D)))
 										.setBorderRight(border(c.rightBorderWeight().opt().orElse(0D)))
-										// TODO: foreground colour
+										// TODO: foreground colour, border styles
 										.setBackgroundColor(fromHex(c.fillColour().opt().orElse("#FFFFFF")))
 										.setContentAlignment(c.valignment().opt().map(checkRange("TOP","MIDDLE","BOTTOM")).orElse("TOP")) //TOP,MIDDLE,BOTTOM
-										.setPaddingBottom(new Dimension().setMagnitude(1.0).setUnit("PT"))
-										.setPaddingTop(new Dimension().setMagnitude(1.0).setUnit("PT"))
-										.setPaddingLeft(new Dimension().setMagnitude(2.0).setUnit("PT"))
-										.setPaddingRight(new Dimension().setMagnitude(2.0).setUnit("PT"))
+										.setPaddingBottom(new Dimension().setMagnitude(c.bottomPadding().opt().orElse(1.0)).setUnit("PT"))
+										.setPaddingTop(new Dimension().setMagnitude(c.topPadding().opt().orElse(1.0)).setUnit("PT"))
+										.setPaddingLeft(new Dimension().setMagnitude(c.leftPadding().opt().orElse(1.0)).setUnit("PT"))
+										.setPaddingRight(new Dimension().setMagnitude(c.rightPadding().opt().orElse(1.0)).setUnit("PT"))
 									)
 								// .setTableStartLocation(new Location().setIndex(tableStart))
 								.setTableRange(new TableRange()
@@ -384,14 +421,51 @@ public class RequestBuilder extends ArrayList<Request> {
 				formatText(textRun, c);
 				
 				if (!c.link().isNa()) {
-					this.add(new Request()
-			                .setUpdateTextStyle(new UpdateTextStyleRequest()
-			                        .setRange(textRun)
-			                        .setTextStyle(new TextStyle()
-			                                .setLink(new Link().setUrl(c.link().get())))
-			                        .setFields("link")));
+					createLink(textRun, c.link().get());
 				}
 			});
+	}
+
+	public void createLink(Range range, String url) {
+		this.add(new Request()
+                .setUpdateTextStyle(new UpdateTextStyleRequest()
+                        .setRange(range)
+                        .setTextStyle(new TextStyle()
+                                .setLink(new Link().setUrl(url)))
+                        .setFields("link")));
+	}
+	
+	public void createPlainLink(Range range, String url) {
+		//TODO: somehow somewhere here the update resets the format of other links in a paragraph
+		// almost as if the range is incorrect or interpreted incorrectly.
+		// alternatively createLink is being called on everything and losing its link formatting in the process?
+		this.add(
+				new Request().setUpdateTextStyle(
+					new UpdateTextStyleRequest()
+						.setTextStyle(
+								new TextStyle()
+									.setLink(new Link().setUrl(url))
+									// decided to leave this out for the time being.
+									// useful to have tagged data highlighted but necessary to be able to remove all links.
+									// which is now possible in the main API.
+ 									// .setUnderline(Boolean.FALSE)
+									// .setForegroundColor(col(0.4F,0.4F,0.4F))
+						)
+						.setRange(range)
+						// .setFields("link,underline,foregroundColor"))
+						.setFields("link"))
+				);
+	}
+	
+	public void removeLink(Range range) {
+		this.add(
+				new Request().setUpdateTextStyle(
+					new UpdateTextStyleRequest()
+						.setTextStyle(new TextStyle())
+						.setRange(range)
+						// .setFields("link,underline,foregroundColor"))
+						.setFields("link"))
+				);
 	}
 		
 }

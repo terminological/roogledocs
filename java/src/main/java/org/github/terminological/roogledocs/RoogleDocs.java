@@ -6,11 +6,13 @@ import static uk.co.terminological.rjava.RConverter.mapping;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -79,29 +81,39 @@ public class RoogleDocs {
 		if(!disabled) service = RService.with(tokenDirectory);
 	}
 	
+	// Testing
+	protected RoogleDocs(RService service, RDocument document) {
+		this.service = service;
+		this.document = document;
+		this.disabled = false;
+		this.tokenDirectory = service.getTokenDirectory().toString();
+		
+	}
+	
 	/**
-	 * Reauthenticate roogledocs
+	 * Re-authenticate roogledocs library
 	 * 
-	 * Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
-	 * Generally this would only be needed if 
+	 * Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+	 * 
+	 * Generally this is only be needed if  
 	 * application permission updates are needed in which case the directory can be manually deleted anyway,
 	 * or if you want to switch google user without using a different tokenDirectory.
 	 * 
-	 * @return a fluent method
+	 * 
+	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
+	 * @return a new RoogleDocs instance without an active document
 	 * @throws IOException if there is a problem deleting the old tokens
 	 * @throws GeneralSecurityException if there is a problem authenticating
 	 */
 	@RMethod
-	public RoogleDocs reauth() throws IOException, GeneralSecurityException {
-		if (disabled) return this;
-		
+	public static RoogleDocs reauth(@RDefault(rCode = ".tokenDirectory()") String tokenDirectory) throws IOException, GeneralSecurityException {
 		RService.deregister(tokenDirectory.toString());
-		service = RService.with(tokenDirectory.toString());
-		return this;
+		RService service = RService.with(tokenDirectory.toString());
+		return new RoogleDocs(service, null);
 	}
 	
 	/**
-	 * Enables roogledocs for this document. 
+	 * Enables roogledocs method calls for this document. 
 	 * 
 	 * It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
 	 *  
@@ -119,7 +131,7 @@ public class RoogleDocs {
 	/**
 	 * Disables roogledocs temporarily for this document. 
 	 * 
-	 * While disabled all calls to roogledocs will silently fail. 
+	 * While disabled all calls to roogledocs will silently abort. 
 	 * @return itself - a fluent method
 	 */
 	@RMethod 
@@ -292,7 +304,7 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedText(String text, String tagName) throws IOException {
+	public RoogleDocs updateTaggedText(String text, @RDefault(rCode = "deparse(substitute(text))") String tagName) throws IOException {
 		if (disabled) return this;
 		if (text == "") throw new IOException("text cannot be blank - use a single space for empty content.");
 		rdoc().updateTaggedText(tagName, text);
@@ -318,7 +330,7 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String absoluteFilePath, String tagName, @RDefault(rCode="300") double dpi) throws IOException {
+	public RoogleDocs updateTaggedImage(String absoluteFilePath, @RDefault(rCode = "deparse(substitute(absoluteFilePath))") String tagName, @RDefault(rCode="300") double dpi) throws IOException {
 		if (disabled) return this;
 		String id = service.upload(Paths.get(absoluteFilePath));
 		URI uri = service.getThumbnailUri(id);
@@ -386,6 +398,29 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * Remove all tags
+	 * 
+	 * Finds tags defined in the current document and removes them. This 
+	 * cannot be undone.
+	 * 
+	 * @param confirm - This action must be confirmed by passing `true` as cannot be undone.
+	 * @return itself - a fluent method
+	 * @throws IOException if there is a problem communicating with google servers
+	 */
+	@RMethod 
+	public RoogleDocs removeTags(@RDefault(rCode = "(menu(c('Yes','No'), title = 'Are you sure?')==1)") boolean confirm) throws IOException {
+		if (disabled) throw new IOException("roogledocs is disabled");
+		if (confirm) {
+			rdoc().removeTags();
+			System.out.println("All roogledoc tags removed from document.");
+		} else {
+			System.out.println("Removing tags aborted as confirmation not given.");
+		}
+		return this;
+	}
+	
+	
+	/**
 	 * Update or insert a formatted table into the document. 
 	 * 
 	 * The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
@@ -431,15 +466,71 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing. 
+	 * Save the document as a PDF
+	 * 
+	 * Saves a snapshot of the current google doc with `roogledocs` links removed as a pdf to a local drive. 
+	 * This is mainly intended for snapshotting the current state of the document. For final export once all
+	 * analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
+	 * 
 	 * @param absoluteFilePath - a file path to save the pdf.
+	 * @param uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
+	 *   for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
+	 *   google drive directory.
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 */
 	@RMethod
-	public RoogleDocs saveAsPdf(String absoluteFilePath) throws IOException {
+	public RoogleDocs saveAsPdf(String absoluteFilePath, @RDefault(rCode="FALSE") boolean uploadCopy) throws IOException {
 		if (disabled) return this;
-		document.saveAsPdf(absoluteFilePath);
+		RDocument newdoc = this.service.getOrClone("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
+		newdoc.removeTags();
+		newdoc.saveAsPdf(absoluteFilePath);
+		this.service.delete(newdoc.getDocId());
+		if (uploadCopy) this.uploadSupplementaryFiles(absoluteFilePath, true, false);
+		return this;
+	}
+	
+	/**
+	 * Upload a file into the same directory as the document.
+	 * 
+	 * This allow you to load e.g. a supplementary file, or the pdf of an image file or a docx/html version of a table
+	 * into google drive into the same directory as the document you are editing. This is handy for organising all the files
+	 * for a journal submission in one place. Any kind of file can be loaded, and the mimetype will be detected. Normal Google Drive rules 
+	 * for uploads will be triggered at this point. As google drive can have multiple files with the same name
+	 * the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options. 
+	 * 
+	 * @param absoluteFilePath - a file path to upload.
+	 * @param overwrite - if matching file(s) are found in the target, delete them before uploading the new one.
+	 * @param duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder.
+	 * @return itself - a fluent method
+	 * @throws IOException if there was a problem with finding the file or uploading it
+	 */
+	@RMethod
+	public RoogleDocs uploadSupplementaryFiles(String absoluteFilePath, @RDefault(rCode="FALSE") boolean overwrite, @RDefault(rCode="FALSE") boolean duplicate) throws IOException {
+		if (disabled) return this;
+		//TODO: detect naming collisions and allow overwriting?
+		Path path = Paths.get(absoluteFilePath);
+		String name = path.getFileName().toString();
+		List<String> parents = this.service.getFileParents(rdoc().getDocId());
+		List<Tuple<String,String>> existingMatches = this.service.search(name, null, true, parents);
+		if (existingMatches.size() > 0) {
+			if (overwrite) {
+				for (Tuple<String,String> existing: existingMatches) {
+					log.info("Deleting existing file as `overwrite` is true: "+existing.getSecond());
+					String id = existing.getFirst();
+					service.delete(id);
+				};
+				this.service.upload(name, path, parents);
+			} else if (duplicate) {
+				log.info("Creating new file with the same name as existing file as `duplicate` is true: "+name);
+				this.service.upload(name, path, parents);
+			} else {
+				log.warn("Aborting upload as a file of this name already exists: "+name);
+			}
+		} else {
+			// No pre-existing file of the same name in the same place.
+			this.service.upload(name, path, parents);
+		}
 		return this;
 	}
 	
@@ -454,7 +545,7 @@ public class RoogleDocs {
 	@RMethod
 	public static void deleteDocument(
 			String docName, 
-			@RDefault(rCode="utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") boolean areYouSure,
+			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") boolean areYouSure,
 			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
 	) throws IOException, GeneralSecurityException {

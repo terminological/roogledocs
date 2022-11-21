@@ -43,8 +43,10 @@
       jh = jh_parent
       jh_parent = fs::path_dir(jh)
     }
-    stop("Couldn't find 'bin/javac(.exe)' or 'bin/java(.exe)' in any parent directories starting at ",
+    if (!.is_jre_home(jh)) {
+      stop("Couldn't find 'bin/javac(.exe)' or 'bin/java(.exe)' in any parent directories starting at ",
          jh_orig,", please set options('rmaven.java_home'=...) to the root of a JDK (the directory containing 'bin/javac').")
+    }
   }
   if (set) Sys.setenv("JAVA_HOME"=jh)
   return(jh)
@@ -887,7 +889,7 @@ manually by looking at: ",dir,"\n",sep="")
   }
 
   if(pom_path %>% .is_newer_than(classpath_path)) {
-    if (.quietly(verbose)) message("Calculating classpath and updating dependencies, please be patient.")
+    message("Updating Java dependencies, please be patient.")
     .execute_maven(
       pom_path = pom_path,
       goal = "dependency:build-classpath",
@@ -967,7 +969,7 @@ manually by looking at: ",dir,"\n",sep="")
   if (nocache) unlink( fs::path(project_dir,"target"), recursive = TRUE)
 
   if (path %>% .is_newer_than(target_jar)) {
-    if (.quietly(verbose)) message("Compiling Java library, please be patient.")
+    message("Compiling Java library, please be patient.")
     .execute_maven(
       pom_path,
       goal = goal,

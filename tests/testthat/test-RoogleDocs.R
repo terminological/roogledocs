@@ -4,7 +4,6 @@
 
 # R6 RoogleDocs instance methods ----
 
-# ├ reauth() R6 method ----
 # ├ enable() R6 method ----
 # ├ disable() R6 method ----
 # ├ withDocument() R6 method ----
@@ -14,14 +13,17 @@
 # ├ updateTaggedText() R6 method ----
 # ├ updateTaggedImage() R6 method ----
 # ├ revertTags() R6 method ----
+# ├ removeTags() R6 method ----
 # ├ updateTable() R6 method ----
 # ├ updateFigure() R6 method ----
 # ├ saveAsPdf() R6 method ----
+# ├ uploadSupplementaryFiles() R6 method ----
 # ├ appendText() R6 method ----
 # ├ appendFormattedParagraph() R6 method ----
 
 # RoogleDocs static methods ----
 
+# ├ reauth() package method ----
 # ├ doc_by_id() package method ----
 # ├ doc_by_name() package method ----
 # ├ doc_from_template() package method ----

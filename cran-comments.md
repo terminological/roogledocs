@@ -21,14 +21,11 @@ This generates wrapper R6 code, documentation, DESCRIPTION and NAMESPACE files, 
 github workflows. If there are specific issues with the way these files are generated please could you raise issues on the r6-generator project on the link above
 so they can be fixed for all future projects.
 
-* The Java code that is specific to the package has been compiled and is distributed with the package, but not the source code. External dependencies
-from public repositories, will be fetched independently during the first use of this package, which is only possible if the java library only uses public dependencies. 
-This is managed by Java's standard package management system, Maven, which is itself downloaded automatically. This reduces the need for libraries to be distributed 
-with the R package, minimising the footprint of the R package, but downloading and installing the dependencies is a potential point of failure, and may take quite some time on first use of the library. 
-This is mitigated as much as possible by using battle tested standard Java tooling for dependency management, which will only download libraries it has not already used.
-
-The package download requires a working directory cache which is specified by `rappdirs::user_cache_dir` which allows us to store files that need to shared 
-across R sessions in a way that aligns with the CRAN policies.
+* All Java library code and its transitive dependencies have already been bundled into a single binary (JAR file) which is part of
+the package. This minimises the complexity of getting a java library up and running on a target
+system. However bunding java libraries does tend to make the package quite large, and will often exceed the 5Mb CRAN limit. The whole of the JAR file 
+will have to be updated and re-installed for every change to the R package, however this is the most stable option with fewest dependencies on the target system.
+For certain situations, where dependencies are not publicly available, for example, this is the only option.
 
 * The R6 package is a build time dependency. The note that it is unused can be safely ignored.
 

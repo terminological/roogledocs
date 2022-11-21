@@ -8,8 +8,8 @@
 
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory()) - (java expects a String)}
-	\item{disabled}{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE)) - (java expects a boolean)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a String)}
+	\item{disabled}{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)}
 	\if{html}{\out{</div>}}
 }
 
@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.1.0
+Version: 0.2.0
 
-Generated: 2022-09-26T22:25:24.230764
+Generated: 2022-11-21T13:35:06.598
 }
 
 \details{
@@ -43,14 +43,6 @@ can be updated independently of the analysis, by the wider team.
 J = roogledocs::JavaApi$get()
 # appropriate parameter values must be provided
 instance = J$RoogleDocs$new(tokenDirectory, disabled)
-}
-
-## -----------------------------------
-## Method `RoogleDocs$reauth()`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$reauth()
 }
 
 ## -----------------------------------
@@ -126,6 +118,14 @@ instance$revertTags()
 }
 
 ## -----------------------------------
+## Method `RoogleDocs$removeTags(confirm)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$removeTags(confirm)
+}
+
+## -----------------------------------
 ## Method `RoogleDocs$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)`
 ## -----------------------------------
 \dontrun{
@@ -142,11 +142,19 @@ instance$updateFigure(absoluteFilePath, figureIndex, dpi)
 }
 
 ## -----------------------------------
-## Method `RoogleDocs$saveAsPdf(absoluteFilePath)`
+## Method `RoogleDocs$saveAsPdf(absoluteFilePath, uploadCopy)`
 ## -----------------------------------
 \dontrun{
 # appropriate parameter values must be provided
-instance$saveAsPdf(absoluteFilePath)
+instance$saveAsPdf(absoluteFilePath, uploadCopy)
+}
+
+## -----------------------------------
+## Method `RoogleDocs$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
 }
 
 ## -----------------------------------
@@ -176,7 +184,6 @@ instance$appendFormattedParagraph(formattedTextDf)
 	}
 	\subsection{Class methods}{
 		\itemize{
-			\item \href{#method-reauth}{\code{instance$reauth()}}
 			\item \href{#method-enable}{\code{instance$enable()}}
 			\item \href{#method-disable}{\code{instance$disable()}}
 			\item \href{#method-withDocument}{\code{instance$withDocument(shareUrlOrDocId)}}
@@ -186,9 +193,11 @@ instance$appendFormattedParagraph(formattedTextDf)
 			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
 			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, dpi)}}
 			\item \href{#method-revertTags}{\code{instance$revertTags()}}
+			\item \href{#method-removeTags}{\code{instance$removeTags(confirm)}}
 			\item \href{#method-updateTable}{\code{instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)}}
 			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi)}}
-			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath)}}
+			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath, uploadCopy)}}
+			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
 			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
 			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
 			\item \code{instance$clone()}
@@ -214,8 +223,8 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled);
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to .tokenDirectory())}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to getOption('roogledocs.disabled',FALSE))}{ - (java expects a boolean)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -227,44 +236,10 @@ the new R6 RoogleDocs object
 	}
 
 	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-reauth"></a>}}
-	
-	\subsection{Method \code{reauth()}}{
-Reauthenticate roogledocs
-
-Reauthenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
-Generally this would only be needed if 
-application permission updates are needed in which case the directory can be manually deleted anyway,
-or if you want to switch google user without using a different tokenDirectory.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$reauth()
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{none}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-enable"></a>}}
 	
 	\subsection{Method \code{enable()}}{
-Enables roogledocs for this document. 
+Enables roogledocs method calls for this document. 
 
 It is likely one of `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` methods will be needed to specify the document.
 
@@ -297,7 +272,7 @@ R6 RoogleDocs object: itself - a fluent method
 	\subsection{Method \code{disable()}}{
 Disables roogledocs temporarily for this document. 
 
-While disabled all calls to roogledocs will silently fail.
+While disabled all calls to roogledocs will silently abort.
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -465,7 +440,7 @@ instance$updateTaggedText(text, tagName)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a String)}
-				\item{tagName the tag name}{ - (java expects a String)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a String)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -503,8 +478,8 @@ instance$updateTaggedImage(absoluteFilePath, tagName, dpi)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
-				\item{tagName the tag name}{ - (java expects a String)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to 300)}{ - (java expects a double)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a String)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to `300`)}{ - (java expects a double)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -547,6 +522,38 @@ R6 RoogleDocs object: itself - a fluent method
 
 	}
 	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-removeTags"></a>}}
+	
+	\subsection{Method \code{removeTags()}}{
+Remove all tags
+
+Finds tags defined in the current document and removes them. This 
+cannot be undone.
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$removeTags(confirm)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{confirm - This action must be confirmed by passing `true` as cannot be undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`)}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateTable"></a>}}
 	
 	\subsection{Method \code{updateTable()}}{
@@ -569,9 +576,9 @@ instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
 			\itemize{
 				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to -1)}{ - (java expects a int)}
-				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to attr(longFormatTable,'colWidths'))}{ - (java expects a RNumericVector)}
-				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to 6.2)}{ - (java expects a RNumeric)}
+				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to `-1`)}{ - (java expects a int)}
+				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
+				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -604,8 +611,8 @@ instance$updateFigure(absoluteFilePath, figureIndex, dpi)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{absoluteFilePath a file path to an png image file (only png is supported at this point).}{ - (java expects a String)}
-				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to -1)}{ - (java expects a int)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to 300)}{ - (java expects a double)}
+				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to `-1`)}{ - (java expects a int)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to `300`)}{ - (java expects a double)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -619,14 +626,18 @@ R6 RoogleDocs object: itself - a fluent method
 	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
 	
 	\subsection{Method \code{saveAsPdf()}}{
-Saves a snapshot of the current google doc as a pdf to a local drive. This is mainly intended for testing.
+Save the document as a PDF
+
+Saves a snapshot of the current google doc with `roogledocs` links removed as a pdf to a local drive. 
+This is mainly intended for snapshotting the current state of the document. For final export once all
+analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
 			\preformatted{
 J = roogledocs::JavaApi$get()
 instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$saveAsPdf(absoluteFilePath)
+instance$saveAsPdf(absoluteFilePath, uploadCopy)
   			}
 			\if{html}{\out{</div>}}
 		}
@@ -635,6 +646,46 @@ instance$saveAsPdf(absoluteFilePath)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a String)}
+				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
+  for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
+  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-uploadSupplementaryFiles"></a>}}
+	
+	\subsection{Method \code{uploadSupplementaryFiles()}}{
+Upload a file into the same directory as the document.
+
+This allow you to load e.g. a supplementary file, or the pdf of an image file or a docx/html version of a table
+into google drive into the same directory as the document you are editing. This is handy for organising all the files
+for a journal submission in one place. Any kind of file can be loaded, and the mimetype will be detected. Normal Google Drive rules 
+for uploads will be triggered at this point. As google drive can have multiple files with the same name
+the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options.
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{absoluteFilePath - a file path to upload.}{ - (java expects a String)}
+				\item{overwrite - if matching file(s) are found in the target, delete them before uploading the new one. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+				\item{duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -665,7 +716,7 @@ instance$appendText(text, style)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{text - a single string with the text to append which may include newlines}{ - (java expects a RCharacter)}
-				\item{style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to 'NORMAL_TEXT')}{ - (java expects a RCharacter)}
+				\item{style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to `'NORMAL_TEXT'`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}

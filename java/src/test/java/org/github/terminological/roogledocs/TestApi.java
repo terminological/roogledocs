@@ -1,11 +1,13 @@
 package org.github.terminological.roogledocs;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +20,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
-import org.github.terminological.roogledocs.RService.Exceptional;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ import uk.co.terminological.rjava.types.RVector;
 
 class TestApi {
 
-	static final Path TOKENDIR = Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs");
+	static final Path TOKENDIR = Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
 	
 	RService singleton = null;
 	RDocument testDoc = null;
@@ -79,6 +80,23 @@ class TestApi {
 	}
 	
 	@Test
+	final void testUploadSupplementary() throws IOException, URISyntaxException {
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RoogleDocs tmp = new RoogleDocs(singleton, test2);
+		Path tmpPath = Files.createTempDirectory("roogledocs-test").resolve("timestamp.txt");
+		Files.newBufferedWriter(tmpPath, StandardOpenOption.CREATE, StandardOpenOption.APPEND).append(
+			LocalDateTime.now().toString()+"\n"
+		).close();
+		tmp.uploadSupplementaryFiles(tmpPath.toString(), false, true);
+		
+		Path tmpPath2 = Files.createTempDirectory("roogledocs-test").resolve("timestamp_2.txt");
+		Files.newBufferedWriter(tmpPath2, StandardOpenOption.CREATE, StandardOpenOption.APPEND).append(
+			LocalDateTime.now().toString()+"\n"
+		).close();
+		tmp.uploadSupplementaryFiles(tmpPath2.toString(), true, false);
+	}
+	
+	@Test
 	final void testDelete() throws IOException, URISyntaxException {
 		//testUploadAndShare();
 		List<Tuple<String, String>> tmp = singleton.search("test logo", RService.MIME_PNG);
@@ -114,8 +132,14 @@ class TestApi {
 	final void testStructure() throws IOException {
 		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
-		Document doc = test1.getDoc(RDocument.MINIMAL);
+		Document doc = test1.getDoc(RDocument.IMAGE_POSITIONS);
 		System.out.print(doc.toPrettyString());
+	}
+	
+	@Test
+	final void testFindLinks() throws IOException {
+		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
+		System.out.print(test1.updateInlineTags());
 	}
 	
 	@Test
@@ -128,8 +152,16 @@ class TestApi {
 	
 	@Test
 	final void testText() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
-		test2.updateTaggedText("text-tag-1", "123REPLACEMENT321");
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		test2.updateTaggedText("text-tag-1", "1234REPLACEMENT4321");
+		Document doc = test2.getDoc();
+		System.out.print(doc.toPrettyString());
+	}
+	
+	@Test
+	final void testImage3() throws IOException {
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		test2.updateTaggedImage("dog-picture", URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"));
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
 	}
@@ -167,7 +199,7 @@ class TestApi {
 	
 	@Test
 	final void testRevert() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
 		test2.revertTags();
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
@@ -212,7 +244,7 @@ class TestApi {
 	@Test
 	final void testClone() throws IOException {
 		//RDocument d = 
-		singleton.getOrClone("roogledocs-demo", "https://docs.google.com/document/d/1R8SuJI5uJwoMGBHGMaCdRH6i9R39DPQdcAdAF4BWZ20/edit?usp=sharing");
+		singleton.getOrClone("roogledocs-clone", "https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing");
 		// d.saveAsPdf("/home/terminological/tmp/template.pdf");
 	}
 	
