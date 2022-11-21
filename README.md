@@ -1,8 +1,10 @@
 # roogledocs: Embed Analysis in Google Docs <a href='https://terminological.github.io/roogledocs/index.html'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
+<!-- badges: start -->
 [![R-CMD-check](https://github.com/terminological/roogledocs/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/roogledocs/actions)
 [![DOI](https://zenodo.org/badge/475030092.svg)](https://zenodo.org/badge/latestdoi/475030092)
-
+[![roogledocs status badge](https://terminological.r-universe.dev/badges/roogledocs)](https://terminological.r-universe.dev)
+<!-- badges: end -->
 
 ROOGLEDOCS IS IN BETA TEST. 
 
