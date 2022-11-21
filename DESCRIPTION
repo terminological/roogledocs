@@ -31,7 +31,7 @@ Imports:
 	rlang,
 	xml2,
 	stringr
-URL: https://terminological.github.io/roogledocs/docs/,
+URL: https://terminological.github.io/roogledocs/,
 	https://github.com/terminological/roogledocs
 BugReports: https://github.com/terminological/roogledocs/issues
 RoxygenNote: 7.2.1
