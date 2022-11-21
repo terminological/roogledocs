@@ -6,8 +6,7 @@
 
 ROOGLEDOCS IS IN BETA TEST. 
 
-I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR Google'S REVIEW.
-
+I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR GOOGLE'S REVIEW.
 PLEASE SUBMIT A GITHUB ISSUE WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.
 
 R library to perform limited interactions with Google docs (and maybe one day slides)
@@ -16,7 +15,7 @@ platform for interactive development and documentation of data analysis in R for
 publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis
 where a team of people are working collaboratively on documentation, whilst at the same time analysis 
 is being performed and results updated repeatedly as a result of new data. In this environment updating
-numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs
+numeric results, tabular data and figures in word documents manually becomes annoying. With `roogledocs`
 you can automate this a bit like a RMarkdown document, but with the added benefit that the content 
 can be updated independently of the analysis, by the wider team. 
 
