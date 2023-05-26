@@ -49,7 +49,7 @@ import uk.co.terminological.rjava.types.RNumericVector;
  * can be updated independently of the analysis, by the wider team.
  * 
  */
-@RClass(imports = {"dplyr","tidyr"}, suggests= {"here"}) //N.b. these imports should be detailed in 
+@RClass(imports = {"dplyr","tidyr","png","pdftools"}, suggests= {"here"}) //N.b. these imports should be detailed in 
 public class RoogleDocs {
 
 	RService service;
