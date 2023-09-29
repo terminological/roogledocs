@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.2.0
+Version: 0.2.1
 
-Generated: 2022-11-21T13:35:06.598
+Generated: 2023-09-29T16:53:46.640578179
 }
 
 \details{
@@ -172,6 +172,14 @@ instance$appendText(text, style)
 # appropriate parameter values must be provided
 instance$appendFormattedParagraph(formattedTextDf)
 }
+
+## -----------------------------------
+## Method `RoogleDocs$updateCitations(bibTex, citationStyle)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateCitations(bibTex, citationStyle)
+}
 }
 
 \keyword{java api}
@@ -200,6 +208,7 @@ instance$appendFormattedParagraph(formattedTextDf)
 			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
 			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
 			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
+			\item \href{#method-updateCitations}{\code{instance$updateCitations(bibTex, citationStyle)}}
 			\item \code{instance$clone()}
 			\item \code{instance$print()}
 		}
@@ -746,6 +755,38 @@ instance$appendFormattedParagraph(formattedTextDf)
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
 				\item{formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateCitations"></a>}}
+	
+	\subsection{Method \code{updateCitations()}}{
+Update citation tags in the document. 
+
+A citation tag is like this {{cite:challen2020;danon2021}}. The ids
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateCitations(bibTex, citationStyle)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{bibTex - a string containing the bibtex}{ - (java expects a RCharacter)}
+				\item{citationStyle - the CSL specification - (defaulting to `'ieee'`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}

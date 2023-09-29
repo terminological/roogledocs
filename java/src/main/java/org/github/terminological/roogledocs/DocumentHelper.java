@@ -165,11 +165,14 @@ public class DocumentHelper {
 			.map(tr -> tr.getTextStyle());
 	}
 	
+	
+	/**
+	 * @param doc a document from RDocument.getDoc(RDocument.TEXT_AND_IMAGE_LINK_ELEMENTS)
+	 * @return a mapping of link name to a list of start and end pairs.
+	 */
 	static Map<String,TupleList<Integer,Integer>> findLinks(Document doc) {
 		
 		Map<String,TupleList<Integer,Integer>> tl = new HashMap<>();
-		
-		// RDocument.TEXT_LINK_ELEMENTS
 		
 		elements(doc)
 			.forEach(el -> {

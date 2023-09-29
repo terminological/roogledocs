@@ -1,7 +1,7 @@
 package org.github.terminological.roogledocs;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -11,16 +11,21 @@ import java.nio.file.StandardOpenOption;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.github.terminological.roogledocs.datatypes.Tuple;
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.ParseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +35,9 @@ import org.slf4j.LoggerFactory;
 import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.Size;
 
+import de.undercouch.citeproc.CSL;
+import de.undercouch.citeproc.bibtex.BibTeXConverter;
+import de.undercouch.citeproc.bibtex.BibTeXItemDataProvider;
 import uk.co.terminological.rjava.UnconvertableTypeException;
 import uk.co.terminological.rjava.types.RDataframe;
 import uk.co.terminological.rjava.types.RNumeric;
@@ -132,7 +140,7 @@ class TestApi {
 	final void testStructure() throws IOException {
 		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
-		Document doc = test1.getDoc(RDocument.IMAGE_POSITIONS);
+		Document doc = test1.getDoc(RDocument.TEXT_AND_IMAGE_LINK_ELEMENTS);
 		System.out.print(doc.toPrettyString());
 	}
 	
@@ -154,8 +162,13 @@ class TestApi {
 	final void testText() throws IOException {
 		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
 		test2.updateTaggedText("text-tag-1", "1234REPLACEMENT4321");
-		Document doc = test2.getDoc();
-		System.out.print(doc.toPrettyString());
+		HashMap<String,String> toChange = new HashMap<>();
+		toChange.put("text-tag-2", "1234REPLACEMENT4321");
+		toChange.put("text-tag-3", "1234REPLACEMENT4321");
+		toChange.put("text-tag-4", "1234REPLACEMENT4321");
+		test2.updateTaggedText(toChange);
+//		Document doc = test2.getDoc();
+//		System.out.print(doc.toPrettyString());
 	}
 	
 	@Test
@@ -281,17 +294,57 @@ class TestApi {
 		test2.appendText(df2);
 	}
 	
+	@Test
+	final void testCSL() throws IOException, ParseException {
+		
+		InputStream is = TestApi.class.getResourceAsStream("/test.bib");
+		BibTeXDatabase db = new BibTeXConverter().loadDatabase(is);
+		BibTeXItemDataProvider provider = new BibTeXItemDataProvider();
+		provider.addDatabase(db);
+		Stream.of(provider.getIds()).forEach(System.out::println);		
+		CSL citeproc = new CSL(provider, "ieee");
+		citeproc.setOutputFormat("html");
+		citeproc.registerCitationItems(provider.getIds());
+		System.out.println(
+			citeproc.makeCitation("challen2019").stream().map(c -> c.getText()).collect(Collectors.joining(";"))
+		);
+		System.out.println(
+		citeproc.makeCitation("challen2021").stream().map(c -> c.getText()).collect(Collectors.joining(";"))
+		);
+		
+		System.out.println(
+		citeproc.makeCitation("challen2019","challen2021").stream().map(c -> c.getText()).collect(Collectors.joining(";"))
+		);
+		
+		System.out.print(citeproc.makeBibliography().makeString());
+		
+		Stream.of(citeproc.makeBibliography().getEntries()).forEach(System.out::println);
+		Stream.of(citeproc.makeBibliography().getEntryIds()).forEach(System.out::println);
+		citeproc.close();
+	}
+	
+	@Test
+	final void testCitation() throws IOException, URISyntaxException, ParseException {
+		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		String bibtex = Files.readString(Paths.get(TestApi.class.getResource("/test.bib").toURI()));
+		test2.updateCitations(bibtex, "ieee");
+		
+	}
+	
 	public static void main(String[] args) throws IOException, GeneralSecurityException {
 		Path tkn  = //Files.createTempDirectory("test-token");
 			Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
 		// RService singleton = 
+		if (Files.exists(tkn)) {
+			Files.walk(tkn).filter(p -> p != tkn).forEach(p -> {
+				try {
+					Files.deleteIfExists(p);
+				} catch (IOException e) {
+				}
+			});
+			Files.delete(tkn);
+		}
+		
 		RService.with(tkn.toString());
-		Files.walk(tkn).filter(p -> p != tkn).forEach(p -> {
-			try {
-				Files.deleteIfExists(p);
-			} catch (IOException e) {
-			}
-		});
-		Files.delete(tkn);
 	}
 }

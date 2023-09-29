@@ -21,12 +21,14 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.github.terminological.roogledocs.datatypes.TupleList;
+import org.jbibtex.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.Size;
 
+import de.undercouch.citeproc.CSL;
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RDefault;
 import uk.co.terminological.rjava.RMethod;
@@ -49,7 +51,7 @@ import uk.co.terminological.rjava.types.RNumericVector;
  * can be updated independently of the analysis, by the wider team.
  * 
  */
-@RClass(imports = {"dplyr","tidyr","png","pdftools"}, suggests= {"here"}) //N.b. these imports should be detailed in 
+@RClass(imports = {"dplyr","tidyr"}, suggests= {"here"}) //N.b. these imports should be detailed in 
 public class RoogleDocs {
 
 	RService service;
@@ -581,6 +583,28 @@ public class RoogleDocs {
 	public RoogleDocs appendFormattedParagraph(RDataframe formattedTextDf) throws IOException, UnconvertableTypeException {
 		if (disabled) return this;
 		document.appendText(formattedTextDf);
+		return this;
+	}
+	
+	/**
+	 * Update citation tags in the document. 
+	 * 
+	 * A citation tag is like this {{cite:challen2020;danon2021}}. The ids  
+	 * 
+	 * @param bibTex - a string containing the bibtex 
+	 * @param citationStyle - the CSL specification
+	 * @return itself - a fluent method
+	 * @throws IOException if there is a problem communicating with google servers.
+	 * @throws ParseException if the bibTex is poorly formed
+	 */
+	@RMethod
+	public RoogleDocs updateCitations(RCharacter bibTex, @RDefault(rCode = "'ieee'") RCharacter citationStyle) throws IOException, ParseException {
+		if (disabled) return this;
+		
+		// setup 
+		if (!CSL.supportsStyle(citationStyle.get())) throw new IOException("Unsupported citation style:"+citationStyle.get());
+		document.updateCitations(bibTex.get(), citationStyle.get());
+				
 		return this;
 	}
 }

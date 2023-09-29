@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.2.0
+#' Version: 0.2.1
 #' 
-#' Generated: 2022-11-21T13:35:06.603
+#' Generated: 2023-09-29T16:53:46.648982759
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe
@@ -619,6 +619,39 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		tmp_formattedTextDf = self$.api$.toJava$RDataframe(formattedTextDf);
 		# execute method call
 		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="appendFormattedParagraph" , tmp_formattedTextDf, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
+		# is this a fluent method?
+		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		if(self$.jobj$equals(tmp_out)) {
+			# return fluent method
+			invisible(self)
+		} else {
+			# wrap return java object in R6 class  
+			out = RoogleDocs$new(
+				self$.api$.fromJava$RoogleDocs(tmp_out),
+				self$.api
+			);
+			return(out);
+		}
+	},
+	#' @description 
+	#' updateCitations: 
+	#' Update citation tags in the document. 
+	#'   
+	#'   A citation tag is like this
+	#'   {{cite:challen2020;danon2021}}. The ids
+	#' @param bibTex - a string containing the bibtex - (java expects a RCharacter)
+	#' @param citationStyle - the CSL specification - (defaulting to `'ieee'`) - (java expects a RCharacter)
+	#' @return R6 RoogleDocs object: 
+	#' itself - a fluent method
+	updateCitations = function(bibTex, citationStyle='ieee') {
+		# copy parameters
+		tmp_bibTex = self$.api$.toJava$RCharacter(bibTex);
+		tmp_citationStyle = self$.api$.toJava$RCharacter(citationStyle);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateCitations" , tmp_bibTex, tmp_citationStyle, check=FALSE);
 		self$.api$printMessages()
 		# check for exceptions and rethrow them
 		.jcheck()

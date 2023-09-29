@@ -4,14 +4,19 @@
 #' @description
 #' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.2.0
+#' Version: 0.2.1
 #'
-#' Generated: 2022-11-21T13:35:06.543
+#' Generated: 2023-09-29T16:53:46.599959460
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import R6
+#' @import rstudioapi
+#' @import ggplot2
+#' @import base64enc
+#' @import png
 #' @import tidyr
 #' @import dplyr
+#' @import pdftools
 #' @import rJava 
 #' @export
 JavaApi = R6::R6Class("JavaApi", public=list( 
@@ -83,9 +88,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.2.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2022-11-21T13:35:06.544");
-		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.2.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.2.1");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2023-09-29T16:53:46.600572648");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.2.1");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -493,9 +498,9 @@ JavaApi$installDependencies = function() {
 JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
-		r_package_version = "0.2.0",
-		r_package_generated = "2022-11-21T13:35:06.569",
-		java_library_version = "io.github.terminological:roogledocs:0.2.0",
+		r_package_version = "0.2.1",
+		r_package_generated = "2023-09-29T16:53:46.614248255",
+		java_library_version = "io.github.terminological:roogledocs:0.2.1",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)
 	# try and get complilation information if library is loaded
@@ -512,7 +517,7 @@ JavaApi$versionInformation = function() {
 
 .checkDependencies = function(nocache = FALSE, ...) {
 	package_jar = .package_jars(package_name="roogledocs",types="fat-jar")
-	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.2.0")]
+	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.2.1")]
 	
 	# Java dependencies
 	# all java library code and dependencies have already been bundled into a single fat jar

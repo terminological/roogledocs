@@ -10,6 +10,7 @@
 ^privacy-policy\.md$
 ^terms-of-service\.md$
 ^.roogledocs-test$
+^CITATION\.cff$
 
 # Java maven directory layouts
 

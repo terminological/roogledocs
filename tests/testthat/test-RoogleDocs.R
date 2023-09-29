@@ -20,6 +20,7 @@
 # ├ uploadSupplementaryFiles() R6 method ----
 # ├ appendText() R6 method ----
 # ├ appendFormattedParagraph() R6 method ----
+# ├ updateCitations() R6 method ----
 
 # RoogleDocs static methods ----
 

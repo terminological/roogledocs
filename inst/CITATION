@@ -2,9 +2,9 @@
 c(
 	bibentry(bibtype = "Manual",
 		title = "roogledocs: R Wrapper For Googledocs Java Library",
-		year = 2022,
-		note = "R package version 0.2.0; Maven artifact: io.github.terminological:roogledocs:0.2.0",
-		url = "https://terminological.github.io/roogledocs/docs/",
+		year = 2023,
+		note = "R package version 0.2.1; Maven artifact: io.github.terminological:roogledocs:0.2.1",
+		url = "https://terminological.github.io/roogledocs/",
 		doi = "10.5281/zenodo.6576096",
 		author = c(
 			person(given = "Rob",family = "Challen",email = "rob.challen@bristol.ac.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre"))		)

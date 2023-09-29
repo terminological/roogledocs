@@ -173,27 +173,44 @@ as.long_format_table.huxtable = function(table, fontName = "Roboto", fontSize = 
     ) %>%
     dplyr::mutate(minCol = col, maxCol = col+colSpan-1) %>%
     # first of all look at each row and find the min and max of each column span
-    dplyr::group_by(row) %>% dplyr::arrange(col) %>% dplyr::mutate(maxCol = cummax(maxCol)) %>% dplyr::group_by(row,maxCol) %>% dplyr::mutate(minCol = min(col)) %>%
+    dplyr::group_by(row) %>% 
+    dplyr::arrange(col) %>% 
+    dplyr::mutate(maxCol = cummax(maxCol)) %>% 
+    dplyr::group_by(row,maxCol) %>% 
+    dplyr::mutate(minCol = min(col)) %>%
     # then for each set of columns find the most number of rows that spans
     # this is because huxtable only stores the rowSpan and colSpan in the top left corner of a rowspan
-    dplyr::group_by(row,minCol,maxCol) %>% dplyr::mutate(rowSpan = max(rowSpan)) %>%
+    dplyr::group_by(row,minCol,maxCol) %>% 
+    dplyr::mutate(rowSpan = max(rowSpan)) %>%
     # calculate the end of each row span
     dplyr::mutate(minRow = row, maxRow = row+rowSpan-1) %>%
     # then for each column, find the min and max of each row span
-    dplyr::group_by(col) %>% dplyr::arrange(row) %>% dplyr::mutate(maxRow = cummax(maxRow)) %>% dplyr::group_by(col,maxRow) %>% dplyr::mutate(minRow = min(row)) %>%
+    dplyr::group_by(col) %>% 
+    dplyr::arrange(row) %>% 
+    dplyr::mutate(maxRow = cummax(maxRow)) %>% 
+    dplyr::group_by(col,maxRow) %>% 
+    dplyr::mutate(minRow = min(row)) %>%
     # then for each set of rows find the most number of cols that span
-    dplyr::group_by(col,minRow,maxRow) %>% dplyr::mutate(colSpan = max(colSpan))
+    dplyr::group_by(col,minRow,maxRow) %>% 
+    dplyr::mutate(colSpan = max(colSpan)) %>%
+    dplyr::ungroup()
 
-  dups = spans %>% dplyr::arrange(col,row) %>% dplyr::filter((row > minRow & row <= maxRow) | (col>minCol & col<=maxCol))
+  dups = spans %>% 
+    dplyr::arrange(col,row) %>% 
+    dplyr::filter((row > minRow & row <= maxRow) | (col>minCol & col<=maxCol))
 
   # these cells will have a bit of info about bottom and right borders at the end of a span.
-  spanEnds = dups %>% dplyr::filter(row == maxRow & col == maxCol) %>% dplyr::select(row = minRow, col = minCol, bottomBorderWeight,rightBorderWeight)
+  spanEnds = dups %>% 
+    dplyr::filter(row == maxRow & col == maxCol) %>% 
+    dplyr::select(row = minRow, col = minCol, bottomBorderWeight,rightBorderWeight)
 
-  tidy %>% dplyr::anti_join(dups, by=c("row","col")) %>% dplyr::left_join(spanEnds, by=c("row","col"), suffix=c("",".new")) %>%
+  tidy %>% dplyr::anti_join(dups, by=c("row","col")) %>% 
+    dplyr::left_join(spanEnds, by=c("row","col"), suffix=c("",".new")) %>%
     dplyr::mutate(
       bottomBorderWeight = ifelse(is.na(bottomBorderWeight.new), bottomBorderWeight, bottomBorderWeight.new),
       rightBorderWeight = ifelse(is.na(rightBorderWeight.new), rightBorderWeight, rightBorderWeight.new)
-    ) %>% dplyr::select(-tidyr::ends_with(".new"))
+    ) %>% 
+    dplyr::select(-dplyr::ends_with(".new"))
 }
 
 # NOTE TO SELF: THIS FILE IS HARD LINKED TO FROM SEVERAL PROJECTS AND MUST BE STAND ALONE.

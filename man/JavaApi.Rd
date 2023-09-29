@@ -25,9 +25,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. R library to perform limited interactions with google docs (and maybe one day slides) in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 
-Version: 0.2.0
+Version: 0.2.1
 
-Generated: 2022-11-21T13:35:06.517
+Generated: 2023-09-29T16:53:46.580338313
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}

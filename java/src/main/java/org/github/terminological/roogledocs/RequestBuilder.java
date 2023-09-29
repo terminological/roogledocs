@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -145,6 +146,31 @@ public class RequestBuilder extends ArrayList<Request> {
 		return this.size() > 0;
 	}
 	
+	static Comparator<Tuple<Integer,Integer>> descendingTuples = new Comparator<Tuple<Integer,Integer>>() {
+		@Override
+		public int compare(Tuple<Integer, Integer> o1, Tuple<Integer, Integer> o2) {
+			return o2.getFirst().compareTo(o1.getFirst());
+		}
+	};
+	
+	static Comparator<Range> descendingRange = new Comparator<Range>() {
+		@Override
+		public int compare(Range o1, Range o2) {
+			return o2.getStartIndex().compareTo(o1.getStartIndex());
+		}
+	};
+	
+	public void deleteContent(TupleList<Integer,Integer> ranges) {
+		
+		ranges.sort(descendingTuples);
+		ranges.forEach(r -> deleteContent(r));
+	}
+	
+	public void deleteContent(List<Range> ranges) {
+		ranges.sort(descendingRange);
+		ranges.forEach(r -> deleteContent(r));
+	}
+	
 	public void deleteContent(Range range) {
 		this.add(new Request().setDeleteContentRange(new DeleteContentRangeRequest().setRange(range)));
 	}
@@ -252,7 +278,7 @@ public class RequestBuilder extends ArrayList<Request> {
 			.findFirst()
 			.ifPresent(c -> {
 				int insertPosition = t.getSecond().getStartIndex()+1;
-				Range textPos = insertTextContent(insertPosition, c.label().opt().map(s -> s == "" ? " " : s).orElse(" "), Optional.empty());
+				Range textPos = insertTextContent(insertPosition, c.label().opt().map(s -> s == "" ? " " : s).orElse(" "), Optional.of("NORMAL_TEXT"));
 				formatText(textPos, c);
 				this.add(new Request()
 						.setUpdateParagraphStyle(new UpdateParagraphStyleRequest()
@@ -337,12 +363,14 @@ public class RequestBuilder extends ArrayList<Request> {
 			
 		String c = style.map(checkRange("NORMAL_TEXT","TITLE","SUBTITLE","HEADING_1","HEADING_2","HEADING_3","HEADING_4","HEADING_5","HEADING_6")).orElse("NORMAL_TEXT");
 		
-		this.add(new Request().setUpdateParagraphStyle(new UpdateParagraphStyleRequest()
-            .setRange(textRun)
-            .setParagraphStyle(new ParagraphStyle()
-                    .setNamedStyleType(c))
-            .setFields("namedStyleType")
-		));
+		if (style.isPresent()) {
+			this.add(new Request().setUpdateParagraphStyle(new UpdateParagraphStyleRequest()
+	            .setRange(textRun)
+	            .setParagraphStyle(new ParagraphStyle()
+	                    .setNamedStyleType(c))
+	            .setFields("namedStyleType")
+			));
+		}
 			
 		return textRun;
 	}
@@ -436,7 +464,7 @@ public class RequestBuilder extends ArrayList<Request> {
 	}
 	
 	public void createPlainLink(Range range, String url) {
-		//TODO: somehow somewhere here the update resets the format of other links in a paragraph
+		// TODO: somehow somewhere here the update resets the format of other links in a paragraph
 		// almost as if the range is incorrect or interpreted incorrectly.
 		// alternatively createLink is being called on everything and losing its link formatting in the process?
 		this.add(
@@ -449,7 +477,7 @@ public class RequestBuilder extends ArrayList<Request> {
 									// useful to have tagged data highlighted but necessary to be able to remove all links.
 									// which is now possible in the main API.
  									// .setUnderline(Boolean.FALSE)
-									// .setForegroundColor(col(0.4F,0.4F,0.4F))
+									// .setForegroundColor(DocumentHelper.col(1.0F,0F,0F))
 						)
 						.setRange(range)
 						// .setFields("link,underline,foregroundColor"))
