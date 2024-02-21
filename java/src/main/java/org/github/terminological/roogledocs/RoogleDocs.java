@@ -6,6 +6,7 @@ import static uk.co.terminological.rjava.RConverter.mapping;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -20,7 +21,6 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
 import org.github.terminological.roogledocs.datatypes.Tuple;
-import org.github.terminological.roogledocs.datatypes.TupleList;
 import org.jbibtex.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +30,12 @@ import com.google.api.services.docs.v1.model.Size;
 
 import de.undercouch.citeproc.CSL;
 import uk.co.terminological.rjava.RClass;
+import uk.co.terminological.rjava.RConverter;
 import uk.co.terminological.rjava.RDefault;
 import uk.co.terminological.rjava.RMethod;
 import uk.co.terminological.rjava.UnconvertableTypeException;
 import uk.co.terminological.rjava.types.RCharacter;
+import uk.co.terminological.rjava.types.RCharacterVector;
 import uk.co.terminological.rjava.types.RDataframe;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
@@ -142,6 +144,19 @@ public class RoogleDocs {
 		return this;
 	}
 	
+	
+	
+	/**
+	 * Return the name of the document
+	 * 
+	 * @param suffix an additional suffix to add to the name
+	 * @return
+	 */
+	@RMethod
+	public String getName(@RDefault(rCode = "''") String suffix) {
+		return this.document.getName() + suffix;
+	}
+	
 	/**
 	 * Select a document by its share url or id.
 	 * 
@@ -149,7 +164,6 @@ public class RoogleDocs {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or the document does not exist, or is not a google doc
 	 */
-	@RMethod
 	public RoogleDocs withDocument(String shareUrlOrDocId) throws IOException {
 		if (disabled) return this;
 		this.document = service.getDocument(shareUrlOrDocId);
@@ -184,10 +198,9 @@ public class RoogleDocs {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
-	@RMethod
 	public RoogleDocs findOrCreateDocument(String title) throws IOException {
 		if (disabled) return this;
-		this.document = service.getOrCreate(title);
+		this.document = service.getOrCreateDocument(title);
 		return this;
 	}
 	
@@ -222,10 +235,9 @@ public class RoogleDocs {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or the template uri is not correct
 	 */
-	@RMethod
 	public RoogleDocs findOrCloneTemplate(String title, String templateUri) throws IOException {
 		if (disabled) return this;
-		this.document = service.getOrClone(title, templateUri);
+		this.document = service.getOrCloneDocument(title, templateUri);
 		return this;
 	}
 	
@@ -287,7 +299,7 @@ public class RoogleDocs {
 	@RMethod 
 	public RDataframe tagsDefined() throws IOException {
 		if (disabled) throw new IOException("roogledocs is disabled");
-		Map<String, TupleList<Integer, Integer>> tmp = rdoc().updateInlineTags();
+		Map<String, List<TextRunPosition>> tmp = rdoc().updateInlineTags();
 		return tmp.entrySet().stream().collect(
 				dataframeCollector(
 						mapping("tag", t->t.getKey()),
@@ -296,9 +308,11 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Relace tags for text
+	 * Replace tags for text
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with the text parameter.
+	 * Substitutes all occurrences of {{tag-name}} with the text parameter. If the tag name is not 
+	 * found in the document it is inserted at the end in a section labelled "Unmatched tags:". From there
+	 * it can be cut and pasted into the right place.
 	 * 
 	 * @param tagName the tag name
 	 * @param text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)
@@ -317,28 +331,69 @@ public class RoogleDocs {
 	/**
 	 * Replace a tag with an image.
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage. There are limited circumstances
-	 * in which using this is a good idea. It will almost always be better to use `updateFigure()` to insert an image
-	 * by index. If you choose to ignore this warning, beware combining this with `updateFigure()` as potentially the figure indexes may
-	 * change dynamically.
+	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage. 
 	 * 
-	 * The image is uploaded to your google drive as a temporary file, and briefly made publically readable. From there it is inserted into the 
-	 * google doc, and one completed the temporary file deleted from your google drive. 
+	 * The image is uploaded to your google drive as a temporary file, and briefly made publicly readable. From there it is inserted into the 
+	 * google doc, and one completed the temporary file deleted from your google drive. Insertion is
+	 * done using the dimensions of the existing image (if present) or the PNG dimensions if not.
+	 * Creating the image with the correct dimensions (and providing the dpi if not 300) is important.
+	 * 
+	 * If the tag is missing from the document the image
+	 * is inserted at the end (and tagged). From there it can be cut and pasted to the correct place.
 	 * 
 	 * @param tagName the tag name
 	 * @param absoluteFilePath a file path to an png image file.
 	 * @param dpi the dots per inch of the image in the document (defaults to 300)
+	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String absoluteFilePath, @RDefault(rCode = "deparse(substitute(absoluteFilePath))") String tagName, @RDefault(rCode="300") double dpi) throws IOException {
+	public RoogleDocs updateTaggedImage(String absoluteFilePath, @RDefault(rCode = "deparse(substitute(absoluteFilePath))") String tagName, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
 		if (disabled) return this;
-		String id = service.upload(Paths.get(absoluteFilePath));
+		Path path = Paths.get(absoluteFilePath);
+		String name = rdoc().getName()+" - "+tagName;
+		List<String> parents = this.service.getFileParents(rdoc().getDocId());
+		String id = null; 
+		if (keepUpload) {
+			id = service.upload(name,path,parents,true,false);
+		} else {
+			id = service.uploadTmp(path);
+		}
 		URI uri = service.getThumbnailUri(id);
 		rdoc().updateTaggedImage(tagName, uri, true, getImageDim(absoluteFilePath, dpi));
 		System.out.println("Figure "+tagName+" updated");
-		service.delete(id);
+		if (!keepUpload) service.delete(id);
+		return this;
+	}
+	
+	/**
+	 * Replace a tag with a table.
+	 * 
+	 * Substitutes a unique occurrences of {{tag-name}} with a table. The tag should either be in the text of the document or as the first entry in 
+	 * the first cell of a table. Once inserted the table is tagged using a zero width character
+	 * as the very first item in the first cell. This will be removed if `removeTags()` is called.
+	 * 
+	 * If the tag is missing the table is inserted at the end of the document where it can be 
+	 * cut and pasted to the correct place. 
+	 * 
+	 * @param tagName the tag name
+	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
+	 * @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from `as.long_format_table`
+	 * @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) but you may want to make this wider for
+	 *   landscape tables 
+	 * @return itself - a fluent method
+	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
+	 * @throws UnconvertableTypeException if the longFormatTable is incorrectly structured.
+	 */
+	@RMethod
+	public RoogleDocs updateTaggedTable(
+			RDataframe longFormatTable, @RDefault(rCode = "deparse(substitute(longFormatTable))") String tagName, 
+			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches
+		) throws IOException, UnconvertableTypeException {
+		if (disabled) return this;
+		this.rdoc().updateTaggedTable(tagName, longFormatTable, colWidths, tableWidthInches);
 		return this;
 	}
 	
@@ -403,7 +458,7 @@ public class RoogleDocs {
 	 * Remove all tags
 	 * 
 	 * Finds tags defined in the current document and removes them. This 
-	 * cannot be undone.
+	 * cannot be undone, except by rolling back to a previous version.
 	 * 
 	 * @param confirm - This action must be confirmed by passing `true` as cannot be undone.
 	 * @return itself - a fluent method
@@ -425,7 +480,11 @@ public class RoogleDocs {
 	/**
 	 * Update or insert a formatted table into the document. 
 	 * 
-	 * The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+	 * This function counts the number of tables from the start of the document.
+	 * Inserting tables by index works only if your document does not change much or you are creating one from
+	 * scratch. You can overwrite tables using this function but if the order of tables has been changed by
+	 * your collaborators this will be generally cause probelms. Use of this function is generally discouraged and
+	 * we now prefer `updateTaggedTable()`. 
 	 * 
 	 * @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document.
 	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
@@ -445,25 +504,37 @@ public class RoogleDocs {
 	}
 	
 	/**
-	 * Update or insert a figure in the document from a locally stored PNG.
+	 * Update or insert a figure in the document from a locally stored PNG by index.
 	 * 
-	 * This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+	 * This function counts the number of inline images (i.e. not absolutely positioned ones) from the start of the document.
+	 * Inserting images by index works only if your document does not change much or you are creating one from
+	 * scratch. You can overwrite images using this function but if the order of images has been changed by
+	 * your collaborators this will generally cause problems. This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publicly readable. From there inserts it into the 
 	 * google document. Once this is complete the temporary google drive copy of the image is deleted. 
 	 * 
 	 * @param figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. 
 	 * @param absoluteFilePath a file path to an png image file (only png is supported at this point).
 	 * @param dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi.
+	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or the png file cannot be read.
 	 */
 	@RMethod
-	public RoogleDocs updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi) throws IOException {
+	public RoogleDocs updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
 		if (disabled) return this;
-		String id = service.upload(Paths.get(absoluteFilePath));
+		Path path = Paths.get(absoluteFilePath);
+		String name = rdoc().getName()+" - figure "+figureIndex;
+		List<String> parents = this.service.getFileParents(rdoc().getDocId());
+		String id = null; 
+		if (keepUpload) {
+			id = service.upload(name,path,parents,true,false);
+		} else {
+			id = service.upload(path);
+		}
 		URI uri = service.getThumbnailUri(id);
 		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));
 		System.out.println("Figure "+index+" updated");
-		service.delete(id);
+		if (!keepUpload) service.delete(id);
 		return this;
 	}
 	
@@ -473,6 +544,7 @@ public class RoogleDocs {
 	 * Saves a snapshot of the current google doc with `roogledocs` links removed as a pdf to a local drive. 
 	 * This is mainly intended for snapshotting the current state of the document. For final export once all
 	 * analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
+	 * but after this no further updating is possible.
 	 * 
 	 * @param absoluteFilePath - a file path to save the pdf.
 	 * @param uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
@@ -484,7 +556,7 @@ public class RoogleDocs {
 	@RMethod
 	public RoogleDocs saveAsPdf(String absoluteFilePath, @RDefault(rCode="FALSE") boolean uploadCopy) throws IOException {
 		if (disabled) return this;
-		RDocument newdoc = this.service.getOrClone("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
+		RDocument newdoc = this.service.getOrCloneDocument("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
 		newdoc.removeTags();
 		newdoc.saveAsPdf(absoluteFilePath);
 		this.service.delete(newdoc.getDocId());
@@ -514,27 +586,11 @@ public class RoogleDocs {
 		Path path = Paths.get(absoluteFilePath);
 		String name = path.getFileName().toString();
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
-		List<Tuple<String,String>> existingMatches = this.service.search(name, null, true, parents);
-		if (existingMatches.size() > 0) {
-			if (overwrite) {
-				for (Tuple<String,String> existing: existingMatches) {
-					log.info("Deleting existing file as `overwrite` is true: "+existing.getSecond());
-					String id = existing.getFirst();
-					service.delete(id);
-				};
-				this.service.upload(name, path, parents);
-			} else if (duplicate) {
-				log.info("Creating new file with the same name as existing file as `duplicate` is true: "+name);
-				this.service.upload(name, path, parents);
-			} else {
-				log.warn("Aborting upload as a file of this name already exists: "+name);
-			}
-		} else {
-			// No pre-existing file of the same name in the same place.
-			this.service.upload(name, path, parents);
-		}
+		this.service.upload(name, path, parents, overwrite, duplicate);
 		return this;
 	}
+	
+	
 	
 	/**
 	 * Deletes a google document by name. 
@@ -552,7 +608,7 @@ public class RoogleDocs {
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
 	) throws IOException, GeneralSecurityException {
 		if (disabled) return;
-		if (areYouSure) RService.with(tokenDirectory).deleteByName(docName);
+		if (areYouSure) RService.with(tokenDirectory).deleteByName(docName, RService.MIME_DOCS);
 		else System.out.println("aborted delete.");
 	}
 	
@@ -587,23 +643,41 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * List the supported citation styles 
+	 * 
+	 * @return a vector of csl style names
+	 * @throws IOException if the citation styles cannot be found
+	 */
+	@RMethod
+	public static RCharacterVector citationStyles() throws IOException {
+		return RConverter.convert(CSL.getSupportedStyles().toArray(new String[] {}));
+	}
+	
+	/**
 	 * Update citation tags in the document. 
 	 * 
-	 * A citation tag is like this {{cite:challen2020;danon2021}}. The ids  
+	 * A citation tag is like this `{{cite:challen2020;danon2021}}`. The ids are matched against the provided bibtex, and
+	 * the tags are replaced with an appropriate citation string. The bibliography itself is added to a specific slide for 
+	 * references which can be decided with the `{{references}}` tag. 
 	 * 
-	 * @param bibTex - a string containing the bibtex 
+	 * If references do not already exist and there if no `{{references}}` tag the
+	 * references will be added to the end of the document. Where it can be cut and
+	 * pasted to the right place. N.B. Do not split up the references when you move them.
+	 *  
+	 * @param bibTexPath - the full file path to the file containing the bibtex 
 	 * @param citationStyle - the CSL specification
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers.
 	 * @throws ParseException if the bibTex is poorly formed
 	 */
 	@RMethod
-	public RoogleDocs updateCitations(RCharacter bibTex, @RDefault(rCode = "'ieee'") RCharacter citationStyle) throws IOException, ParseException {
+	public RoogleDocs updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException {
 		if (disabled) return this;
 		
 		// setup 
+		String bibTex = Files.readString(Paths.get(bibTexPath.toString()));
 		if (!CSL.supportsStyle(citationStyle.get())) throw new IOException("Unsupported citation style:"+citationStyle.get());
-		document.updateCitations(bibTex.get(), citationStyle.get());
+		document.updateCitations(bibTex, citationStyle.get());
 				
 		return this;
 	}

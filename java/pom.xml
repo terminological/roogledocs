@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.terminological</groupId>
 	<artifactId>roogledocs</artifactId>
-	<version>0.2.1</version>
+	<version>0.3.0</version>
 	<description>R wrapper for Google docs API java library</description>
 
 	<properties>
@@ -44,17 +44,25 @@
 	      <artifactId>google-api-services-drive</artifactId>
 	      <version>v3-rev20211107-1.32.1</version>
 	    </dependency>
+	    <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-slides -->
+		<dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-slides</artifactId>
+		    <version>v1-rev399-1.25.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.9</version>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/de.undercouch/citeproc-java -->
 		<dependency>
-			<groupId>de.undercouch</groupId>
-			<artifactId>citeproc-java</artifactId>
-			<version>2.0.0</version>
+		    <groupId>de.undercouch</groupId>
+		    <artifactId>citeproc-java</artifactId>
+		    <version>3.0.0-beta.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.citationstyles</groupId>
 			<artifactId>styles</artifactId>
@@ -78,6 +86,15 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-math3</artifactId>
+		    <version>3.6.1</version>
+		</dependency>
+		
+
+
 	</dependencies>
 
 	<repositories>
@@ -120,10 +137,10 @@
 				<configuration>
 					<packageData>
 						<title>R wrapper for Googledocs java library</title>
-						<version>${version}</version>
+						<version>${project.version}</version>
 						<description>
-Programmatically substitute images, data and tables into a google doc. 
-R library to perform limited interactions with google docs (and maybe one day slides)
+Programmatically substitute images, data and tables into a google doc or presentation. 
+R library to perform limited interactions with google docs and slides
 in R via the Java API library. The purpose being to support google docs as a
 platform for interactive development and documentation of data analysis in R for scientific
 publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis
@@ -138,7 +155,7 @@ can be updated independently of the analysis, by the wider team.
 						<debug>false</debug>
 						<useRoxygen2>true</useRoxygen2>
 						<useCmdCheck>true</useCmdCheck>
-						<usePkgdown>true</usePkgdown>
+						<usePkgdown>false</usePkgdown>
 						<useJavadoc>false</useJavadoc>
 <!-- 						<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
 						<rjavaOpts>

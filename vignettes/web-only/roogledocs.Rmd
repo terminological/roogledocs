@@ -1,9 +1,9 @@
 ---
-title: "Using roogledocs"
+title: "Using roogledocs for documents"
 author: "Rob Challen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using roogledocs}
+  %\VignetteIndexEntry{Using roogledocs for documents}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 resource_files:
@@ -19,8 +19,14 @@ knitr::opts_chunk$set(
 
 suppressWarnings(library(tidyverse))
 suppressWarnings(library(huxtable))
-devtools::load_all("~/Git/roogledocs/")
+# devtools::load_all("~/Git/roogledocs/")
 here::i_am("vignettes/web-only/roogledocs.Rmd")
+```
+
+
+```{r eval=FALSE}
+remove.packages("roogledocs")
+devtools::install_local("~/Git/roogledocs",upgrade = FALSE)
 ```
 
 ## Initialising the library
@@ -39,6 +45,7 @@ options('roogledocs.disabled'=FALSE)
 # roogledocs stores an authentication token on your local hard drive.
 options("roogledocs.tokenDirectory"="~/.roogledocs-test")
 ```
+
 
 ```{r}
 J = roogledocs::JavaApi$get(logLevel = "DEBUG")
@@ -73,6 +80,7 @@ Once authentication is working getting a
 
 ```{r}
 doc = roogledocs::doc_from_template("roogledocs-demo","https://docs.Google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing")
+fs::dir_create(here::here("docs/articles/web-only"))
 doc$saveAsPdf(here::here("docs/articles/web-only/example-template-doc.pdf"))
 ```
 
@@ -103,7 +111,8 @@ hux = diamonds %>% mutate(colorCat = ifelse(color <= "G", "D-G","G-J")) %>% grou
   huxtable::set_all_padding(value = 0) %>%
   huxtable::merge_repeated_rows()
 
-hux %>% roogledocs::as.long_format_table() %>% doc$updateTable(tableIndex = 1,tableWidthInches = 4)
+table_1 = hux %>% roogledocs::as.long_format_table() 
+doc$updateTaggedTable(table_1, tableWidthInches = 4)
 
 hux
 ```
@@ -118,8 +127,7 @@ document and then temporary drive file deleted. In this example we update figure
 
 ```{r fig1}
 g = ggplot(diamonds, aes(x=carat,y=price, colour=color))+geom_point()
-figure_1 = fs::path(tempdir(),"figure_1_original.png")
-ggsave(figure_1, g, width=6, height=3)
+figure_1 = roogledocs::ggplot_to_png(g, width=6, height=3)
 
 # If the first parameter is passed as a variable and no tag is given, 
 # as in this example the variable name is used as the tag and the image is 
@@ -149,10 +157,9 @@ tagged text" section later).
 ```{r fig2}
 g2 = ggplot(diamonds, aes(x=cut,y=price, fill=cut))+
   geom_violin(draw_quantiles = c(0.95,0.5,0.05))+
-  scale_fill_brewer()
-filename = tempfile(fileext = ".png")
-# ggsave default units is inches:
-ggsave(filename, g2, width=4, height=3)
+  scale_fill_brewer()+
+  theme(axis.text.x = element_text(angle = 15, vjust=1,hjust=1))
+filename = roogledocs::ggplot_to_png(g2, width=4, height=3)
 
 # The figure index has to be calculated with respect to any changes that have 
 # already been made in the document. In this case inserting figure 1 before
@@ -219,7 +226,7 @@ support more styles but at the moment this is not the primary use case for
 
 ```{r new-text}
 
-doc$appendText("\nAdding new content\n","HEADING_3")
+doc$appendText("\nAdding new content\n","HEADING_1")
 
 content = tibble::tribble(
   ~label, ~link, ~fontName, ~fontFace,
@@ -229,7 +236,7 @@ content = tibble::tribble(
   "bold, ", NA, NA, "bold",
   "italic ", NA, NA, "italic",
   "and underlined", NA, NA, "underlined",
-  " amongst other things.", NA, NA, "plain"
+  " amongst other things.\n\n", NA, NA, "plain"
   )
 
 doc$appendFormattedParagraph(content)
@@ -242,6 +249,15 @@ the same script to programmatically generate replacement content. Likewise this
 could be used for captions of tables and figures when they are added. When you
 write new content you can write in double-brace tags and these can then be
 updated at a later stage for example.
+
+Citations are referenced as a tag of the format `{{cite:XXXX;YYYY}}` where X and Y 
+are bibtext ids. References will be updated if present or if not  
+
+```{r}
+
+doc$updateCitations(here::here("vignettes/web-only/test.bib"), "ieee")
+
+```
 
 Finally we can write out the new document to a PDF, mostly so we can see what we
 have done. When we write out a document any `roogledocs` links are removed:
@@ -268,9 +284,7 @@ up the dynamic images from R.
 * Building a Google docs based drop in for the `officer` library for MS word
 could be good if it means we can leverage that interface for other uses (e.g.
 knitr support). 
-* A fairly complex development would be support for Google slides, although a
-very simple tagged text and image substitution equivalent might be simple, in
-reality for this you are likely to want to do more complex operations.
+
 
 
 

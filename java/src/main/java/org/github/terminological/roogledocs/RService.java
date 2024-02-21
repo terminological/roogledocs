@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -49,6 +50,9 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
+import com.google.api.services.slides.v1.Slides;
+import com.google.api.services.slides.v1.SlidesScopes;
+import com.google.api.services.slides.v1.model.Presentation;
 
 public class RService {
     
@@ -60,7 +64,9 @@ public class RService {
     // Global instance of the scopes required by this application (If modifying these scopes, delete your previously saved tokens/ folder.)
     private static final List<String> SCOPES = Arrays.asList(
     		DocsScopes.DOCUMENTS,
-    		DocsScopes.DRIVE);
+    		DocsScopes.DRIVE,
+    		SlidesScopes.PRESENTATIONS
+    		);
     private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
     private Logger log = LoggerFactory.getLogger(RService.class);
     
@@ -68,6 +74,7 @@ public class RService {
     private Path tokenDirectory = null;
     private Docs service = null;
     private Drive driveService = null;
+	private Slides slideService = null;
     
     private RService() throws IOException, GeneralSecurityException {
     	this(Paths.get(System.getProperty("user.home"), ".roogledocs"));
@@ -103,6 +110,10 @@ public class RService {
     
     Drive getDrive()  {
     	return driveService;
+    }
+    
+    Slides getSlides()  {
+    	return slideService;
     }
     
     protected Path getTokenDirectory() {return tokenDirectory;}
@@ -207,8 +218,12 @@ public class RService {
         driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         		.setApplicationName(APPLICATION_NAME)
         		.build();
+        slideService = new Slides.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+        		.setApplicationName(APPLICATION_NAME)
+        		.build();
     }
 
+    public static final String MIME_SLIDES =  "application/vnd.google-apps.presentation";
     public static final String MIME_DOCS =  "application/vnd.google-apps.document";
     public static final String MIME_PNG =  "image/png";
     
@@ -220,6 +235,7 @@ public class RService {
     	return search(documentName, mimeType, exact, Collections.emptyList());
     }
     
+    // file id, file name tuple list (maybe multiple with same name)
     public List<Tuple<String,String>> search(String documentName, String mimeType, boolean exact, List<String> parents) throws IOException {
     	// https://developers.google.com/drive/api/guides/search-files
     	List<Tuple<String,String>> out = new ArrayList<>();
@@ -245,25 +261,45 @@ public class RService {
     	return out;
     }
     
-    public RDocument getOrCreate(String documentName) throws IOException {
+    public String findUniqueId(String documentName, String mimeType) throws IOException {
+    	List<Tuple<String,String>> tmp = search(documentName, mimeType, true);
+    	if (tmp.size() == 0) throw new IOException(documentName+" not found.");
+    	if (tmp.size() >1) throw new IOException("Multiple matches for "+documentName);
+    	return(tmp.get(0).getFirst());
+    }
+    
+    public RDocument getOrCreateDocument(String documentName) throws IOException {
     	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
     	if (tmp.size() > 0) {
     		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or document id.");
     		String docId = tmp.get(0).getFirst(); 
-    		return new RDocument(docId,this);
+    		return new RDocument(docId,documentName,this);
     	}
     	Document doc = new Document().setTitle(documentName);
     	doc = getDocs().documents().create(doc).execute();
     	log.info("Created new document with title: " + doc.getTitle());
-    	return new RDocument(doc.getDocumentId(),this);
+    	return new RDocument(doc.getDocumentId(),documentName,this);
     }
     
-    public RDocument getOrClone(String documentName, String templateUri) throws IOException {
+    public RPresentation getOrCreatePresentation(String documentName) throws IOException {
+    	List<Tuple<String, String>> tmp = search(documentName, MIME_SLIDES, true);
+    	if (tmp.size() > 0) {
+    		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or presentation id.");
+    		String docId = tmp.get(0).getFirst(); 
+    		return new RPresentation(docId,documentName,this);
+    	}
+    	Presentation doc = new Presentation().setTitle(documentName);
+    	doc = getSlides().presentations().create(doc).execute();
+    	log.info("Created new presentation with title: " + doc.getTitle());
+    	return new RPresentation(doc.getPresentationId(),documentName,this);
+    }
+    
+    public RDocument getOrCloneDocument(String documentName, String templateUri) throws IOException {
     	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
     	if (tmp.size() > 0) {
     		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or document id.");
     		String docId = tmp.get(0).getFirst(); 
-    		return new RDocument(docId,this);
+    		return new RDocument(docId,documentName,this);
     	}
     	
     	String templateId = extractDocId(templateUri);
@@ -274,7 +310,26 @@ public class RService {
     		throw new IOException("templateUri must refer to a google doc.");
     	}
     	log.info("Created new document with title: " + documentName);
-    	return new RDocument(newf.getId(),this);
+    	return new RDocument(newf.getId(),documentName,this);
+    }
+    
+    public RPresentation getOrClonePresentation(String documentName, String templateUri) throws IOException {
+    	List<Tuple<String, String>> tmp = search(documentName, MIME_SLIDES, true);
+    	if (tmp.size() > 0) {
+    		if(tmp.size() > 1) log.warn("More than one possible match detected. Using first found. It is probably better to use a share url or document id.");
+    		String docId = tmp.get(0).getFirst(); 
+    		return new RPresentation(docId,documentName,this);
+    	}
+    	
+    	String templateId = extractDocId(templateUri);
+    	File f = new File().setName(documentName);
+    	File newf = driveService.files().copy(templateId, f).execute();
+    	if (!newf.getMimeType().equals(MIME_SLIDES)) {
+    		driveService.files().delete(newf.getId());
+    		throw new IOException("templateUri must refer to a google slides.");
+    	}
+    	log.info("Created new document with title: " + documentName);
+    	return new RPresentation(newf.getId(),documentName,this);
     }
     
     protected static String extractDocId(String docId) throws IOException {
@@ -296,7 +351,23 @@ public class RService {
     	File f = driveService.files().get(docId).execute();
     	if (f != null) {
     		if (f.getMimeType().equals(MIME_DOCS)) {
-    			return new RDocument(docId,this);
+    			return new RDocument(docId,f.getName(), this);
+    		} else {
+    			throw new IOException("File: "+f.getName()+" is not a google doc");
+    		}
+    	}
+    	throw new IOException("No document for: "+docId);
+    }
+    
+    public RPresentation getPresentation(String docId) throws IOException {
+    	
+    	// https://docs.google.com/presentation/d/1FTXrtDafyVfoOj8CYaZlxVA8XnrcZdDJHUnDOmvCsjY/edit?usp=sharing
+    	docId = extractDocId(docId);
+    	
+    	File f = driveService.files().get(docId).execute();
+    	if (f != null) {
+    		if (f.getMimeType().equals(MIME_SLIDES)) {
+    			return new RPresentation(docId, f.getName(), this);
     		} else {
     			throw new IOException("File: "+f.getName()+" is not a google doc");
     		}
@@ -310,6 +381,12 @@ public class RService {
     			file);
     }
     
+    public String uploadTmp(Path file) throws IOException {
+    	return upload(
+    			"temp_"+UUID.randomUUID()+getExtension(file).orElse(""),
+    			file);
+    }
+    
     //TODO: A copy to same directory 
     
     public List<String> getFileParents(String driveId) throws IOException {
@@ -318,12 +395,28 @@ public class RService {
     }
     
     public String upload(String documentName, Path file) throws IOException {
-    	return upload(documentName, file, Collections.emptyList());
+    	return upload(documentName, file, Collections.emptyList(), false, false);
     }
     
-    public String upload(String documentName, Path file, List<String> parents) throws IOException {
+    public String upload(String documentName, Path file, List<String> parents, boolean overwrite, boolean duplicate) throws IOException {
     	URLConnection connection = file.toUri().toURL().openConnection();
         String mimeType = connection.getContentType();
+        
+        List<Tuple<String,String>> existingMatches = this.search(documentName, null, true, parents);
+		if (existingMatches.size() > 0) {
+			if (!overwrite && !duplicate) {
+				throw new IOException("Aborting upload as a file of this name already exists: "+documentName);
+			}
+			if (!duplicate) {
+				for (Tuple<String,String> existing: existingMatches) {
+					log.info("Deleting existing file: "+existing.getSecond());
+					String id = existing.getFirst();
+					delete(id);
+				};
+			} else {
+				log.info("Duplicating existing file: "+documentName);
+			}
+		}	
         
     	File fileMetadata = new File().setName(documentName).setParents(parents);
         log.info("Uploading: "+file.getFileName()+"; with type: "+mimeType); 
@@ -403,8 +496,8 @@ public class RService {
         return uri;
     }
     
-    public void deleteByName(String documentName) throws IOException {
-    	List<Tuple<String, String>> tmp = search(documentName, MIME_DOCS, true);
+    public void deleteByName(String documentName, String mimeType) throws IOException {
+    	List<Tuple<String, String>> tmp = search(documentName, mimeType, true);
     	if (tmp.size() == 1) {
     		String docId = tmp.get(0).getFirst();
     		delete(docId);
@@ -437,4 +530,11 @@ public class RService {
 		services.remove(tokenDirectory);
 	}
     
+	private Optional<String> getExtension(Path file) {
+	    return Optional.ofNullable(file)
+	    		.map(p -> p.toString())
+	    		.filter(f -> f.contains("."))
+	    		.map(f -> f.substring(f.lastIndexOf(".")));
+	}
+	
 }

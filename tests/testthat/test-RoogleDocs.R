@@ -6,12 +6,11 @@
 
 # ├ enable() R6 method ----
 # ├ disable() R6 method ----
-# ├ withDocument() R6 method ----
-# ├ findOrCreateDocument() R6 method ----
-# ├ findOrCloneTemplate() R6 method ----
+# ├ getName() R6 method ----
 # ├ tagsDefined() R6 method ----
 # ├ updateTaggedText() R6 method ----
 # ├ updateTaggedImage() R6 method ----
+# ├ updateTaggedTable() R6 method ----
 # ├ revertTags() R6 method ----
 # ├ removeTags() R6 method ----
 # ├ updateTable() R6 method ----
@@ -30,3 +29,4 @@
 # ├ doc_from_template() package method ----
 # ├ search_for_documents() package method ----
 # ├ delete_document() package method ----
+# ├ citation_styles() package method ----

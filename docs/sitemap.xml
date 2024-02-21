@@ -22,6 +22,9 @@
     <loc>/articles/web-only/roogledocs.html</loc>
   </url>
   <url>
+    <loc>/articles/web-only/roogleslides.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -40,10 +43,16 @@
     <loc>/reference/RoogleDocs.html</loc>
   </url>
   <url>
+    <loc>/reference/RoogleSlides.html</loc>
+  </url>
+  <url>
     <loc>/reference/as.long_format_table.html</loc>
   </url>
   <url>
     <loc>/reference/delete_document.html</loc>
+  </url>
+  <url>
+    <loc>/reference/delete_slides.html</loc>
   </url>
   <url>
     <loc>/reference/doc_by_id.html</loc>
@@ -53,6 +62,9 @@
   </url>
   <url>
     <loc>/reference/doc_from_template.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ggplot_to_png.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -68,6 +80,18 @@
   </url>
   <url>
     <loc>/reference/search_for_documents.html</loc>
+  </url>
+  <url>
+    <loc>/reference/search_for_slides.html</loc>
+  </url>
+  <url>
+    <loc>/reference/slides_by_id.html</loc>
+  </url>
+  <url>
+    <loc>/reference/slides_by_name.html</loc>
+  </url>
+  <url>
+    <loc>/reference/slides_from_template.html</loc>
   </url>
   <url>
     <loc>/tag.html</loc>

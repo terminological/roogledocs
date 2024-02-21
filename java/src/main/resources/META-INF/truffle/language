@@ -1,0 +1,22 @@
+language1.characterMimeType.0=application/tregex
+language1.className=com.oracle.truffle.regex.RegexLanguage
+language1.id=regex
+language1.implementationName=
+language1.interactive=false
+language1.internal=true
+language1.name=REGEX
+language1.version=0.1
+
+language2.characterMimeType.0=application/javascript
+language2.characterMimeType.1=application/javascript+module
+language2.characterMimeType.2=text/javascript
+language2.className=com.oracle.truffle.js.lang.JavaScriptLanguage
+language2.defaultMimeType=application/javascript
+language2.dependentLanguage.0=regex
+language2.fileTypeDetector0=com.oracle.truffle.js.lang.JSFileTypeDetector
+language2.id=js
+language2.implementationName=GraalVM JavaScript
+language2.interactive=true
+language2.internal=false
+language2.name=JavaScript
+language2.version=inherit

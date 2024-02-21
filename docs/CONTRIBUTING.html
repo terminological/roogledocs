@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">roogledocs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/placeholder.html">Placeholder</a>
-    <a class="dropdown-item" href="articles/web-only/roogledocs.html">Using roogledocs</a>
+    <a class="dropdown-item" href="articles/web-only/roogledocs.html">Using roogledocs for documents</a>
+    <a class="dropdown-item" href="articles/web-only/roogleslides.html">Using roogledocs for presentations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -52,6 +53,7 @@
     </div>
 
 <div id="contributing" class="section level1">
+
 <p>When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.</p>
 <div class="section level2">
 <h2 id="development-notes">Development notes<a class="anchor" aria-label="anchor" href="#development-notes"></a></h2>
@@ -78,8 +80,8 @@ mvn install</code></pre>
 <p>Generic answer for Google secrets:</p>
 <p><a href="https://stackoverflow.com/questions/62315535/are-there-any-security-concerns-with-sharing-the-client-secrets-of-a-Google-api" class="external-link uri">https://stackoverflow.com/questions/62315535/are-there-any-security-concerns-with-sharing-the-client-secrets-of-a-Google-api</a></p>
 <p>But difference between OAuth client id secret and types discussed on <a href="https://developers.Google.com/identity/protocols/oauth2" class="external-link">this page</a> which states:</p>
-<p>"Installed applications: The Google OAuth 2.0 endpoint supports applications that are installed on devices such as computers, mobile devices, and tablets. When you create a client ID through the Google API Console, specify that this is an Installed application, then select Android, Chrome app, iOS, Universal Windows Platform (UWP), or Desktop app as the application type.</p>
-<p>The process results in a client ID and, in some cases, a client secret, which you embed in the source code of your application. (In this context, the client secret is obviously not treated as a secret.)"</p>
+<p>“Installed applications: The Google OAuth 2.0 endpoint supports applications that are installed on devices such as computers, mobile devices, and tablets. When you create a client ID through the Google API Console, specify that this is an Installed application, then select Android, Chrome app, iOS, Universal Windows Platform (UWP), or Desktop app as the application type.</p>
+<p>The process results in a client ID and, in some cases, a client secret, which you embed in the source code of your application. (In this context, the client secret is obviously not treated as a secret.)”</p>
 <p>Which suggests this is not an issue in this situation. In either event storing the raw client_secrets.json file in github seems lika a bad idea. However as github is the distribution method of the library it is not actually possible to totally avoid all security issues.</p>
 </div>
 </div>

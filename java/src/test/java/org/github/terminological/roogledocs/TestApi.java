@@ -14,15 +14,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
+import org.github.terminological.roogledocs.datatypes.FO2LongFormat;
+import org.github.terminological.roogledocs.datatypes.FO2Text;
 import org.github.terminological.roogledocs.datatypes.Tuple;
 import org.jbibtex.BibTeXDatabase;
 import org.jbibtex.ParseException;
@@ -31,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.google.api.services.docs.v1.model.Document;
 import com.google.api.services.docs.v1.model.Size;
@@ -48,7 +54,7 @@ class TestApi {
 	static final Path TOKENDIR = Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
 	
 	RService singleton = null;
-	RDocument testDoc = null;
+	RCitable testDoc = null;
 	String testImageId = null;
 	private Logger log = LoggerFactory.getLogger(TestApi.class);
 	
@@ -68,13 +74,13 @@ class TestApi {
 	@Test
 	final void testFindOrCreate() throws IOException {
 		if (testDoc == null)
-			testDoc = singleton.getOrCreate("Test document");
+			testDoc = singleton.getOrCreateDocument("Test document");
 		 
 	}
 
 	@Test
 	final void testUploadAndShare() throws IOException, URISyntaxException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		String tmp = dtf.format(now);  
@@ -89,7 +95,7 @@ class TestApi {
 	
 	@Test
 	final void testUploadSupplementary() throws IOException, URISyntaxException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		RoogleDocs tmp = new RoogleDocs(singleton, test2);
 		Path tmpPath = Files.createTempDirectory("roogledocs-test").resolve("timestamp.txt");
 		Files.newBufferedWriter(tmpPath, StandardOpenOption.CREATE, StandardOpenOption.APPEND).append(
@@ -138,7 +144,7 @@ class TestApi {
 	
 	@Test
 	final void testStructure() throws IOException {
-		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
+		RDocument test1 = singleton.getOrCreateDocument("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
 		Document doc = test1.getDoc(RDocument.TEXT_AND_IMAGE_LINK_ELEMENTS);
 		System.out.print(doc.toPrettyString());
@@ -146,7 +152,7 @@ class TestApi {
 	
 	@Test
 	final void testFindLinks() throws IOException {
-		RDocument test1 = singleton.getOrCreate("Roogledocs example 1");
+		RDocument test1 = singleton.getOrCreateDocument("Roogledocs example 1");
 		System.out.print(test1.updateInlineTags());
 	}
 	
@@ -160,12 +166,12 @@ class TestApi {
 	
 	@Test
 	final void testText() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
-		test2.updateTaggedText("text-tag-1", "1234REPLACEMENT4321");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 1");
+		test2.updateTaggedText("text-tag-1", "1234-text-tag-1-4321");
 		HashMap<String,String> toChange = new HashMap<>();
-		toChange.put("text-tag-2", "1234REPLACEMENT4321");
-		toChange.put("text-tag-3", "1234REPLACEMENT4321");
-		toChange.put("text-tag-4", "1234REPLACEMENT4321");
+		toChange.put("text-tag-2", "1234-text-tag-2-4321");
+		toChange.put("text-tag-3", "1234-text-tag-3-4321");
+		toChange.put("text-tag-4", "1234-text-tag-4-4321");
 		test2.updateTaggedText(toChange);
 //		Document doc = test2.getDoc();
 //		System.out.print(doc.toPrettyString());
@@ -173,7 +179,7 @@ class TestApi {
 	
 	@Test
 	final void testImage3() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 1");
 		test2.updateTaggedImage("dog-picture", URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"));
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
@@ -181,7 +187,7 @@ class TestApi {
 	
 	@Test
 	final void testImage() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		test2.updateTaggedImage("image-here", URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"));
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
@@ -189,15 +195,15 @@ class TestApi {
 	
 	@Test
 	final void testImage2() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
-		test2.updateTaggedImage("image-here", URI.create("https://drive.google.com/uc?id=1C9fUcM6vLWxHLWFc3_8zCJW6jSTwSwfu&export=download"), 4.0,4.0);
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
+		test2.updateTaggedImage("image-here", URI.create("https://upload.wikimedia.org/wikipedia/commons/7/77/Avatar_cat.png"), 4.0,4.0);
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
 	}
 	
 	@Test
 	final void testImageSize() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		Document doc = test2.getDoc();
 		Optional<Size> size = DocumentHelper.imageSize(doc, "image-here");
 		System.out.print(size);	
@@ -212,7 +218,7 @@ class TestApi {
 	
 	@Test
 	final void testRevert() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 1");
 		test2.revertTags();
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
@@ -241,14 +247,42 @@ class TestApi {
 				.withCol("fillColour", RVector.with("#FFFFFF","#DDFFFF","#FFDDFF","#FFFFDD","#DDDDDD"));
 		
 		System.out.println(df.asCsv());
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 1");
 		
 		test2.updateOrInsertTable(1, df, RVector.with(2D,4D,3D), RNumeric.from(4D));				
 	}
 	
 	@Test
+	final void testTaggedTableInsert() throws IOException, UnconvertableTypeException {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		String tmp = dtf.format(now); 
+		RDataframe df = RDataframe.create()
+				.withCol("label", RVector.with("TAGGED2",tmp,"B1","B2","B3"))
+				.withCol("col", RVector.with(1,2,1,2,3))
+				.withCol("row", RVector.with(1,1,2,2,2))
+				.withCol("colSpan", RVector.with(1,2,1,1,1))
+				.withCol("rowSpan", RVector.with(1,1,1,1,1))
+				.withCol("fontFace", RVector.with("bold","italic","bold.italic",null,"plain"))
+				.withCol("fontName", RVector.with("Roboto","Arial","Courier New","Times New Roman","Pacifico"))
+				.withCol("fontSize", RVector.with(8D,8D,12D,20D,6D))
+				.withCol("alignment", RVector.with("START","CENTER",null,"CENTER","END"))
+				.withCol("valignment", RVector.with("TOP","MIDDLE","BOTTOM","MIDDLE","TOP"))
+				.withCol("bottomBorderWeight", RVector.with(0D,0D,1D,1D,1D))
+				.withCol("topBorderWeight", RVector.with(4D,4D,0D,0D,0D))
+				.withCol("leftBorderWeight", RVector.with(1D,0D,1D,0D,0D))
+				.withCol("rightBorderWeight", RVector.with(0D,1D,0D,0D,1D))
+				.withCol("fillColour", RVector.with("#FFFFFF","#DDFFFF","#FFDDFF","#FFFFDD","#DDDDDD"));
+		
+		System.out.println(df.asCsv());
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 1");
+		
+		test2.updateTaggedTable("tag-table", df, RVector.with(2D,4D,3D), RNumeric.from(4D));				
+	}
+	
+	@Test
 	final void testImageInsert() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		test2.updateOrInsertInlineImage(1, URI.create("https://www.pngall.com/wp-content/uploads/5/Black-Dog-PNG.png"), 3.0, 3.0);
 		Document doc = test2.getDoc();
 		System.out.print(doc.toPrettyString());
@@ -257,13 +291,13 @@ class TestApi {
 	@Test
 	final void testClone() throws IOException {
 		//RDocument d = 
-		singleton.getOrClone("roogledocs-clone", "https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing");
+		singleton.getOrCloneDocument("roogledocs-clone", "https://docs.google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing");
 		// d.saveAsPdf("/home/terminological/tmp/template.pdf");
 	}
 	
 	@Test
 	final void testTextInsert() throws IOException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		test2.appendText("First header2\nSecond header2", Optional.of("HEADING_2"));	
 	}
 	
@@ -280,7 +314,7 @@ class TestApi {
 //				;
 //		
 //		System.out.println(df.asCsv());
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 2");
+		RDocument test2 = singleton.getOrCreateDocument("Roogledocs example 2");
 		
 		// test2.appendText(df);	
 		
@@ -295,15 +329,16 @@ class TestApi {
 	}
 	
 	@Test
-	final void testCSL() throws IOException, ParseException {
+	final void testCSL() throws IOException, ParseException, SAXException, ParserConfigurationException {
 		
 		InputStream is = TestApi.class.getResourceAsStream("/test.bib");
 		BibTeXDatabase db = new BibTeXConverter().loadDatabase(is);
 		BibTeXItemDataProvider provider = new BibTeXItemDataProvider();
+		CSL.getSupportedStyles().forEach(System.out::println);
 		provider.addDatabase(db);
 		Stream.of(provider.getIds()).forEach(System.out::println);		
 		CSL citeproc = new CSL(provider, "ieee");
-		citeproc.setOutputFormat("html");
+		citeproc.setOutputFormat("fo");
 		citeproc.registerCitationItems(provider.getIds());
 		System.out.println(
 			citeproc.makeCitation("challen2019").stream().map(c -> c.getText()).collect(Collectors.joining(";"))
@@ -316,19 +351,32 @@ class TestApi {
 		citeproc.makeCitation("challen2019","challen2021").stream().map(c -> c.getText()).collect(Collectors.joining(";"))
 		);
 		
-		System.out.print(citeproc.makeBibliography().makeString());
+		String html = citeproc.makeBibliography().makeString();
+		System.out.println(html);
+		System.out.println("TEXT:");
+		FO2Text.convert(html).forEach(lf -> System.out.println(lf));
 		
-		Stream.of(citeproc.makeBibliography().getEntries()).forEach(System.out::println);
-		Stream.of(citeproc.makeBibliography().getEntryIds()).forEach(System.out::println);
-		citeproc.close();
+		//Stream.of(citeproc.makeBibliography().getEntries()).forEach(System.out::println);
+		//Stream.of(citeproc.makeBibliography().getEntryIds()).forEach(System.out::println);
+		// citeproc.close();
 	}
 	
 	@Test
 	final void testCitation() throws IOException, URISyntaxException, ParseException {
-		RDocument test2 = singleton.getOrCreate("Roogledocs example 1");
+		RCitable test2 = singleton.getOrCreateDocument("Roogledocs example 1");
 		String bibtex = Files.readString(Paths.get(TestApi.class.getResource("/test.bib").toURI()));
 		test2.updateCitations(bibtex, "ieee");
 		
+	}
+	
+	@Test void testRevertAndSavePdf() throws IOException {
+		RDocument olddoc = singleton.getOrCreateDocument("Roogledocs example 1");
+		RDocument newdoc = singleton.getOrCloneDocument("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), olddoc.getDocId());
+		newdoc.removeTags();
+		Path p = Files.createTempFile("test",".pdf");
+		newdoc.saveAsPdf(p.toAbsolutePath().toString());
+		singleton.delete(newdoc.getDocId());
+		System.out.println(p.toString());
 	}
 	
 	public static void main(String[] args) throws IOException, GeneralSecurityException {

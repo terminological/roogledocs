@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.2.1
+#' Version: 0.3.0
 #' 
-#' Generated: 2023-09-29T16:53:46.648982759
+#' Generated: 2024-02-21T19:05:32.857390212
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe
@@ -122,96 +122,23 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 		}
 	},
 	#' @description 
-	#' withDocument: 
-	#' Select a document by its share url or id.
-	#' @param shareUrlOrDocId the url from clicking a share button in google docs or
-	#'   an id from searchForDocuments() method - (java expects a String)
-	#' @return R6 RoogleDocs object: 
-	#' itself - a fluent method
-	withDocument = function(shareUrlOrDocId) {
+	#' getName: 
+	#' Return the name of the document
+	#' @param suffix an additional suffix to add to the name - (defaulting to `''`) - (java expects a String)
+	#' @return String: 
+	#' 
+	getName = function(suffix='') {
 		# copy parameters
-		tmp_shareUrlOrDocId = self$.api$.toJava$String(shareUrlOrDocId);
+		tmp_suffix = self$.api$.toJava$String(suffix);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="withDocument" , tmp_shareUrlOrDocId, check=FALSE);
+		tmp_out = .jcall(self$.jobj, returnSig = "Ljava/lang/String;", method="getName" , tmp_suffix, check=FALSE);
 		self$.api$printMessages()
 		# check for exceptions and rethrow them
 		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleDocs$new(
-				self$.api$.fromJava$RoogleDocs(tmp_out),
-				self$.api
-			);
-			return(out);
-		}
-	},
-	#' @description 
-	#' findOrCreateDocument: 
-	#' Search for a document by name or create one if missing.
-	#' @param title a document title. If there is an exact match in google drive
-	#'   then that document will be used 
-	#'   otherwise a new one will be created. - (java expects a String)
-	#' @return R6 RoogleDocs object: 
-	#' itself - a fluent method
-	findOrCreateDocument = function(title) {
-		# copy parameters
-		tmp_title = self$.api$.toJava$String(title);
-		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCreateDocument" , tmp_title, check=FALSE);
-		self$.api$printMessages()
-		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleDocs$new(
-				self$.api$.fromJava$RoogleDocs(tmp_out),
-				self$.api
-			);
-			return(out);
-		}
-	},
-	#' @description 
-	#' findOrCloneTemplate: 
-	#' Get a document by name or create one from a template if missing.
-	#' @param title a document title. If there is an exact match in google drive
-	#'   then that document will be used
-	#'   otherwise a new one will be created. - (java expects a String)
-	#' @param templateUri the share link (or document id) of a template google
-	#'   document - (java expects a String)
-	#' @return R6 RoogleDocs object: 
-	#' itself - a fluent method
-	findOrCloneTemplate = function(title, templateUri) {
-		# copy parameters
-		tmp_title = self$.api$.toJava$String(title);
-		tmp_templateUri = self$.api$.toJava$String(templateUri);
-		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="findOrCloneTemplate" , tmp_title, tmp_templateUri, check=FALSE);
-		self$.api$printMessages()
-		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleDocs$new(
-				self$.api$.fromJava$RoogleDocs(tmp_out),
-				self$.api
-			);
-			return(out);
-		}
+		# convert java object back to R
+		out = self$.api$.fromJava$String(tmp_out);
+		if(is.null(out)) return(invisible(out))
+		return(out);
 	},
 	#' @description 
 	#' tagsDefined: 
@@ -234,10 +161,14 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateTaggedText: 
-	#' Relace tags for text
+	#' Replace tags for text
 	#'   
-	#'   Substitutes all occurrences of {{tag-name}} with
-	#'   the text parameter.
+	#'   Substitutes all occurrences of {{tag-name}}
+	#'   with the text parameter. If the tag name is not 
+	#'   found in the document
+	#'   it is inserted at the end in a section labelled "Unmatched tags:".
+	#'   From there
+	#'   it can be cut and pasted into the right place.
 	#' @param text the value to replace the tag with (e.g. a result from analysis)
 	#'   (cannot be empty) - (java expects a String)
 	#' @param tagName the tag name - (defaulting to `deparse(substitute(text))`) - (java expects a String)
@@ -271,35 +202,101 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' Replace a tag with an image.
 	#'   
 	#'   Substitutes all occurrences of
-	#'   {{tag-name}} with an image from the local storage. There are limited
-	#'   circumstances
-	#'   in which using this is a good idea. It will almost
-	#'   always be better to use `updateFigure()` to insert an image
-	#'   by index.
-	#'   If you choose to ignore this warning, beware combining this with
-	#'   `updateFigure()` as potentially the figure indexes may
-	#'   change
-	#'   dynamically.
+	#'   {{tag-name}} with an image from the local storage. 
 	#'   
-	#'   The image is uploaded to your google drive as a
-	#'   temporary file, and briefly made publically readable. From there it is
-	#'   inserted into the 
-	#'   google doc, and one completed the temporary file
-	#'   deleted from your google drive.
+	#'   The image is
+	#'   uploaded to your google drive as a temporary file, and briefly made
+	#'   publicly readable. From there it is inserted into the 
+	#'   google doc, and
+	#'   one completed the temporary file deleted from your google drive.
+	#'   Insertion is
+	#'   done using the dimensions of the existing image (if
+	#'   present) or the PNG dimensions if not.
+	#'   Creating the image with the
+	#'   correct dimensions (and providing the dpi if not 300) is
+	#'   important.
+	#'   
+	#'   If the tag is missing from the document the image
+	#'   is
+	#'   inserted at the end (and tagged). From there it can be cut and pasted
+	#'   to the correct place.
 	#' @param absoluteFilePath a file path to an png image file. - (java expects a String)
 	#' @param tagName the tag name - (defaulting to
 	#'   `deparse(substitute(absoluteFilePath))`) - (java expects a String)
 	#' @param dpi the dots per inch of the image in the document (defaults to 300) -
 	#'   (defaulting to `300`) - (java expects a double)
+	#' @param keepUpload keep the uploaded image as a supplementary file in the same
+	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a boolean)
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
-	updateTaggedImage = function(absoluteFilePath, tagName=deparse(substitute(absoluteFilePath)), dpi=300) {
+	updateTaggedImage = function(absoluteFilePath, tagName=deparse(substitute(absoluteFilePath)), dpi=300, keepUpload=FALSE) {
 		# copy parameters
 		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
 		tmp_tagName = self$.api$.toJava$String(tagName);
 		tmp_dpi = self$.api$.toJava$double(dpi);
+		tmp_keepUpload = self$.api$.toJava$boolean(keepUpload);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_dpi, check=FALSE);
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_dpi, tmp_keepUpload, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
+		# is this a fluent method?
+		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		if(self$.jobj$equals(tmp_out)) {
+			# return fluent method
+			invisible(self)
+		} else {
+			# wrap return java object in R6 class  
+			out = RoogleDocs$new(
+				self$.api$.fromJava$RoogleDocs(tmp_out),
+				self$.api
+			);
+			return(out);
+		}
+	},
+	#' @description 
+	#' updateTaggedTable: 
+	#' Replace a tag with a table.
+	#'   
+	#'   Substitutes a unique occurrences of
+	#'   {{tag-name}} with a table. The tag should either be in the text of the
+	#'   document or as the first entry in 
+	#'   the first cell of a table. Once
+	#'   inserted the table is tagged using a zero width character
+	#'   as the very
+	#'   first item in the first cell. This will be removed if `removeTags()`
+	#'   is called.
+	#'   
+	#'   If the tag is missing the table is inserted at the end of
+	#'   the document where it can be 
+	#'   cut and pasted to the correct place.
+	#' @param longFormatTable A dataframe consisting of the table content and
+	#'   formatting indexed by row and column. at a minimum this should have
+	#'   columns label,row,col, but may also
+	#'   include
+	#'   rowSpan,colSpan,fillColour, leftBorderWeight,
+	#'   rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment
+	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
+	#'   fontFace, fontSize. - (java expects a RDataframe)
+	#' @param tagName the tag name - (defaulting to
+	#'   `deparse(substitute(longFormatTable))`) - (java expects a String)
+	#' @param colWidths A vector including the relative length of each column. This
+	#'   can be left out if longFormatTable comes from `as.long_format_table` -
+	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
+	#' @param tableWidthInches The final width of the table in inches (defaults to a
+	#'   size that fits in A4 page with margins) but you may want to make this
+	#'   wider for
+	#'     landscape tables - (defaulting to `6.2`) - (java expects a RNumeric)
+	#' @return R6 RoogleDocs object: 
+	#' itself - a fluent method
+	updateTaggedTable = function(longFormatTable, tagName=deparse(substitute(longFormatTable)), colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
+		# copy parameters
+		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
+		tmp_tagName = self$.api$.toJava$String(tagName);
+		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
+		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateTaggedTable" , tmp_longFormatTable, tmp_tagName, tmp_colWidths, tmp_tableWidthInches, check=FALSE);
 		self$.api$printMessages()
 		# check for exceptions and rethrow them
 		.jcheck()
@@ -357,7 +354,8 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#'   
 	#'   Finds tags defined in the current document and
 	#'   removes them. This 
-	#'   cannot be undone.
+	#'   cannot be undone, except by rolling back to a
+	#'   previous version.
 	#' @param confirm - This action must be confirmed by passing `true` as cannot be
 	#'   undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`) - (java expects a boolean)
 	#' @return R6 RoogleDocs object: 
@@ -388,9 +386,18 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' updateTable: 
 	#' Update or insert a formatted table into the document. 
 	#'   
-	#'   The table and
-	#'   formatting are described in a dataframe the format of which is
-	#'   documented in the as.long_format_table() method.
+	#'   This function
+	#'   counts the number of tables from the start of the document.
+	#'   Inserting
+	#'   tables by index works only if your document does not change much or
+	#'   you are creating one from
+	#'   scratch. You can overwrite tables using this
+	#'   function but if the order of tables has been changed by
+	#'   your
+	#'   collaborators this will be generally cause probelms. Use of this
+	#'   function is generally discouraged and
+	#'   we now prefer
+	#'   `updateTaggedTable()`.
 	#' @param longFormatTable A dataframe consisting of the table content and
 	#'   formatting indexed by row and column. at a minimum this should have
 	#'   columns label,row,col, but may also
@@ -435,14 +442,23 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	#' @description 
 	#' updateFigure: 
-	#' Update or insert a figure in the document from a locally stored
-	#'   PNG.
+	#' Update or insert a figure in the document from a locally stored PNG by
+	#'   index.
 	#'   
-	#'   This function uploads the image into a temporary file onto your
-	#'   Google Drive, and makes it briefly publically readable. From there
-	#'   inserts it into the 
-	#'   google document. Once this is complete the
-	#'   temporary google drive copy of the image is deleted.
+	#'   This function counts the number of inline images (i.e. not
+	#'   absolutely positioned ones) from the start of the document.
+	#'   Inserting
+	#'   images by index works only if your document does not change much or
+	#'   you are creating one from
+	#'   scratch. You can overwrite images using this
+	#'   function but if the order of images has been changed by
+	#'   your
+	#'   collaborators this will generally cause problems. This function
+	#'   uploads the image into a temporary file onto your Google Drive, and
+	#'   makes it briefly publicly readable. From there inserts it into the
+	#'   
+	#'   google document. Once this is complete the temporary google drive
+	#'   copy of the image is deleted.
 	#' @param absoluteFilePath a file path to an png image file (only png is
 	#'   supported at this point). - (java expects a String)
 	#' @param figureIndex what is the figure index in the document? (This only
@@ -451,15 +467,18 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' @param dpi the dots per inch of the image in the document (defaults to 300).
 	#'   the final size of the image in the doc will be determined by the image
 	#'   file dimensions and the dpi. - (defaulting to `300`) - (java expects a double)
+	#' @param keepUpload keep the uploaded image as a supplementary file in the same
+	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a boolean)
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
-	updateFigure = function(absoluteFilePath, figureIndex=-1, dpi=300) {
+	updateFigure = function(absoluteFilePath, figureIndex=-1, dpi=300, keepUpload=FALSE) {
 		# copy parameters
 		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
 		tmp_figureIndex = self$.api$.toJava$int(figureIndex);
 		tmp_dpi = self$.api$.toJava$double(dpi);
+		tmp_keepUpload = self$.api$.toJava$boolean(keepUpload);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_absoluteFilePath, tmp_figureIndex, tmp_dpi, check=FALSE);
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateFigure" , tmp_absoluteFilePath, tmp_figureIndex, tmp_dpi, tmp_keepUpload, check=FALSE);
 		self$.api$printMessages()
 		# check for exceptions and rethrow them
 		.jcheck()
@@ -488,6 +507,8 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#'   For final export once all
 	#'   analysis is complete it may be preferable to
 	#'   call `doc$removeTags()` and manually export the output
+	#'   but after this
+	#'   no further updating is possible.
 	#' @param absoluteFilePath - a file path to save the pdf. - (java expects a String)
 	#' @param uploadCopy place a copy of the downloaded pdf back onto google drive
 	#'   in the same folder as the document
@@ -641,17 +662,31 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' Update citation tags in the document. 
 	#'   
 	#'   A citation tag is like this
-	#'   {{cite:challen2020;danon2021}}. The ids
-	#' @param bibTex - a string containing the bibtex - (java expects a RCharacter)
-	#' @param citationStyle - the CSL specification - (defaulting to `'ieee'`) - (java expects a RCharacter)
+	#'   `{{cite:challen2020;danon2021}}`. The ids are matched against the
+	#'   provided bibtex, and
+	#'   the tags are replaced with an appropriate
+	#'   citation string. The bibliography itself is added to a specific slide
+	#'   for 
+	#'   references which can be decided with the `{{references}}` tag.
+	#'   
+	#'   
+	#'   If references do not already exist and there if no `{{references}}`
+	#'   tag the
+	#'   references will be added to the end of the document. Where it
+	#'   can be cut and
+	#'   pasted to the right place. N.B. Do not split up the
+	#'   references when you move them.
+	#' @param bibTexPath - the full file path to the file containing the bibtex - (java expects a RCharacter)
+	#' @param citationStyle - the CSL specification - (defaulting to
+	#'   `'ieee-with-url'`) - (java expects a RCharacter)
 	#' @return R6 RoogleDocs object: 
 	#' itself - a fluent method
-	updateCitations = function(bibTex, citationStyle='ieee') {
+	updateCitations = function(bibTexPath, citationStyle='ieee-with-url') {
 		# copy parameters
-		tmp_bibTex = self$.api$.toJava$RCharacter(bibTex);
+		tmp_bibTexPath = self$.api$.toJava$RCharacter(bibTexPath);
 		tmp_citationStyle = self$.api$.toJava$RCharacter(citationStyle);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateCitations" , tmp_bibTex, tmp_citationStyle, check=FALSE);
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="updateCitations" , tmp_bibTexPath, tmp_citationStyle, check=FALSE);
 		self$.api$printMessages()
 		# check for exceptions and rethrow them
 		.jcheck()
