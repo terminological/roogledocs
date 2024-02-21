@@ -12,7 +12,7 @@ I CAN ADD UP TO 100 USERS BEFORE I HAVE TO SUBMIT FOR GOOGLE'S REVIEW.
 PLEASE HEAD TO THE [BETA TEST DISCUSSION](https://github.com/terminological/roogledocs/discussions/2) 
 WITH YOUR GMAIL ADDRESS IF YOU WANT TO PARTICIPATE.
 
-R library to perform limited interactions with Google docs (and maybe one day slides)
+R library to perform limited interactions with Google docs and slides
 in R via the Java API library. The purpose being to support Google docs as a 
 platform for interactive development and documentation of data analysis in R for scientific
 publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis

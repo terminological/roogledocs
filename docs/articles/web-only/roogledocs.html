@@ -112,49 +112,49 @@ replaced by calculated content from R. To do this we initialise the
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"roogledocs.tokenDirectory"</span><span class="op">=</span><span class="st">"~/.roogledocs-test"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">J</span> <span class="op">=</span> <span class="fu">roogledocs</span><span class="fu">::</span><span class="va"><a href="../../reference/JavaApi.html">JavaApi</a></span><span class="op">$</span><span class="fu">get</span><span class="op">(</span>logLevel <span class="op">=</span> <span class="st">"DEBUG"</span><span class="op">)</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,938 main DEBUG null null initializing configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,949 main DEBUG PluginManager 'Core' found 127 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,949 main DEBUG PluginManager 'Level' found 0 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,954 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,955 main DEBUG Building Plugin[name=AppenderRef, class=org.apache.logging.log4j.core.config.AppenderRef].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,962 main DEBUG PluginManager 'TypeConverter' found 26 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,966 main DEBUG createAppenderRef(ref="Console", level="null", Filter=null)</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,966 main DEBUG Building Plugin[name=root, class=org.apache.logging.log4j.core.config.LoggerConfig$RootLogger].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,970 main DEBUG LoggerConfig$RootLogger$Builder(additivity="null", level="DEBUG", levelAndRefs="null", includeLocation="null", ={Console}, ={}, Configuration(DefaultLogger), Filter=null)</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,971 main DEBUG Building Plugin[name=loggers, class=org.apache.logging.log4j.core.config.LoggersPlugin].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,971 main DEBUG createLoggers(={root})</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,971 main DEBUG Building Plugin[name=layout, class=org.apache.logging.log4j.core.layout.PatternLayout].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,973 main DEBUG PatternLayout$Builder(pattern="%m%n", PatternSelector=null, Configuration(DefaultLogger), Replace=null, charset="null", alwaysWriteExceptions="null", disableAnsi="null", noConsoleNoAnsi="null", header="null", footer="null")</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,974 main DEBUG PluginManager 'Converter' found 45 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,980 main DEBUG Building Plugin[name=appender, class=org.apache.logging.log4j.core.appender.ConsoleAppender].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,984 main DEBUG ConsoleAppender$Builder(target="SYSTEM_OUT", follow="null", direct="null", bufferedIo="null", bufferSize="null", immediateFlush="null", ignoreExceptions="null", PatternLayout(%m%n), name="Console", Configuration(DefaultLogger), Filter=null, ={})</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,986 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,986 main DEBUG Building Plugin[name=appenders, class=org.apache.logging.log4j.core.config.AppendersPlugin].</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,986 main DEBUG createAppenders(={Console})</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,986 main DEBUG Configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30 initialized</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,073 main DEBUG null null initializing configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,084 main DEBUG PluginManager 'Core' found 127 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,084 main DEBUG PluginManager 'Level' found 0 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,090 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,091 main DEBUG Building Plugin[name=AppenderRef, class=org.apache.logging.log4j.core.config.AppenderRef].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,099 main DEBUG PluginManager 'TypeConverter' found 26 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,104 main DEBUG createAppenderRef(ref="Console", level="null", Filter=null)</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,105 main DEBUG Building Plugin[name=root, class=org.apache.logging.log4j.core.config.LoggerConfig$RootLogger].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,110 main DEBUG LoggerConfig$RootLogger$Builder(additivity="null", level="DEBUG", levelAndRefs="null", includeLocation="null", ={Console}, ={}, Configuration(DefaultLogger), Filter=null)</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,111 main DEBUG Building Plugin[name=loggers, class=org.apache.logging.log4j.core.config.LoggersPlugin].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,111 main DEBUG createLoggers(={root})</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,111 main DEBUG Building Plugin[name=layout, class=org.apache.logging.log4j.core.layout.PatternLayout].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,113 main DEBUG PatternLayout$Builder(pattern="%m%n", PatternSelector=null, Configuration(DefaultLogger), Replace=null, charset="null", alwaysWriteExceptions="null", disableAnsi="null", noConsoleNoAnsi="null", header="null", footer="null")</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,114 main DEBUG PluginManager 'Converter' found 45 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,121 main DEBUG Building Plugin[name=appender, class=org.apache.logging.log4j.core.appender.ConsoleAppender].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,125 main DEBUG ConsoleAppender$Builder(target="SYSTEM_OUT", follow="null", direct="null", bufferedIo="null", bufferSize="null", immediateFlush="null", ignoreExceptions="null", PatternLayout(%m%n), name="Console", Configuration(DefaultLogger), Filter=null, ={})</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,127 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,127 main DEBUG Building Plugin[name=appenders, class=org.apache.logging.log4j.core.config.AppendersPlugin].</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,128 main DEBUG createAppenders(={Console})</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,128 main DEBUG Configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30 initialized</span></span>
 <span><span class="co">## WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,988 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,989 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,989 main DEBUG PluginManager 'Converter' found 45 plugins</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,994 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false-1</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,994 main DEBUG Starting LoggerContext[name=Default, org.apache.logging.log4j.core.LoggerContext@402e37bc] with configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30...</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,995 main DEBUG Shutdown hook enabled. Registering a new one.</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,998 main DEBUG Starting configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,998 main DEBUG Started configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30 OK.</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,998 main DEBUG Shutting down OutputStreamManager SYSTEM_OUT.false.false-1</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,998 main DEBUG OutputStream closed</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,999 main DEBUG Shut down OutputStreamManager SYSTEM_OUT.false.false-1, all resources released: true</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,999 main DEBUG Appender DefaultConsole-1 stopped with status true</span></span>
-<span><span class="co">## 2024-01-17 15:16:30,999 main DEBUG Stopped org.apache.logging.log4j.core.config.DefaultConfiguration@14ec4505 OK</span></span>
-<span><span class="co">## 2024-01-17 15:16:31,057 main DEBUG org.apache.logging.log4j.core.util.SystemClock does not support precise timestamps.</span></span>
-<span><span class="co">## 2024-01-17 15:16:31,057 main DEBUG LoggerContext[name=Default, org.apache.logging.log4j.core.LoggerContext@402e37bc] started OK with configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30.</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,130 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,132 main DEBUG PluginManager 'Lookup' found 16 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,133 main DEBUG PluginManager 'Converter' found 45 plugins</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,138 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false-1</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,139 main DEBUG Starting LoggerContext[name=Default, org.apache.logging.log4j.core.LoggerContext@402e37bc] with configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30...</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,139 main DEBUG Shutdown hook enabled. Registering a new one.</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,141 main DEBUG Starting configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,142 main DEBUG Started configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30 OK.</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,142 main DEBUG Shutting down OutputStreamManager SYSTEM_OUT.false.false-1</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,142 main DEBUG OutputStream closed</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,142 main DEBUG Shut down OutputStreamManager SYSTEM_OUT.false.false-1, all resources released: true</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,142 main DEBUG Appender DefaultConsole-1 stopped with status true</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,143 main DEBUG Stopped org.apache.logging.log4j.core.config.DefaultConfiguration@14ec4505 OK</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,208 main DEBUG org.apache.logging.log4j.core.util.SystemClock does not support precise timestamps.</span></span>
+<span><span class="co">## 2024-02-21 21:31:13,209 main DEBUG LoggerContext[name=Default, org.apache.logging.log4j.core.LoggerContext@402e37bc] started OK with configuration org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration@33723e30.</span></span>
 <span><span class="co">## Adding to classpath: </span></span>
-<span><span class="co">## /tmp/RtmpYHFHtI/temp_libpath12be77aabe594/roogledocs/java/roogledocs-0.3.0-jar-with-dependencies.jar</span></span>
+<span><span class="co">## /tmp/RtmpUIiazd/temp_libpath2bcf931f0324f/roogledocs/java/roogledocs-0.3.0-jar-with-dependencies.jar</span></span>
 <span><span class="co">## Initialised roogledocs</span></span>
 <span><span class="co">## R package version: 0.3.0</span></span>
-<span><span class="co">## R package generated: 2024-01-17T13:26:56.091248658</span></span>
+<span><span class="co">## R package generated: 2024-02-21T19:05:32.792925904</span></span>
 <span><span class="co">## Java library version: io.github.terminological:roogledocs:0.3.0</span></span>
-<span><span class="co">## Java library compiled: 2024-01-17T15:16:04.153</span></span>
+<span><span class="co">## Java library compiled: 2024-02-21T21:30:59.62</span></span>
 <span><span class="co">## Contact: rob.challen@bristol.ac.uk</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="va">J</span><span class="op">$</span><span class="va">RoogleDocs</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">## Initialising RoogleDocs. Local token directory: /home/vp22681/.roogledocs-test</span></span></code></pre></div>
@@ -185,8 +185,8 @@ re-authenticating the library can be done though a call to
 <span><span class="co">## Created new document with title: roogledocs-demo</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only/example-template-doc.pdf"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Created new document with title: tmp_copy_for_pdf_5cfe08cc-d7c3-4e96-9e15-24d7b116defc</span></span>
-<span><span class="co">## Deleting file: tmp_copy_for_pdf_5cfe08cc-d7c3-4e96-9e15-24d7b116defc</span></span></code></pre></div>
+<span><span class="co">## Created new document with title: tmp_copy_for_pdf_da44800e-e504-45fb-8bc4-b84723b687e6</span></span>
+<span><span class="co">## Deleting file: tmp_copy_for_pdf_da44800e-e504-45fb-8bc4-b84723b687e6</span></span></code></pre></div>
 <p>Running the chunk above should authenticate you and grab a publicly
 shared template I created, and make a copy of it in your Google drive
 under the name “roogledocs-demo”. <a href="example-template-doc.pdf">The
@@ -309,11 +309,11 @@ tag in the original Google doc with the image:</p>
 <span><span class="co"># inserted into the document at the location of the tag:</span></span>
 <span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedImage</span><span class="op">(</span><span class="va">figure_1</span><span class="op">)</span></span>
-<span><span class="co">## Uploading: file1367961967822.png; with type: image/png</span></span>
-<span><span class="co">## Autotext replacing: {{figure_1}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_FeBrpwxw4ONJeU0x_WMv6Rbyr6OKSlmLALSwTO8-ILFIrZ94RVJIF6azMYuxYjG4g2C3_v_PMK5m90ZRAyWjhRt5BNZo7h5OjDCiQF1g=s16383</span></span>
+<span><span class="co">## Uploading: file2ca6a63bb17bd.png; with type: image/png</span></span>
+<span><span class="co">## Autotext replacing: {{figure_1}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_E88_d3EMIW0SU5YRipkPGlzKJ3RcpSDSL8Umg3xZ7zIzYKKa9jB9Q3atnSxM9FA06erw-sU4Gru9IT_F-Najk2_zg7MJSCPAKxxFSW=s16383</span></span>
 <span><span class="co">## No requests made</span></span>
 <span><span class="co">## Figure figure_1 updated</span></span>
-<span><span class="co">## Deleting file: temp_79b0b033-d6a2-4213-b38b-a26fb19f9dd1.png</span></span>
+<span><span class="co">## Deleting file: temp_a51518cc-0782-4257-a1f5-32856aaf6f1c.png</span></span>
 <span></span>
 <span><span class="co"># This is equivalent to:</span></span>
 <span><span class="co"># doc$updateTaggedImage(figure_1, tagName = "figure_1")</span></span>
@@ -345,9 +345,9 @@ in R (see “Updating tagged text” section later).</p>
 <span><span class="co"># means this is inserted in the right place, but it is up to the user to make </span></span>
 <span><span class="co"># sure this is right.</span></span>
 <span><span class="va">filename</span> <span class="op"><a href="../../reference/pipe.html">%&gt;%</a></span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateFigure</span><span class="op">(</span>figureIndex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">## Uploading: file1367961dff21f.png; with type: image/png</span></span>
+<span><span class="co">## Uploading: file2ca6a655ef08f.png; with type: image/png</span></span>
 <span><span class="co">## Figure 2 updated</span></span>
-<span><span class="co">## Deleting file: file1367961dff21f.png</span></span>
+<span><span class="co">## Deleting file: file2ca6a655ef08f.png</span></span>
 <span><span class="va">g2</span></span></code></pre></div>
 <p><img src="roogledocs_files/figure-html/fig2-1.png" width="700"></p>
 <p>Along with updating a figure within a document as a png it is useful
@@ -362,7 +362,7 @@ directory the behaviour must be specified if the file already
 exists.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">doc</span><span class="op">$</span><span class="fu">uploadSupplementaryFiles</span><span class="op">(</span>absoluteFilePath <span class="op">=</span> <span class="va">figure_1</span>,overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">## Uploading: file1367961967822.png; with type: image/png</span></span></code></pre></div>
+<span><span class="co">## Uploading: file2ca6a63bb17bd.png; with type: image/png</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="updating-tagged-text">Updating tagged text<a class="anchor" aria-label="anchor" href="#updating-tagged-text"></a>
@@ -426,7 +426,7 @@ document like this:</p>
 like this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"%d/%m/%Y"</span><span class="op">)</span> <span class="op"><a href="../../reference/pipe.html">%&gt;%</a></span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedText</span><span class="op">(</span>tagName <span class="op">=</span> <span class="st">"table_1_update_date"</span><span class="op">)</span></span>
-<span><span class="co">## Autotext replacing: {{table_1_update_date}} with 17/01/2024</span></span>
+<span><span class="co">## Autotext replacing: {{table_1_update_date}} with 21/02/2024</span></span>
 <span><span class="co">## No requests made</span></span>
 <span><span class="co">## Text table_1_update_date updated</span></span>
 <span><span class="va">diamonds_mean_sd</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%1.1f \u00B1 %1.1f"</span>,<span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span><span class="op">)</span> </span>
@@ -548,8 +548,8 @@ see what we have done. When we write out a document any
 <code>roogledocs</code> links are removed:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only/example-after-update.pdf"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Created new document with title: tmp_copy_for_pdf_78161468-d372-40ef-99a7-f3338bf7deb5</span></span>
-<span><span class="co">## Deleting file: tmp_copy_for_pdf_78161468-d372-40ef-99a7-f3338bf7deb5</span></span></code></pre></div>
+<span><span class="co">## Created new document with title: tmp_copy_for_pdf_36119892-ff4f-4ffa-8c7e-97556d262775</span></span>
+<span><span class="co">## Deleting file: tmp_copy_for_pdf_36119892-ff4f-4ffa-8c7e-97556d262775</span></span></code></pre></div>
 <p>After the analysis has run we have a new version of the Google
 document which should <a href="example-after-update.pdf">look like
 this</a>.</p>

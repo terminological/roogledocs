@@ -139,8 +139,8 @@ re-authenticating the library can be done though a call to
 <span><span class="co">## Created new document with title: roogleslides-demo</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only/example-template-slides.pdf"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Created new document with title: tmp_copy_for_pdf_6202b428-2ddb-4d40-862d-dcc1d622fbb5</span></span>
-<span><span class="co">## Deleting file: tmp_copy_for_pdf_6202b428-2ddb-4d40-862d-dcc1d622fbb5</span></span></code></pre></div>
+<span><span class="co">## Created new document with title: tmp_copy_for_pdf_f2c44d58-bc4e-44d7-89e7-984289d1fbf0</span></span>
+<span><span class="co">## Deleting file: tmp_copy_for_pdf_f2c44d58-bc4e-44d7-89e7-984289d1fbf0</span></span></code></pre></div>
 <p>Running the chunk above should authenticate you and grab a publicly
 shared template I created, and make a copy of it in your Google drive
 under the name “roogledocs-demo”. <a href="example-template-slides.pdf">The document template can be seen
@@ -265,10 +265,10 @@ tag in the original Google doc with the image:</p>
 <span><span class="co"># inserted into the document at the location of the tag:</span></span>
 <span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedImage</span><span class="op">(</span><span class="va">figure_1</span><span class="op">)</span></span>
-<span><span class="co">## Uploading: file1375864865e4c.png; with type: image/png</span></span>
-<span><span class="co">## Autotext replacing: {{figure_1}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_HcIm2zAw3Y9vl3ahLzQ0iv39wxCJ91ZAQFJxKxJPUQ_dqej50Q2JKa58CyKs5BN2u9Qdb7HZDVsEOPybFjITqBMdNzmkEozmRCNPX4aA=s16383</span></span>
+<span><span class="co">## Uploading: file2cc244a5371dd.png; with type: image/png</span></span>
+<span><span class="co">## Autotext replacing: {{figure_1}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_GN8JN5L2g1jC0dekGMknkWohD6Jp9A0SS2jD58EmcR4Oftmt-rCLO3HDWpv4YMHEpkfHMFiv2TptRf0yjIFQQ4OVheJyGHlBeXWX9eSA=s16383</span></span>
 <span><span class="co">## Figure figure_1 updated</span></span>
-<span><span class="co">## Deleting file: temp_1c69427a-23af-476f-8b05-2dd94839c96f.png</span></span>
+<span><span class="co">## Deleting file: temp_16b6e160-9f3e-40bb-84f3-fe9017d86d42.png</span></span>
 <span></span>
 <span><span class="co"># This is equivalent to:</span></span>
 <span><span class="co"># doc$updateTaggedImage(figure_1, tagName = "figure_1")</span></span></code></pre></div>
@@ -282,10 +282,10 @@ container is rotated the result will be rotated.</p>
 <span><span class="va">figure_2</span> <span class="op">=</span> <span class="fu">roogledocs</span><span class="fu">::</span><span class="fu"><a href="../../reference/ggplot_to_png.html">ggplot_to_png</a></span><span class="op">(</span><span class="va">g2</span>, width<span class="op">=</span><span class="fl">5</span>, height<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedImage</span><span class="op">(</span><span class="va">figure_2</span><span class="op">)</span></span>
-<span><span class="co">## Uploading: file137583c9600c3.png; with type: image/png</span></span>
-<span><span class="co">## Autotext replacing: {{figure_2}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_EKyp7k3b5IIs7tc0GM8Rdegw7C1mchEYMjUPSaeyIW06UxjT6xzb5TaRIt4IrHMIaTKpa5bt6rpytYt04Hql4WEm5YC0IvOasY-AONPg=s16383</span></span>
+<span><span class="co">## Uploading: file2cc24579e60e6.png; with type: image/png</span></span>
+<span><span class="co">## Autotext replacing: {{figure_2}} with image: https://lh3.googleusercontent.com/drive-storage/ANtge_FCGrrtPdqYLv7eaYgjLQq14p9CS5inEhJYh8_oYiqeM70ZOOSwh8k2zX4fxBeSP-p17jyfCKHEC0BQmlL0jLLjwN-QWxzBgLI8hRiSjw=s16383</span></span>
 <span><span class="co">## Figure figure_2 updated</span></span>
-<span><span class="co">## Deleting file: temp_4f67bbfb-a27b-4f1f-9243-0855e3a61916.png</span></span></code></pre></div>
+<span><span class="co">## Deleting file: temp_410dc55a-e703-471d-8e1c-32b441bf3241.png</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="updating-tagged-text">Updating tagged text<a class="anchor" aria-label="anchor" href="#updating-tagged-text"></a>
@@ -348,7 +348,7 @@ document like this:</p>
 like this:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"%d/%m/%Y"</span><span class="op">)</span> <span class="op"><a href="../../reference/pipe.html">%&gt;%</a></span> <span class="va">doc</span><span class="op">$</span><span class="fu">updateTaggedText</span><span class="op">(</span>tagName <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span></span>
-<span><span class="co">## Autotext replacing: {{date}} with 17/01/2024</span></span>
+<span><span class="co">## Autotext replacing: {{date}} with 21/02/2024</span></span>
 <span><span class="co">## Text date updated</span></span>
 <span><span class="va">diamonds_mean_sd</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%1.1f \u00B1 %1.1f"</span>,<span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span><span class="op">)</span> </span>
 <span></span>
@@ -455,8 +455,8 @@ see what we have done. When we write out a document any
 <code>roogledocs</code> links are removed:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">doc</span><span class="op">$</span><span class="fu">saveAsPdf</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"docs/articles/web-only/slides-after-update.pdf"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Created new document with title: tmp_copy_for_pdf_ada04604-1713-459f-a827-b4a44d6cc2a2</span></span>
-<span><span class="co">## Deleting file: tmp_copy_for_pdf_ada04604-1713-459f-a827-b4a44d6cc2a2</span></span></code></pre></div>
+<span><span class="co">## Created new document with title: tmp_copy_for_pdf_d78d0473-6ff7-4575-a48e-2add1fc7d14c</span></span>
+<span><span class="co">## Deleting file: tmp_copy_for_pdf_d78d0473-6ff7-4575-a48e-2add1fc7d14c</span></span></code></pre></div>
 <p>After the analysis has run we have a new version of the Google slides
 which should <a href="slides-after-update.pdf">look like this</a>.</p>
 </div>
