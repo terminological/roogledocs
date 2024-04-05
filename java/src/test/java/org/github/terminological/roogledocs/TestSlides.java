@@ -22,8 +22,6 @@ import org.jbibtex.ParseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.api.services.slides.v1.model.Presentation;
 
@@ -85,8 +83,10 @@ class TestSlides {
 		test1.setDefaultLayout("TITLE_AND_BODY");
 		HashMap<String,String> toChange = new HashMap<>();
 		toChange.put("text-tag-2", "1234-text-tag-2-4321");
-		toChange.put("text-tag-3", "1234-text-tag-3-4321");
+		toChange.put("text-tag-3", "<u>1234-text-tag-3-4321</u>");
 		toChange.put("text-tag-4", "1234-text-tag-4-4321");
+		toChange.put("text-tag-5", "<sup>1234-text-tag-5-4321</sup>");
+		toChange.put("text-tag-6", "<b><i>1234-text-tag-6-4321</b></i>");
 		test1.updateTaggedText(toChange);
 	}
 	

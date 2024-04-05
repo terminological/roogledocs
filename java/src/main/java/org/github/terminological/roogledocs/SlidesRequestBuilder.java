@@ -9,12 +9,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.github.terminological.roogledocs.datatypes.LongFormatTable;
 import org.github.terminological.roogledocs.datatypes.LongFormatText;
 import org.github.terminological.roogledocs.datatypes.TextFormat;
@@ -434,8 +440,11 @@ public class SlidesRequestBuilder extends ArrayList<Request> {
 	}
 	
 	public TextRunPosition insertTextContent(TextRunPosition textRun, String unformattedText, Optional<String> style) {
-		if (unformattedText == null || unformattedText == "") return textRun;
-		TextRunPosition textRun2 = insertTextRun(textRun, unformattedText);
+		String plainText = stripHtml(unformattedText);
+		if (plainText == null || plainText == "") return textRun;
+		TextRunPosition textRun2 = insertTextRun(textRun, plainText);
+		
+		Optional<UpdateTextStyleRequest> textStyle = textStyleFromHtml(unformattedText, textRun2);
 		
 		if (style.isPresent()) {
 			String c = style.map(checkRange(
@@ -462,8 +471,71 @@ public class SlidesRequestBuilder extends ArrayList<Request> {
 				)
 			);
 		}
+		
+		if (textStyle.isPresent() && !textRun2.isEmpty()) {
+			this.add(new Request().setUpdateTextStyle(textStyle.get()));
+		}
 			
 		return textRun2;
+	}
+	
+	static Pattern p = Pattern.compile("^<(sup|sub|b|i|u)>(.*)</(sup|sub|b|i|u)>$");
+	
+	static String stripHtml(String text) {
+		
+		while (text.startsWith("<")) {
+			Matcher m = p.matcher(text);
+			if (m.find()) {
+				// System.out.println(m.group(1));
+				text = m.group(2);
+			} else {
+				// unsupported format for regex
+				break;
+			}
+		} 
+		return StringEscapeUtils.unescapeHtml4(text);
+	}
+	
+	static Optional<UpdateTextStyleRequest> textStyleFromHtml(String text, TextRunPosition textRun) {
+		TextStyle tmp = new TextStyle();
+		Set<String> matched = new HashSet<>(); 
+		while (text.startsWith("<")) {
+			Matcher m = p.matcher(text);
+			if (m.find()) {
+				String tag = m.group(1);
+				switch (tag) {
+					case "sup":
+						tmp.setBaselineOffset("SUPERSCRIPT");
+						matched.add("baselineOffset");
+						break;
+					case "sub":
+						tmp.setBaselineOffset("SUBSCRIPT");
+						matched.add("baselineOffset");
+						break;
+					case "b":
+						tmp.setBold(Boolean.TRUE);
+						matched.add("bold");
+						break;
+					case "i":
+						tmp.setItalic(Boolean.TRUE);
+						matched.add("italic");
+						break;
+					case "u":
+						tmp.setUnderline(Boolean.TRUE);
+						matched.add("underline");
+						break;
+				}
+				text = m.group(2);
+			} else {
+				// unsupported format for regex
+				break;
+			}
+		} 
+		if (matched.isEmpty()) return Optional.empty();
+		UpdateTextStyleRequest out = textRun.setPosition(new UpdateTextStyleRequest()
+				.setStyle(tmp)
+				.setFields(matched.stream().collect(Collectors.joining(","))));
+		return Optional.of(out);
 	}
 	
 	private TextRunPosition insertTextRun(TextRunPosition textRun, String unformattedText) {

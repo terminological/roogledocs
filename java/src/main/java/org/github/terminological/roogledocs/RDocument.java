@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 import com.google.api.services.docs.v1.model.DeleteContentRangeRequest;
 import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.Document;
+import com.google.api.services.docs.v1.model.ParagraphStyle;
 import com.google.api.services.docs.v1.model.ReplaceAllTextRequest;
 import com.google.api.services.docs.v1.model.Request;
 import com.google.api.services.docs.v1.model.Size;
 import com.google.api.services.docs.v1.model.SubstringMatchCriteria;
 import com.google.api.services.docs.v1.model.Table;
-import com.google.api.services.docs.v1.model.ParagraphStyle;
 import com.google.api.services.docs.v1.model.UpdateParagraphStyleRequest;
 
 import uk.co.terminological.rjava.UnconvertableTypeException;
@@ -212,11 +212,12 @@ public class RDocument extends RCitable {
 			for (String tagName: unmatched) {
 				log.info("tag '"+tagName+"' not found in document. adding to end.");
 				String tagDesc = "\n"+tagName+": ";
-				String newText = tagDesc+tagMap.get(tagName);
+				String newText = tagMap.get(tagName);
 				TextRunPosition newRange = requests.insertTextContent(end, newText, Optional.of("NORMAL_TEXT"));
-				requests.createLinkTag(tagName, newRange.offset(tagDesc.length()-1, 0));
+				requests.createLinkTag(tagName, newRange);
+				requests.insertTextContent(end, tagDesc, Optional.empty());
 			}
-			requests.insertTextContent(end, "\nUnmatched tags:", Optional.of("NORMAL_TEXT"));
+			
 		}
 		
 		// Create a sequence of requests for each range in reverse document order, so we can apply in one go.
@@ -226,11 +227,9 @@ public class RDocument extends RCitable {
 			requests.deleteContent(range);
 			String tagName = allRanges.get(range);
 			String newText = tagMap.get(tagName);
-
 			// Insert the replacement text.
 			TextRunPosition newRange = requests.insertTextContent(range, newText, Optional.empty());
-
-			// Re-create the named range on the new text.
+			// Re-create the roogledocs hyperlink on the new text.
 			requests.createLinkTag(tagName, newRange);
 		}
 

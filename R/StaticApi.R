@@ -2,8 +2,8 @@
 # This is a collection of the static methods described in the Java API
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
-# Version: 0.3.0
-# Generated: 2024-02-21T19:05:32.810062477
+# Version: 0.4.0
+# Generated: 2024-04-05T16:34:41.851196056
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----

@@ -3,7 +3,7 @@ c(
 	bibentry(bibtype = "Manual",
 		title = "roogledocs: R Wrapper For Googledocs Java Library",
 		year = 2024,
-		note = "R package version 0.3.0; Maven artifact: io.github.terminological:roogledocs:0.3.0",
+		note = "R package version 0.4.0; Maven artifact: io.github.terminological:roogledocs:0.4.0",
 		url = "https://terminological.github.io/roogledocs/",
 		doi = "10.5281/zenodo.6576096",
 		author = c(

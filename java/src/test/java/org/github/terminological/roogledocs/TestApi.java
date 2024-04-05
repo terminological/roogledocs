@@ -172,6 +172,8 @@ class TestApi {
 		toChange.put("text-tag-2", "1234-text-tag-2-4321");
 		toChange.put("text-tag-3", "1234-text-tag-3-4321");
 		toChange.put("text-tag-4", "1234-text-tag-4-4321");
+		toChange.put("text-tag-5", "<sup>1234-text-tag-5-4321</sup>");
+		toChange.put("text-tag-6", "<b><i>1234-text-tag-6-4321</b></i>");
 		test2.updateTaggedText(toChange);
 //		Document doc = test2.getDoc();
 //		System.out.print(doc.toPrettyString());
@@ -337,7 +339,7 @@ class TestApi {
 		CSL.getSupportedStyles().forEach(System.out::println);
 		provider.addDatabase(db);
 		Stream.of(provider.getIds()).forEach(System.out::println);		
-		CSL citeproc = new CSL(provider, "ieee");
+		CSL citeproc = new CSL(provider, "science");
 		citeproc.setOutputFormat("fo");
 		citeproc.registerCitationItems(provider.getIds());
 		System.out.println(
@@ -355,6 +357,8 @@ class TestApi {
 		System.out.println(html);
 		System.out.println("TEXT:");
 		FO2Text.convert(html).forEach(lf -> System.out.println(lf));
+		
+		FO2LongFormat.convert(html).forEach(lf -> System.out.println(lf.fontFace()+" "+lf.label()+" "+lf.link()));
 		
 		//Stream.of(citeproc.makeBibliography().getEntries()).forEach(System.out::println);
 		//Stream.of(citeproc.makeBibliography().getEntryIds()).forEach(System.out::println);

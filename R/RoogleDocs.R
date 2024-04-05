@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.3.0
+#' Version: 0.4.0
 #' 
-#' Generated: 2024-02-21T19:05:32.857390212
+#' Generated: 2024-04-05T16:34:41.885564628
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe
@@ -540,6 +540,68 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 			);
 			return(out);
 		}
+	},
+	#' @description 
+	#' makeCopy: 
+	#' Make a copy of the current document
+	#'   
+	#'   This makes a exact copy of the
+	#'   document under a new name. This name can already exist as googledocs
+	#'   can have multiple 
+	#'   files with the same file name but this will
+	#'   certainly lead to confusion later. It is up to the user to create
+	#'   a
+	#'   naming strategy that does not cause issues.
+	#' @param newName - The new document name. - (java expects a String)
+	#' @return R6 RoogleDocs object: 
+	#' a `roogledocs` object pointing to the new document.
+	makeCopy = function(newName) {
+		# copy parameters
+		tmp_newName = self$.api$.toJava$String(newName);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="makeCopy" , tmp_newName, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
+		# is this a fluent method?
+		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		if(self$.jobj$equals(tmp_out)) {
+			# return fluent method
+			invisible(self)
+		} else {
+			# wrap return java object in R6 class  
+			out = RoogleDocs$new(
+				self$.api$.fromJava$RoogleDocs(tmp_out),
+				self$.api
+			);
+			return(out);
+		}
+	},
+	#' @description 
+	#' delete: 
+	#' Delete the current document
+	#'   
+	#'   Deleted documents can still be retrieved
+	#'   via the Google Drive website but this is otherwise a 
+	#'   final operation.
+	#'   After this any operations on this document will fail with a null
+	#'   pointer exception.
+	#' @param areYouSure - confirm the delete - (defaulting to `utils::askYesNo('Are
+	#'   you sure you wan...`) - (java expects a boolean)
+	#' @return void: 
+	#' 
+	delete = function(areYouSure=utils::askYesNo('Are you sure you want to delete this document',FALSE)) {
+		# copy parameters
+		tmp_areYouSure = self$.api$.toJava$boolean(areYouSure);
+		# execute method call
+		tmp_out = .jcall(self$.jobj, returnSig = "V", method="delete" , tmp_areYouSure, check=FALSE);
+		self$.api$printMessages()
+		# check for exceptions and rethrow them
+		.jcheck()
+		# convert java object back to R
+		out = self$.api$.fromJava$void(tmp_out);
+		if(is.null(out)) return(invisible(out))
+		return(out);
 	},
 	#' @description 
 	#' uploadSupplementaryFiles: 

@@ -13,6 +13,8 @@
 # ├ updateTaggedTable() R6 method ----
 # ├ removeTags() R6 method ----
 # ├ saveAsPdf() R6 method ----
+# ├ makeCopy() R6 method ----
+# ├ delete() R6 method ----
 # ├ uploadSupplementaryFiles() R6 method ----
 # ├ appendFormattedSlide() R6 method ----
 # ├ slideDimensions() R6 method ----

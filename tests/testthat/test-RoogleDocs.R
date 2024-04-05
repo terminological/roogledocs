@@ -16,6 +16,8 @@
 # ├ updateTable() R6 method ----
 # ├ updateFigure() R6 method ----
 # ├ saveAsPdf() R6 method ----
+# ├ makeCopy() R6 method ----
+# ├ delete() R6 method ----
 # ├ uploadSupplementaryFiles() R6 method ----
 # ├ appendText() R6 method ----
 # ├ appendFormattedParagraph() R6 method ----

@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.3.0
+Version: 0.4.0
 
-Generated: 2024-02-21T19:05:32.842755972
+Generated: 2024-04-05T16:34:41.873185786
 }
 
 \details{
@@ -142,6 +142,22 @@ instance$saveAsPdf(absoluteFilePath, uploadCopy)
 }
 
 ## -----------------------------------
+## Method `RoogleDocs$makeCopy(newName)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$makeCopy(newName)
+}
+
+## -----------------------------------
+## Method `RoogleDocs$delete(areYouSure)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$delete(areYouSure)
+}
+
+## -----------------------------------
 ## Method `RoogleDocs$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)`
 ## -----------------------------------
 \dontrun{
@@ -196,6 +212,8 @@ instance$updateCitations(bibTexPath, citationStyle)
 			\item \href{#method-updateTable}{\code{instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)}}
 			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)}}
 			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath, uploadCopy)}}
+			\item \href{#method-makeCopy}{\code{instance$makeCopy(newName)}}
+			\item \href{#method-delete}{\code{instance$delete(areYouSure)}}
 			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
 			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
 			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
@@ -649,6 +667,71 @@ instance$saveAsPdf(absoluteFilePath, uploadCopy)
 
 		\subsection{Returns}{
 R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-makeCopy"></a>}}
+	
+	\subsection{Method \code{makeCopy()}}{
+Make a copy of the current document
+
+This makes a exact copy of the document under a new name. This name can already exist as googledocs can have multiple 
+files with the same file name but this will certainly lead to confusion later. It is up to the user to create
+a naming strategy that does not cause issues.
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$makeCopy(newName)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{newName - The new document name.}{ - (java expects a String)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: a `roogledocs` object pointing to the new document.
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-delete"></a>}}
+	
+	\subsection{Method \code{delete()}}{
+Delete the current document
+
+Deleted documents can still be retrieved via the Google Drive website but this is otherwise a 
+final operation. After this any operations on this document will fail with a null pointer exception.
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$delete(areYouSure)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\itemize{
+				\item{areYouSure - confirm the delete - (defaulting to `utils::askYesNo('Are you sure you wan...`)}{ - (java expects a boolean)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: 
 		}
 
 	}

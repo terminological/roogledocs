@@ -22,6 +22,7 @@ public class FO2LongFormat extends DefaultHandler {
 	private Stack<Boolean> isBold = new Stack<>();
 	private Stack<Boolean> isItalic = new Stack<>();
 	private Stack<Boolean> isUnderlined = new Stack<>();
+	private Stack<Boolean> isSuperscript = new Stack<>();
 	private List<LongFormatText> output = new ArrayList<>();
 	private int block = 0;
 	private boolean inCell = false;
@@ -31,6 +32,7 @@ public class FO2LongFormat extends DefaultHandler {
 		isItalic.push(Boolean.FALSE);
 		isBold.push(Boolean.FALSE);
 		isUnderlined.push(Boolean.FALSE);
+		isSuperscript.push(Boolean.FALSE);
 		data = new StringBuilder();
 	}
 	
@@ -64,6 +66,7 @@ public class FO2LongFormat extends DefaultHandler {
 			isItalic.push(Boolean.FALSE);
 			isBold.push(Boolean.FALSE);
 			isUnderlined.push(Boolean.FALSE);
+			isSuperscript.push(Boolean.FALSE);
 			block = 0;
 		}
 		else if (qName.equals("fo:block")) {
@@ -79,6 +82,8 @@ public class FO2LongFormat extends DefaultHandler {
 		} else if (qName.equals("fo:inline")) {
 			
 			output.add(LongFormatText.of(data.toString().trim(), fontStyle(), 8D, null, null));
+			
+			// output.add(LongFormatText.of(data.toString().trim(), fontStyle(), 8D, null, null, isSuperscript.peek()));
 			data = new StringBuilder();
 			
 			if (style(attributes).contains("italic")) {
@@ -99,6 +104,8 @@ public class FO2LongFormat extends DefaultHandler {
 				isUnderlined.push(Boolean.FALSE);
 			}
 			
+		} else if (qName.equals("sup")) {
+			isSuperscript.push(Boolean.TRUE);
 		}
 		
 	}

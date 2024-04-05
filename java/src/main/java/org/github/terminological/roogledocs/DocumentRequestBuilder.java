@@ -9,10 +9,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.github.terminological.roogledocs.datatypes.LongFormatTable;
 import org.github.terminological.roogledocs.datatypes.LongFormatText;
@@ -356,9 +362,75 @@ public class DocumentRequestBuilder extends ArrayList<Request> {
 		};
 	}
 	
+	static Pattern p = Pattern.compile("^<(sup|sub|b|i|u)>(.*)</(sup|sub|b|i|u)>$");
+	
+	private static String stripHtml(String text) {
+		
+		while (text.startsWith("<")) {
+			Matcher m = p.matcher(text);
+			if (m.find()) {
+				// System.out.println(m.group(1));
+				text = m.group(2);
+			} else {
+				// unsupported format for regex
+				break;
+			}
+		} 
+		return StringEscapeUtils.unescapeHtml4(text);
+	}
+	
+	private static Optional<UpdateTextStyleRequest> textStyleFromHtml(String text, TextRunPosition textRun) {
+		TextStyle tmp = new TextStyle();
+		Set<String> matched = new HashSet<>(); 
+		while (text.startsWith("<")) {
+			Matcher m = p.matcher(text);
+			if (m.find()) {
+				String tag = m.group(1);
+				switch (tag) {
+					case "sup":
+						tmp.setBaselineOffset("SUPERSCRIPT");
+						matched.add("baselineOffset");
+						break;
+					case "sub":
+						tmp.setBaselineOffset("SUBSCRIPT");
+						matched.add("baselineOffset");
+						break;
+					case "b":
+						tmp.setBold(Boolean.TRUE);
+						matched.add("bold");
+						break;
+					case "i":
+						tmp.setItalic(Boolean.TRUE);
+						matched.add("italic");
+						break;
+					case "u":
+						tmp.setUnderline(Boolean.TRUE);
+						matched.add("underline");
+						break;
+				}
+				text = m.group(2);
+			} else {
+				// unsupported format for regex
+				break;
+			}
+		} 
+		if (matched.isEmpty()) return Optional.empty();
+		UpdateTextStyleRequest out = new UpdateTextStyleRequest()
+				.setRange(textRun.getDocsRange())
+				.setTextStyle(tmp)
+				.setFields(matched.stream().collect(Collectors.joining(",")));
+		return Optional.of(out);
+	}
+	
+	
 	public TextRunPosition insertTextContent(TextRunPosition range, String unformattedText, Optional<String> style) {
-		TextRunPosition textRun = insertTextRun(range, unformattedText);
-			
+		
+		String plainText = stripHtml(unformattedText);
+		TextRunPosition textRun = insertTextRun(range, plainText);
+		
+		// identify html elements in unformattedText
+		Optional<UpdateTextStyleRequest> textStyle = textStyleFromHtml(unformattedText, textRun);
+					
 		String c = style.map(checkRange("NORMAL_TEXT","TITLE","SUBTITLE","HEADING_1","HEADING_2","HEADING_3","HEADING_4","HEADING_5","HEADING_6")).orElse("NORMAL_TEXT");
 		
 		if (style.isPresent() && !textRun.isEmpty()) {
@@ -368,6 +440,10 @@ public class DocumentRequestBuilder extends ArrayList<Request> {
 	                    .setNamedStyleType(c))
 	            .setFields("namedStyleType")
 			));
+		}
+		
+		if (textStyle.isPresent() && !textRun.isEmpty()) {
+			this.add(new Request().setUpdateTextStyle(textStyle.get()));
 		}
 			
 		return textRun;
@@ -440,6 +516,50 @@ public class DocumentRequestBuilder extends ArrayList<Request> {
 					)	
 			);
 		});
+//		c.smallCaps().opt().ifPresent(f -> {
+//			this.add(
+//					new Request()
+//					.setUpdateTextStyle(
+//						new UpdateTextStyleRequest()
+//						.setRange(textRun.getDocsRange())
+//						.setTextStyle(new TextStyle().setSmallCaps(f))
+//						.setFields("smallCaps")
+//					)	
+//			);
+//		});
+//		c.superscript().opt().filter(b -> b.booleanValue()).ifPresent(f -> {
+//			this.add(
+//					new Request()
+//					.setUpdateTextStyle(
+//						new UpdateTextStyleRequest()
+//						.setRange(textRun.getDocsRange())
+//						.setTextStyle(new TextStyle().setBaselineOffset("SUPERSCRIPT"))
+//						.setFields("baselineOffset")
+//					)
+//			);
+//		});
+//		c.subscript().opt().filter(b -> b.booleanValue()).ifPresent(f -> {
+//			this.add(
+//					new Request()
+//					.setUpdateTextStyle(
+//						new UpdateTextStyleRequest()
+//						.setRange(textRun.getDocsRange())
+//						.setTextStyle(new TextStyle().setBaselineOffset("SUBSCRIPT"))
+//						.setFields("baselineOffset")
+//					)
+//			);
+//		});
+//		c.strikethrough().opt().filter(b -> b.booleanValue()).ifPresent(f -> {
+//			this.add(
+//					new Request()
+//					.setUpdateTextStyle(
+//						new UpdateTextStyleRequest()
+//						.setRange(textRun.getDocsRange())
+//						.setTextStyle(new TextStyle().setStrikethrough(true))
+//						.setFields("strikethrough")
+//					)
+//			);
+//		});
 	}
 	
 	public void writeTextContent(TextRunPosition position, List<LongFormatText> df) {

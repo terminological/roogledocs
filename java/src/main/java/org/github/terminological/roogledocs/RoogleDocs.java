@@ -565,6 +565,47 @@ public class RoogleDocs {
 	}
 	
 	/**
+	 * Make a copy of the current document
+	 * 
+	 * This makes a exact copy of the document under a new name. This name can already exist as googledocs can have multiple 
+	 * files with the same file name but this will certainly lead to confusion later. It is up to the user to create
+	 * a naming strategy that does not cause issues. 
+	 * 
+	 * @param newName - The new document name. 
+	 * @return a `roogledocs` object pointing to the new document.
+	 * @throws IOException if a network or google drive problem or if roogledocs is disabled.
+	 */
+	@RMethod
+	public RoogleDocs makeCopy(String newName) throws IOException {
+		if (disabled) throw new IOException("Cannot make a copy as roogledocs is currently disabled");
+		RDocument newdoc = this.service.copyDocument(newName, document.getDocId());
+		return new RoogleDocs(this.service, newdoc);
+	}
+	
+	/**
+	 * Delete the current document
+	 * 
+	 * Deleted documents can still be retrieved via the Google Drive website but this is otherwise a 
+	 * final operation. After this any operations on this document will fail with a null pointer exception.  
+	 * 
+	 * @param areYouSure - confirm the delete
+	 * @throws IOException - if there is a network problem or the user does not confirm the delete
+	 */
+	@RMethod 
+	public void delete(
+			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this document',FALSE)") boolean areYouSure
+	) throws IOException {
+		if (!areYouSure) throw new IOException("Delete aborted by user");
+		this.service.delete(document.getDocId());
+		System.out.println("Document `"+document.getName()+"` deleted");
+		this.document = null;
+		this.disabled = true;
+		this.tokenDirectory = null;
+		this.service = null;
+		
+	}
+	
+	/**
 	 * Upload a file into the same directory as the document.
 	 * 
 	 * This allow you to load e.g. a supplementary file, or the pdf of an image file or a docx/html version of a table

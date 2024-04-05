@@ -468,7 +468,7 @@ public class RPresentation extends RCitable {
 			String newText = tagMap.get(tagName);
 
 			// Insert the replacement text.
-			TextRunPosition newRange = requests.insertTextContent(range,newText, Optional.empty());
+			TextRunPosition newRange = requests.insertTextContent(range, newText, Optional.empty());
 
 			// Re-create the named range on the new text.
 			requests.createLinkTag(tagName, newRange);
@@ -482,7 +482,13 @@ public class RPresentation extends RCitable {
 			List<LongFormatText> slideBody = new ArrayList<>();
 			unmatched.stream().forEach(tag -> {
 				slideBody.add(LongFormatText.of(tag+": ", null, null, null, null));
-				slideBody.add(LongFormatText.of(tagMap.get(tag), null, null, null, SlidesRequestBuilder.linkUrl(tag)));
+				slideBody.add(LongFormatText.of(
+						// TODO: This does not format correctly new tags of the form <sup>XYZ</sup>
+						// because it does not use insertTextContent and hence bypasses
+						// the formatter. This all needs to be done properly with a HTML
+						// to docs request.
+						SlidesRequestBuilder.stripHtml(tagMap.get(tag)),
+						null, null, null, SlidesRequestBuilder.linkUrl(tag)));
 				slideBody.add(LongFormatText.of("\n", null, null, null, null));
 			});
 	

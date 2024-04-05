@@ -313,6 +313,17 @@ public class RService {
     	return new RDocument(newf.getId(),documentName,this);
     }
     
+    public RDocument copyDocument(String newName, String docId) throws IOException {
+    	File f = new File().setName(newName);
+    	File newf = driveService.files().copy(docId, f).execute();
+    	if (!newf.getMimeType().equals(MIME_DOCS)) {
+    		driveService.files().delete(newf.getId());
+    		throw new IOException("docId must refer to a google doc.");
+    	}
+    	log.info("Created new document with title: " + newName);
+    	return new RDocument(newf.getId(),newName,this);
+    }
+    
     public RPresentation getOrClonePresentation(String documentName, String templateUri) throws IOException {
     	List<Tuple<String, String>> tmp = search(documentName, MIME_SLIDES, true);
     	if (tmp.size() > 0) {
@@ -328,8 +339,19 @@ public class RService {
     		driveService.files().delete(newf.getId());
     		throw new IOException("templateUri must refer to a google slides.");
     	}
-    	log.info("Created new document with title: " + documentName);
+    	log.info("Created new presentation with title: " + documentName);
     	return new RPresentation(newf.getId(),documentName,this);
+    }
+    
+    public RPresentation copyPresentation(String newName, String docId) throws IOException {
+    	File f = new File().setName(newName);
+    	File newf = driveService.files().copy(docId, f).execute();
+    	if (!newf.getMimeType().equals(MIME_SLIDES)) {
+    		driveService.files().delete(newf.getId());
+    		throw new IOException("docId must refer to a google slides.");
+    	}
+    	log.info("Created new presentation with title: " + newName);
+    	return new RPresentation(newf.getId(), newName,this);
     }
     
     protected static String extractDocId(String docId) throws IOException {

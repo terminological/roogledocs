@@ -4,9 +4,9 @@
 #' @description
 #' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.3.0
+#' Version: 0.4.0
 #'
-#' Generated: 2024-02-21T19:05:32.792646378
+#' Generated: 2024-04-05T16:34:41.835585144
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import R6
@@ -87,9 +87,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.3.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-02-21T19:05:32.792925904");
-		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.3.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.4.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-04-05T16:34:41.835954387");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.4.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -604,9 +604,9 @@ JavaApi$installDependencies = function() {
 JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
-		r_package_version = "0.3.0",
-		r_package_generated = "2024-02-21T19:05:32.808078434",
-		java_library_version = "io.github.terminological:roogledocs:0.3.0",
+		r_package_version = "0.4.0",
+		r_package_generated = "2024-04-05T16:34:41.849261428",
+		java_library_version = "io.github.terminological:roogledocs:0.4.0",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)
 	# try and get complilation information if library is loaded
@@ -623,7 +623,7 @@ JavaApi$versionInformation = function() {
 
 .checkDependencies = function(nocache = FALSE, ...) {
 	package_jar = .package_jars(package_name="roogledocs",types="fat-jar")
-	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.3.0")]
+	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.4.0")]
 	
 	# Java dependencies
 	# all java library code and dependencies have already been bundled into a single fat jar
