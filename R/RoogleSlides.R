@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.4.0
+#' Version: 0.5.0
 #' 
-#' Generated: 2024-04-05T16:34:41.914748237
+#' Generated: 2024-04-27T13:56:10.645594618
 #'
 #' @details
 	#' The purpose being to support google slides as a
@@ -39,7 +39,6 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#' @field .jobj internal pointer to the rJava reference to the java object.
 	.jobj = NULL,
 
-
 	#' @description
 	#' Create a new RoogleSlides this is not for general use and instances should be created through the
 	#' package api class. See example.
@@ -65,140 +64,161 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   of `withDocument()`, `findOrCreateDocument()` or
 	#'   `findOrCloneTemplate()` methods will be needed to specify the
 	#'   document.
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	enable = function() {
-		# copy parameters
+		# copy parameters into Java
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="enable" , check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "enable", 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' disable: 
 	#' Disables roogledocs temporarily for this document. 
 	#'   
 	#'   While disabled
 	#'   all calls to roogledocs will silently abort.
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	disable = function() {
-		# copy parameters
+		# copy parameters into Java
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="disable" , check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "disable", 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' getName: 
 	#' Return the name of the presentation
-	#' @param suffix an additional suffix to add to the name - (defaulting to `''`) - (java expects a String)
-	#' @return String: 
+	#' @param suffix an additional suffix to add to the name - (defaulting to `''`) - (java expects a RCharacter)
+	#' @return String
 	#' 
 	getName = function(suffix='') {
-		# copy parameters
-		tmp_suffix = self$.api$.toJava$String(suffix);
+		# copy parameters into Java
+		tmp_suffix = self$.api$.toJava$RCharacter(suffix);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Ljava/lang/String;", method="getName" , tmp_suffix, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Ljava/lang/String;", 
+			method = "getName",
+			tmp_suffix, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# convert java object back to R
+		.jcheck();
+		# convert java object back to R. Wrapping to R6 as needed. 
 		out = self$.api$.fromJava$String(tmp_out);
-		if(is.null(out)) return(invisible(out))
+		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
+	
 	#' @description 
 	#' tagsDefined: 
 	#' List all tags
 	#'   
 	#'   Finds tags defined in the current document
-	#' @return RDataframe: 
+	#' @return RDataframe
 	#' a dataframe containing tag and count columns
 	tagsDefined = function() {
-		# copy parameters
+		# copy parameters into Java
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="tagsDefined" , check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Luk/co/terminological/rjava/types/RDataframe;", 
+			method = "tagsDefined", 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# convert java object back to R
+		.jcheck();
+		# convert java object back to R. Wrapping to R6 as needed. 
 		out = self$.api$.fromJava$RDataframe(tmp_out);
-		if(is.null(out)) return(invisible(out))
+		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
+	
 	#' @description 
 	#' updateTaggedText: 
 	#' Replace tags for text
 	#'   
-	#'   Substitutes all occurrences of {{tag-name}}
+	#'   Substitutes all occurrences of \{\{tag-name\}\}
 	#'   with the text parameter. If the
 	#'   tag is not found then a new slide is
 	#'   inserted at the end in a section titled "Unmatched tags:". 
 	#'   From there
 	#'   they can be cut and pasted into the right place.
 	#' @param text the value to replace the tag with (e.g. a result from analysis)
-	#'   (cannot be empty) - (java expects a String)
-	#' @param tagName the tag name - (defaulting to `deparse(substitute(text))`) - (java expects a String)
-	#' @return R6 RoogleSlides object: 
+	#'   (cannot be empty) - (java expects a RCharacter)
+	#' @param tagName the tag name - (defaulting to `deparse(substitute(text))`) - (java expects a RCharacter)
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	updateTaggedText = function(text, tagName=deparse(substitute(text))) {
-		# copy parameters
-		tmp_text = self$.api$.toJava$String(text);
-		tmp_tagName = self$.api$.toJava$String(tagName);
+		# copy parameters into Java
+		tmp_text = self$.api$.toJava$RCharacter(text);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="updateTaggedText" , tmp_text, tmp_tagName, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "updateTaggedText",
+			tmp_text,
+			tmp_tagName, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' updateTaggedImage: 
 	#' Replace a tag with an image.
 	#'   
 	#'   Substitutes all occurrences of
-	#'   {{tag-name}} with an image from the local storage. 
+	#'   \{\{tag-name\}\} with an image from the local storage. 
 	#'   
 	#'   The image is
 	#'   uploaded to your google drive as a temporary file, and made publicly
@@ -215,53 +235,58 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   will be created at the end of the presentation with the image
 	#'   and an
 	#'   uninformative title which can be changed.
-	#' @param absoluteFilePath a file path to an png image file. - (java expects a String)
+	#' @param absoluteFilePath a file path to an png image file. - (java expects a RCharacter)
 	#' @param tagName the tag name - (defaulting to
-	#'   `deparse(substitute(absoluteFilePath))`) - (java expects a String)
+	#'   `deparse(substitute(absoluteFilePath))`) - (java expects a RCharacter)
 	#' @param keepUpload keep the uploaded image as a supplementary file in the same
 	#'   directory as the google doc. N.B. the result will be publicly
-	#'   readable. - (defaulting to `FALSE`) - (java expects a boolean)
-	#' @return R6 RoogleSlides object: 
+	#'   readable. - (defaulting to `FALSE`) - (java expects a RLogical)
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	updateTaggedImage = function(absoluteFilePath, tagName=deparse(substitute(absoluteFilePath)), keepUpload=FALSE) {
-		# copy parameters
-		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
-		tmp_tagName = self$.api$.toJava$String(tagName);
-		tmp_keepUpload = self$.api$.toJava$boolean(keepUpload);
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RCharacter(absoluteFilePath);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
+		tmp_keepUpload = self$.api$.toJava$RLogical(keepUpload);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="updateTaggedImage" , tmp_absoluteFilePath, tmp_tagName, tmp_keepUpload, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "updateTaggedImage",
+			tmp_absoluteFilePath,
+			tmp_tagName,
+			tmp_keepUpload, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' updateTaggedTable: 
 	#' Replace a tag with a table.
 	#'   
 	#'   Substitutes a unique occurrence of
-	#'   {{tag-name}} with a table. The tag must either be in a text box shape
-	#'   or as the first entry in 
-	#'   a table. Once inserted the table is tagged
-	#'   using a zero width character
-	#'   as the very first item in the first cell.
-	#'   This will be removed if `removeTags()` is called.
+	#'   \{\{tag-name\}\} with a table. The tag must either be in a text box
+	#'   shape or as the first entry in 
+	#'   a table. Once inserted the table is
+	#'   tagged using a zero width character
+	#'   as the very first item in the
+	#'   first cell. This will be removed if `removeTags()` is called.
 	#'   
-	#'   If the tag is not
-	#'   found in the document a new slide will be created at the end with the
-	#'   table.
+	#'   If the
+	#'   tag is not found in the document a new slide will be created at the
+	#'   end with the table.
 	#' @param longFormatTable A dataframe consisting of the table content and
 	#'   formatting indexed by row and column. at a minimum this should have
 	#'   columns label,row,col, but may also
@@ -271,36 +296,41 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
 	#'   fontFace, fontSize. - (java expects a RDataframe)
 	#' @param tagName the tag name - (defaulting to
-	#'   `deparse(substitute(longFormatTable))`) - (java expects a String)
+	#'   `deparse(substitute(longFormatTable))`) - (java expects a RCharacter)
 	#' @param colWidths A vector including the relative length of each column. This
 	#'   can be left out if longFormatTable comes from as.long_format_table -
 	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	updateTaggedTable = function(longFormatTable, tagName=deparse(substitute(longFormatTable)), colWidths=attr(longFormatTable,'colWidths')) {
-		# copy parameters
+		# copy parameters into Java
 		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
-		tmp_tagName = self$.api$.toJava$String(tagName);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
 		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="updateTaggedTable" , tmp_longFormatTable, tmp_tagName, tmp_colWidths, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "updateTaggedTable",
+			tmp_longFormatTable,
+			tmp_tagName,
+			tmp_colWidths, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' removeTags: 
 	#' Remove all tags
@@ -310,31 +340,34 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   cannot be undone, except by rolling back to a
 	#'   previous version.
 	#' @param confirm - This action must be confirmed by passing `true` as cannot be
-	#'   undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`) - (java expects a boolean)
-	#' @return R6 RoogleSlides object: 
+	#'   undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`) - (java expects a RLogical)
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	removeTags = function(confirm=(menu(c('Yes','No'), title = 'Are you sure?')==1)) {
-		# copy parameters
-		tmp_confirm = self$.api$.toJava$boolean(confirm);
+		# copy parameters into Java
+		tmp_confirm = self$.api$.toJava$RLogical(confirm);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="removeTags" , tmp_confirm, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "removeTags",
+			tmp_confirm, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' saveAsPdf: 
 	#' Save the document as a PDF
@@ -348,38 +381,42 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   preferable to call `doc$removeTags()` and manually export the
 	#'   output
 	#'   but after this no further updating is possible.
-	#' @param absoluteFilePath - a file path to save the pdf. - (java expects a String)
+	#' @param absoluteFilePath - a file path to save the pdf. - (java expects a RFile)
 	#' @param uploadCopy place a copy of the downloaded pdf back onto google drive
 	#'   in the same folder as the document
 	#'     for example for keeping submitted
 	#'   versions of a updated document. This will overwrite files of the same
 	#'   name in the 
-	#'     google drive directory. - (defaulting to `FALSE`) - (java expects a boolean)
-	#' @return R6 RoogleSlides object: 
+	#'     google drive directory. - (defaulting to `FALSE`) - (java expects a RLogical)
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	saveAsPdf = function(absoluteFilePath, uploadCopy=FALSE) {
-		# copy parameters
-		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
-		tmp_uploadCopy = self$.api$.toJava$boolean(uploadCopy);
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RFile(absoluteFilePath);
+		tmp_uploadCopy = self$.api$.toJava$RLogical(uploadCopy);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="saveAsPdf" , tmp_absoluteFilePath, tmp_uploadCopy, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "saveAsPdf",
+			tmp_absoluteFilePath,
+			tmp_uploadCopy, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' makeCopy: 
 	#' Make a copy of the current document
@@ -391,31 +428,34 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   certainly lead to confusion later. It is up to the user to create
 	#'   a
 	#'   naming strategy that does not cause issues.
-	#' @param newName - The new document name. - (java expects a String)
-	#' @return R6 RoogleSlides object: 
+	#' @param newName - The new document name. - (java expects a RCharacter)
+	#' @return R6 RoogleSlides object 
 	#' a `roogledocs` object pointing to the new document.
 	makeCopy = function(newName) {
-		# copy parameters
-		tmp_newName = self$.api$.toJava$String(newName);
+		# copy parameters into Java
+		tmp_newName = self$.api$.toJava$RCharacter(newName);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="makeCopy" , tmp_newName, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "makeCopy",
+			tmp_newName, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' delete: 
 	#' Delete the current presentation
@@ -426,22 +466,29 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   operation. After this any operations on this presentation will fail
 	#'   with a null pointer exception.
 	#' @param areYouSure - confirm the delete - (defaulting to `utils::askYesNo('Are
-	#'   you sure you wan...`) - (java expects a boolean)
-	#' @return void: 
+	#'   you sure you wan...`) - (java expects a RLogical)
+	#' @return void
 	#' 
 	delete = function(areYouSure=utils::askYesNo('Are you sure you want to delete this presentation',FALSE)) {
-		# copy parameters
-		tmp_areYouSure = self$.api$.toJava$boolean(areYouSure);
+		# copy parameters into Java
+		tmp_areYouSure = self$.api$.toJava$RLogical(areYouSure);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "V", method="delete" , tmp_areYouSure, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "V", 
+			method = "delete",
+			tmp_areYouSure, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# convert java object back to R
+		.jcheck();
+		# convert java object back to R. Wrapping to R6 as needed. 
 		out = self$.api$.fromJava$void(tmp_out);
-		if(is.null(out)) return(invisible(out))
+		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
+	
 	#' @description 
 	#' uploadSupplementaryFiles: 
 	#' Upload a file into the same directory as the document.
@@ -459,70 +506,79 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   multiple files with the same name
 	#'   the behaviour if the file already
 	#'   exists is slightly complex, with `overwrite` and `duplicate` options.
-	#' @param absoluteFilePath - a file path to upload. - (java expects a String)
+	#' @param absoluteFilePath - a file path to upload. - (java expects a RFile)
 	#' @param overwrite - if matching file(s) are found in the target, delete them
-	#'   before uploading the new one. - (defaulting to `FALSE`) - (java expects a boolean)
+	#'   before uploading the new one. - (defaulting to `FALSE`) - (java expects a RLogical)
 	#' @param duplicate - if matching file(s) are found in the target, upload this
 	#'   new file anyway, creating duplicate names in the folder. - (defaulting
-	#'   to `FALSE`) - (java expects a boolean)
-	#' @return R6 RoogleSlides object: 
+	#'   to `FALSE`) - (java expects a RLogical)
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	uploadSupplementaryFiles = function(absoluteFilePath, overwrite=FALSE, duplicate=FALSE) {
-		# copy parameters
-		tmp_absoluteFilePath = self$.api$.toJava$String(absoluteFilePath);
-		tmp_overwrite = self$.api$.toJava$boolean(overwrite);
-		tmp_duplicate = self$.api$.toJava$boolean(duplicate);
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RFile(absoluteFilePath);
+		tmp_overwrite = self$.api$.toJava$RLogical(overwrite);
+		tmp_duplicate = self$.api$.toJava$RLogical(duplicate);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="uploadSupplementaryFiles" , tmp_absoluteFilePath, tmp_overwrite, tmp_duplicate, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "uploadSupplementaryFiles",
+			tmp_absoluteFilePath,
+			tmp_overwrite,
+			tmp_duplicate, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' appendFormattedSlide: 
 	#' Append a new "TITLE_AND_BODY" slide, with formatted text from the
 	#'   'label' column with optional formating in the other columns.
-	#' @param title - A plain text title - (java expects a String)
+	#' @param title - A plain text title - (java expects a RCharacter)
 	#' @param formattedTextDf - a data frame containing the columns label, and
 	#'   optionally: link (as a URL), fontName, fontFace, fontSize. - (java expects a RDataframe)
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	appendFormattedSlide = function(title, formattedTextDf) {
-		# copy parameters
-		tmp_title = self$.api$.toJava$String(title);
+		# copy parameters into Java
+		tmp_title = self$.api$.toJava$RCharacter(title);
 		tmp_formattedTextDf = self$.api$.toJava$RDataframe(formattedTextDf);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="appendFormattedSlide" , tmp_title, tmp_formattedTextDf, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "appendFormattedSlide",
+			tmp_title,
+			tmp_formattedTextDf, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' slideDimensions: 
 	#' The default dimensions of the body of a new slide.
@@ -540,39 +596,51 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   by default. If you want to fit in with the theme then 
 	#'   images will
 	#'   need to be to be sized to these dimensions to fill the slide.
-	#' @return RNamedList: 
+	#' @return RNamedList
 	#' a named list with width and height in inches, and the name of the
 	#'   layout being
 	#'     used as the default.
 	slideDimensions = function() {
-		# copy parameters
+		# copy parameters into Java
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RNamedList;", method="slideDimensions" , check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Luk/co/terminological/rjava/types/RNamedList;", 
+			method = "slideDimensions", 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# convert java object back to R
+		.jcheck();
+		# convert java object back to R. Wrapping to R6 as needed. 
 		out = self$.api$.fromJava$RNamedList(tmp_out);
-		if(is.null(out)) return(invisible(out))
+		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
+	
 	#' @description 
 	#' slideLayouts: 
 	#' The layouts available in the slides templates
-	#' @return RCharacterVector: 
+	#' @return RCharacterVector
 	#' a list of available slide layouts
 	slideLayouts = function() {
-		# copy parameters
+		# copy parameters into Java
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Luk/co/terminological/rjava/types/RCharacterVector;", method="slideLayouts" , check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Luk/co/terminological/rjava/types/RCharacterVector;", 
+			method = "slideLayouts", 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# convert java object back to R
+		.jcheck();
+		# convert java object back to R. Wrapping to R6 as needed. 
 		out = self$.api$.fromJava$RCharacterVector(tmp_out);
-		if(is.null(out)) return(invisible(out))
+		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
+	
 	#' @description 
 	#' setDefaultLayout: 
 	#' Set the default layout
@@ -588,87 +656,94 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	#'   seen on the google
 	#'   slides `Apply Layout...` menu option.
 	#' @param layout a string representing the layout - (java expects a RCharacter)
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	setDefaultLayout = function(layout) {
-		# copy parameters
+		# copy parameters into Java
 		tmp_layout = self$.api$.toJava$RCharacter(layout);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="setDefaultLayout" , tmp_layout, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "setDefaultLayout",
+			tmp_layout, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
+	
 	#' @description 
 	#' updateCitations: 
 	#' Update citation tags in the document. 
 	#'   
 	#'   A citation tag is like this
-	#'   `{{cite:challen2020;danon2021}}`. The ids are matched against the
+	#'   `\{\{cite:challen2020;danon2021\}\}`. The ids are matched against the
 	#'   provided bibtex, and
 	#'   the tags are replaced with an appropriate
 	#'   citation string. The bibliography itself is added to a specific slide
 	#'   for 
-	#'   references which can be decided with the `{{references}}` tag.
+	#'   references which can be decided with the `\{\{references\}\}`
+	#'   tag. 
 	#'   
-	#'   
-	#'   If references do not already exist and there if no `{{references}}`
-	#'   tag a new slide 
-	#'   will be created at the end of the presentation.
+	#'   If references do not already exist and there if no
+	#'   `\{\{references\}\}` tag a new slide 
+	#'   will be created at the end of
+	#'   the presentation.
 	#' @param bibTexPath - the full file path to the file containing the bibtex - (java expects a RCharacter)
 	#' @param citationStyle - the CSL specification - (defaulting to `'ieee'`) - (java expects a RCharacter)
-	#' @return R6 RoogleSlides object: 
+	#' @return R6 RoogleSlides object 
 	#' itself - a fluent method
 	updateCitations = function(bibTexPath, citationStyle='ieee') {
-		# copy parameters
+		# copy parameters into Java
 		tmp_bibTexPath = self$.api$.toJava$RCharacter(bibTexPath);
 		tmp_citationStyle = self$.api$.toJava$RCharacter(citationStyle);
 		# execute method call
-		tmp_out = .jcall(self$.jobj, returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="updateCitations" , tmp_bibTexPath, tmp_citationStyle, check=FALSE);
-		self$.api$printMessages()
+		tmp_out = .jcall(
+			self$.jobj, 
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+			method = "updateCitations",
+			tmp_bibTexPath,
+			tmp_citationStyle, 
+			check=FALSE
+		);
+		self$.api$printMessages();
 		# check for exceptions and rethrow them
-		.jcheck()
-		# is this a fluent method?
-		# if(.jcall(self$.jobj, returnSig="Z", method="equals", .jcast(tmp_out))) {
+		.jcheck();
+		# is this a fluent method (output is same as dispatching class)?
 		if(self$.jobj$equals(tmp_out)) {
 			# return fluent method
-			invisible(self)
-		} else {
-			# wrap return java object in R6 class  
-			out = RoogleSlides$new(
-				self$.api$.fromJava$RoogleSlides(tmp_out),
-				self$.api
-			);
-			return(out);
+			return(invisible(self));
 		}
+		# convert java object back to R. Wrapping to R6 as needed. 
+		out = self$.api$.fromJava$RoogleSlides(tmp_out);
+		if(is.null(out)) return(invisible(out));
+		return(out);
 	},
 	
 	#' @description The output of toString() of this RoogleSlides
 	print = function() {
 		tmp_out = .jcall(self$.jobj, returnSig = "Ljava/lang/String;", method="toString");
-		self$.api$printMessages()
-		print(tmp_out)
-		invisible(self)
+		self$.api$printMessages();
+		print(tmp_out);
+		invisible(self);
 	},
 	
 	#' @description The output of equals() of this RoogleSlides
 	#' @param object The R6 instance to test for equality to this RoogleSlides  
 	equals = function(object) {
-		if (is.null(object$.jobj)) return(FALSE)
-		return(self$.jobj$equals(object$.jobj))
+		if (is.null(object$.jobj)) return(FALSE);
+		return(self$.jobj$equals(object$.jobj));
 	},
 	
 	#' @description Allow this object to be garbage collected.

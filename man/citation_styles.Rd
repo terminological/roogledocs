@@ -7,6 +7,7 @@
 }
 \value{
 RCharacterVector: a vector of csl style names
+
 }
 \description{
 no description

@@ -2,8 +2,8 @@
 # This is a collection of the static methods described in the Java API
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
-# Version: 0.4.0
-# Generated: 2024-04-05T16:34:41.851196056
+# Version: 0.5.0
+# Generated: 2024-04-27T13:56:10.582362960
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----
@@ -22,7 +22,7 @@
 #'   google user without using a different tokenDirectory.
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @return R6 RoogleDocs object: 
 #' a new RoogleDocs instance without an active document
 #' @export
@@ -40,14 +40,14 @@ reauth = function(tokenDirectory=.tokenDirectory()) {
 #' 
 #' no description
 #' @param shareUrlOrDocId the url from clicking a share button in google docs or
-#'   an id from searchForDocuments() method - (java expects a String)
+#'   an id from searchForDocuments() method - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleDocs object: 
 #' itself - a fluent method
 #' @export
@@ -65,14 +65,14 @@ doc_by_id = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled
 #' 
 #' no description
 #' @param title a document title. If there is an exact match in google drive
-#'   then that document will be used - (java expects a String)
+#'   then that document will be used - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleDocs object: 
 #' itself - a fluent method
 #' @export
@@ -91,16 +91,16 @@ doc_by_name = function(title, tokenDirectory=.tokenDirectory(), disabled=getOpti
 #' no description
 #' @param title a document title. If there is an exact match in google drive
 #'   then that document will be used
-#'   otherwise a new one will be created. - (java expects a String)
+#'   otherwise a new one will be created. - (java expects a RCharacter)
 #' @param templateUri the share link (or document id) of a template google
-#'   document - (java expects a String)
+#'   document - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleDocs object: 
 #' itself - a fluent method
 #' @export
@@ -118,10 +118,10 @@ doc_from_template = function(title, templateUri, tokenDirectory=.tokenDirectory(
 #' 
 #' no description
 #' @param titleMatch a string to be searched for as an approximate match. All
-#'   results will be retrieved with document ids. - (java expects a String)
+#'   results will be retrieved with document ids. - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @return RDataframe: 
 #' a dataframe containing id and name columns
 #' @export
@@ -139,11 +139,11 @@ search_for_documents = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 #' 
 #' no description
 #' @param docName - the name of a document to delete. must be an exact and
-#'   unique match. - (java expects a String)
+#'   unique match. - (java expects a RCharacter)
 #' @param areYouSure - a boolean check. - (defaulting to
-#'   `utils::askYesNo(paste0('Are you sure ...`) - (java expects a boolean)
-#' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a String)
-#' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `utils::askYesNo(paste0('Are you sure ...`) - (java expects a RLogical)
+#' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)
+#' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return void: 
 #' nothing, called for side efffects
 #' @export
@@ -180,14 +180,14 @@ citation_styles = function() {
 #' 
 #' no description
 #' @param shareUrlOrDocId the url from clicking a share button in google slides
-#'   or an id from searchForDocuments() method - (java expects a String)
+#'   or an id from searchForDocuments() method - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleSlides object: 
 #' itself - a fluent method
 #' @export
@@ -205,14 +205,14 @@ slides_by_id = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disab
 #' 
 #' no description
 #' @param title a document title. If there is an exact match in google drive
-#'   then that document will be used - (java expects a String)
+#'   then that document will be used - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleSlides object: 
 #' itself - a fluent method
 #' @export
@@ -231,16 +231,16 @@ slides_by_name = function(title, tokenDirectory=.tokenDirectory(), disabled=getO
 #' no description
 #' @param title a document title. If there is an exact match in google drive
 #'   then that document will be used
-#'   otherwise a new one will be created. - (java expects a String)
+#'   otherwise a new one will be created. - (java expects a RCharacter)
 #' @param templateUri the share link (or document id) of a template google
-#'   document - (java expects a String)
+#'   document - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled a flag to switch roogledocs off (on a document by document
 #'   basis, for testing or development. This can be set globally with
 #'   `options('roogledocs.disabled'=TRUE)` - (defaulting to
-#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return R6 RoogleSlides object: 
 #' itself - a fluent method
 #' @export
@@ -258,10 +258,10 @@ slides_from_template = function(title, templateUri, tokenDirectory=.tokenDirecto
 #' 
 #' no description
 #' @param titleMatch a string to be searched for as an approximate match. All
-#'   results will be retrieved with document ids. - (java expects a String)
+#'   results will be retrieved with document ids. - (java expects a RCharacter)
 #' @param tokenDirectory the place to store authentication tokens. This should
 #'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a String)
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
 #' @return RDataframe: 
 #' a dataframe containing id and name columns
 #' @export
@@ -279,11 +279,11 @@ search_for_slides = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 #' 
 #' no description
 #' @param docName - the name of a document to delete. must be an exact and
-#'   unique match. - (java expects a String)
+#'   unique match. - (java expects a RCharacter)
 #' @param areYouSure - a boolean check. - (defaulting to
-#'   `utils::askYesNo(paste0('Are you sure ...`) - (java expects a boolean)
-#' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a String)
-#' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)
+#'   `utils::askYesNo(paste0('Are you sure ...`) - (java expects a RLogical)
+#' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)
+#' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return void: 
 #' nothing, called for side efffects
 #' @export

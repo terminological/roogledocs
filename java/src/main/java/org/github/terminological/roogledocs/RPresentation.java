@@ -12,7 +12,6 @@ import static org.github.terminological.roogledocs.StreamHelper.ofNullable;
 import static org.github.terminological.roogledocs.StreamHelper.recurseOne;
 import static org.github.terminological.roogledocs.StreamHelper.str;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -103,10 +102,10 @@ public class RPresentation extends RCitable {
 		public String pageId;
 		public String pageName;
 		public String pageDisplayName;
-		public Size pageSize;
+		// public Size pageSize;
 		public Size size;
 		public AffineTransform transform;
-		public boolean isImage;
+		// public boolean isImage;
 		public boolean isShape;
 		public boolean isTextBox;
 		public Double area;
@@ -114,7 +113,7 @@ public class RPresentation extends RCitable {
 		public String pageElementId;
 		public String placeholderType;
 		public int pageElementIndex;
-		public int pageIndex;
+		// public int pageIndex;
 		public String masterId;
 		
 		public Object clone() throws CloneNotSupportedException {
@@ -150,7 +149,7 @@ public class RPresentation extends RCitable {
 		
 		layList = new ArrayList<>();
 		LayoutElement pageLay = new LayoutElement();
-		pageLay.pageSize = layout.getPageSize();
+		// pageLay.pageSize = layout.getPageSize();
 		int j = 0;
 		for (Page p: ls(layout.getLayouts())) {
 			LayoutElement lay;
@@ -164,7 +163,7 @@ public class RPresentation extends RCitable {
 			lay.masterId = lp.getMasterObjectId();
 			lay.pageName = lp.getName();
 			lay.pageDisplayName = lp.getDisplayName();
-			lay.pageIndex = j;
+			// lay.pageIndex = j;
 			int i = 0;
 			for (PageElement pe: ls(p.getPageElements())) {
 				LayoutElement lay2;
@@ -176,7 +175,7 @@ public class RPresentation extends RCitable {
 				lay2.pageElementId = pe.getObjectId();
 				lay2.size = pe.getSize();
 				lay2.transform = pe.getTransform();
-				lay2.isImage = pe.getImage() != null;
+				// lay2.isImage = pe.getImage() != null;
 				lay2.isShape = pe.getShape() != null;
 				lay2.isTextBox = lay2.isShape && pe.getShape().getShapeType() != null && pe.getShape().getShapeType().equals("TEXT_BOX");
 				
@@ -727,10 +726,9 @@ public class RPresentation extends RCitable {
 //		return tableIndex;
 //	}
 //
-	public void saveAsPdf(String absoluteFilePath) throws IOException {
-		OutputStream outputStream = new FileOutputStream(absoluteFilePath);
+	public void saveAsPdf(OutputStream outputStream) throws IOException {
 		service.getDrive().files().export(docId, "application/pdf")
-	    	.executeMediaAndDownloadTo(outputStream);
+			.executeMediaAndDownloadTo(outputStream);
 	}
 
 	

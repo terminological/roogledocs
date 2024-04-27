@@ -29,6 +29,8 @@ import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.Size;
 
 import de.undercouch.citeproc.CSL;
+import uk.co.terminological.rjava.RAsync;
+import uk.co.terminological.rjava.RBlocking;
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RConverter;
 import uk.co.terminological.rjava.RDefault;
@@ -37,6 +39,9 @@ import uk.co.terminological.rjava.UnconvertableTypeException;
 import uk.co.terminological.rjava.types.RCharacter;
 import uk.co.terminological.rjava.types.RCharacterVector;
 import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RFile;
+import uk.co.terminological.rjava.types.RInteger;
+import uk.co.terminological.rjava.types.RLogical;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
 
@@ -77,12 +82,12 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public RoogleDocs(
-		@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-		@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+		@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+		@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
-		this.disabled = disabled;
-		this.tokenDirectory = tokenDirectory;
-		if(!disabled) service = RService.with(tokenDirectory);
+		this.disabled = disabled.get();
+		this.tokenDirectory = tokenDirectory.get();
+		if(!this.disabled) service = RService.with(tokenDirectory.get());
 	}
 	
 	// Testing
@@ -110,9 +115,9 @@ public class RoogleDocs {
 	 * @throws GeneralSecurityException if there is a problem authenticating
 	 */
 	@RMethod
-	public static RoogleDocs reauth(@RDefault(rCode = ".tokenDirectory()") String tokenDirectory) throws IOException, GeneralSecurityException {
-		RService.deregister(tokenDirectory.toString());
-		RService service = RService.with(tokenDirectory.toString());
+	public static RoogleDocs reauth(@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory) throws IOException, GeneralSecurityException {
+		RService.deregister(tokenDirectory.get());
+		RService service = RService.with(tokenDirectory.get());
 		return new RoogleDocs(service, null);
 	}
 	
@@ -153,8 +158,8 @@ public class RoogleDocs {
 	 * @return
 	 */
 	@RMethod
-	public String getName(@RDefault(rCode = "''") String suffix) {
-		return this.document.getName() + suffix;
+	public String getName(@RDefault(rCode = "''") RCharacter suffix) {
+		return this.document.getName() + suffix.get();
 	}
 	
 	/**
@@ -182,12 +187,12 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public static RoogleDocs docById(
-			String shareUrlOrDocId,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter shareUrlOrDocId,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleDocs out = new RoogleDocs(tokenDirectory, disabled);
-		out.withDocument(shareUrlOrDocId);
+		out.withDocument(shareUrlOrDocId.get());
 		return out;
 	}
 	
@@ -216,12 +221,12 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public static RoogleDocs docByName(
-			String title,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter title,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleDocs out = new RoogleDocs(tokenDirectory, disabled);
-		out.findOrCreateDocument(title);
+		out.findOrCreateDocument(title.get());
 		return out;
 	}
 	
@@ -255,13 +260,13 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public static RoogleDocs docFromTemplate(
-			String title,
-			String templateUri,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter title,
+			RCharacter templateUri,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleDocs out = new RoogleDocs(tokenDirectory, disabled);
-		out.findOrCloneTemplate(title, templateUri);
+		out.findOrCloneTemplate(title.get(), templateUri.get());
 		return out;
 	}
 	
@@ -276,11 +281,11 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public static RDataframe searchForDocuments(
-			String titleMatch, 
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory
+			RCharacter titleMatch, 
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory
 	) throws IOException, GeneralSecurityException {
-		RService service = RService.with(tokenDirectory);
-		List<Tuple<String, String>> tmp = service.search(titleMatch, RService.MIME_DOCS);
+		RService service = RService.with(tokenDirectory.get());
+		List<Tuple<String, String>> tmp = service.search(titleMatch.get(), RService.MIME_DOCS);
 		return tmp.stream().collect(
 				dataframeCollector(
 						mapping(Tuple.class, "id", t->t.getFirst()),
@@ -310,7 +315,7 @@ public class RoogleDocs {
 	/**
 	 * Replace tags for text
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with the text parameter. If the tag name is not 
+	 * Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the tag name is not 
 	 * found in the document it is inserted at the end in a section labelled "Unmatched tags:". From there
 	 * it can be cut and pasted into the right place.
 	 * 
@@ -320,10 +325,13 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedText(String text, @RDefault(rCode = "deparse(substitute(text))") String tagName) throws IOException {
+	public RoogleDocs updateTaggedText(
+			RCharacter text, 
+			@RDefault(rCode = "deparse(substitute(text))") RCharacter tagName
+		) throws IOException {
 		if (disabled) return this;
-		if (text == "") throw new IOException("text cannot be blank - use a single space for empty content.");
-		rdoc().updateTaggedText(tagName, text);
+		if (text.get() == "") throw new IOException("text cannot be blank - use a single space for empty content.");
+		rdoc().updateTaggedText(tagName.get(), text.get());
 		System.out.println("Text "+tagName+" updated");
 		return this;
 	}
@@ -331,7 +339,7 @@ public class RoogleDocs {
 	/**
 	 * Replace a tag with an image.
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage. 
+	 * Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
 	 * 
 	 * The image is uploaded to your google drive as a temporary file, and briefly made publicly readable. From there it is inserted into the 
 	 * google doc, and one completed the temporary file deleted from your google drive. Insertion is
@@ -349,28 +357,32 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 */
 	@RMethod
-	public RoogleDocs updateTaggedImage(String absoluteFilePath, @RDefault(rCode = "deparse(substitute(absoluteFilePath))") String tagName, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
+	public RoogleDocs updateTaggedImage(
+			RCharacter absoluteFilePath, 
+			@RDefault(rCode = "deparse(substitute(absoluteFilePath))") RCharacter tagName, 
+			@RDefault(rCode="300") RNumeric dpi, 
+			@RDefault(rCode="FALSE") RLogical keepUpload) throws IOException {
 		if (disabled) return this;
-		Path path = Paths.get(absoluteFilePath);
+		Path path = Paths.get(absoluteFilePath.get());
 		String name = rdoc().getName()+" - "+tagName;
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
 		String id = null; 
-		if (keepUpload) {
+		if (keepUpload.get()) {
 			id = service.upload(name,path,parents,true,false);
 		} else {
 			id = service.uploadTmp(path);
 		}
 		URI uri = service.getThumbnailUri(id);
-		rdoc().updateTaggedImage(tagName, uri, true, getImageDim(absoluteFilePath, dpi));
-		System.out.println("Figure "+tagName+" updated");
-		if (!keepUpload) service.delete(id);
+		rdoc().updateTaggedImage(tagName.get(), uri, true, getImageDim(absoluteFilePath.get(), dpi.get()));
+		System.out.println("Figure "+tagName.get()+" updated");
+		if (!keepUpload.get()) service.delete(id);
 		return this;
 	}
 	
 	/**
 	 * Replace a tag with a table.
 	 * 
-	 * Substitutes a unique occurrences of {{tag-name}} with a table. The tag should either be in the text of the document or as the first entry in 
+	 * Substitutes a unique occurrences of \{\{tag-name\}\} with a table. The tag should either be in the text of the document or as the first entry in 
 	 * the first cell of a table. Once inserted the table is tagged using a zero width character
 	 * as the very first item in the first cell. This will be removed if `removeTags()` is called.
 	 * 
@@ -389,11 +401,13 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public RoogleDocs updateTaggedTable(
-			RDataframe longFormatTable, @RDefault(rCode = "deparse(substitute(longFormatTable))") String tagName, 
-			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches
+			RDataframe longFormatTable, 
+			@RDefault(rCode = "deparse(substitute(longFormatTable))") RCharacter tagName, 
+			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, 
+			@RDefault(rCode="6.2") RNumeric tableWidthInches
 		) throws IOException, UnconvertableTypeException {
 		if (disabled) return this;
-		this.rdoc().updateTaggedTable(tagName, longFormatTable, colWidths, tableWidthInches);
+		this.rdoc().updateTaggedTable(tagName.get(), longFormatTable, colWidths, tableWidthInches);
 		return this;
 	}
 	
@@ -465,9 +479,11 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
 	@RMethod 
-	public RoogleDocs removeTags(@RDefault(rCode = "(menu(c('Yes','No'), title = 'Are you sure?')==1)") boolean confirm) throws IOException {
+	public RoogleDocs removeTags(
+			@RDefault(rCode = "(menu(c('Yes','No'), title = 'Are you sure?')==1)") RLogical confirm
+		) throws IOException {
 		if (disabled) throw new IOException("roogledocs is disabled");
-		if (confirm) {
+		if (confirm.get()) {
 			rdoc().removeTags();
 			System.out.println("All roogledoc tags removed from document.");
 		} else {
@@ -496,9 +512,14 @@ public class RoogleDocs {
 	 * @throws UnconvertableTypeException if the longFormatTable data frame is the wrong format.
 	 */
 	@RMethod
-	public RoogleDocs updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+	public RoogleDocs updateTable(
+			RDataframe longFormatTable, 
+			@RDefault(rCode="-1") RInteger tableIndex, 
+			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, 
+			@RDefault(rCode="6.2") RNumeric tableWidthInches
+		) throws IOException, UnconvertableTypeException {
 		if (disabled) return this;
-		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
+		int index = rdoc().updateOrInsertTable(tableIndex.get(), longFormatTable, colWidths, tableWidthInches);
 		System.out.println("Table "+index+" updated");
 		return this;
 	}
@@ -520,21 +541,25 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers, or the png file cannot be read.
 	 */
 	@RMethod
-	public RoogleDocs updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
+	public RoogleDocs updateFigure(
+			RCharacter absoluteFilePath, 
+			@RDefault(rCode="-1") RInteger figureIndex, 
+			@RDefault(rCode="300") RNumeric dpi, 
+			@RDefault(rCode="FALSE") RLogical keepUpload) throws IOException {
 		if (disabled) return this;
-		Path path = Paths.get(absoluteFilePath);
+		Path path = Paths.get(absoluteFilePath.get());
 		String name = rdoc().getName()+" - figure "+figureIndex;
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
 		String id = null; 
-		if (keepUpload) {
+		if (keepUpload.get()) {
 			id = service.upload(name,path,parents,true,false);
 		} else {
 			id = service.upload(path);
 		}
 		URI uri = service.getThumbnailUri(id);
-		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));
+		int index = rdoc().updateOrInsertInlineImage(figureIndex.get(), uri, getImageDim(absoluteFilePath.get(), dpi.get()));
 		System.out.println("Figure "+index+" updated");
-		if (!keepUpload) service.delete(id);
+		if (!keepUpload.get()) service.delete(id);
 		return this;
 	}
 	
@@ -554,13 +579,16 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 */
 	@RMethod
-	public RoogleDocs saveAsPdf(String absoluteFilePath, @RDefault(rCode="FALSE") boolean uploadCopy) throws IOException {
+	public RoogleDocs saveAsPdf(
+			RFile absoluteFilePath, 
+			@RDefault(rCode="FALSE") RLogical uploadCopy
+		) throws IOException {
 		if (disabled) return this;
 		RDocument newdoc = this.service.getOrCloneDocument("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
 		newdoc.removeTags();
-		newdoc.saveAsPdf(absoluteFilePath);
+		newdoc.saveAsPdf(absoluteFilePath.getForWriting());
 		this.service.delete(newdoc.getDocId());
-		if (uploadCopy) this.uploadSupplementaryFiles(absoluteFilePath, true, false);
+		if (uploadCopy.get()) this.uploadSupplementaryFiles(absoluteFilePath, RLogical.TRUE, RLogical.FALSE);
 		return this;
 	}
 	
@@ -576,9 +604,9 @@ public class RoogleDocs {
 	 * @throws IOException if a network or google drive problem or if roogledocs is disabled.
 	 */
 	@RMethod
-	public RoogleDocs makeCopy(String newName) throws IOException {
+	public RoogleDocs makeCopy(RCharacter newName) throws IOException {
 		if (disabled) throw new IOException("Cannot make a copy as roogledocs is currently disabled");
-		RDocument newdoc = this.service.copyDocument(newName, document.getDocId());
+		RDocument newdoc = this.service.copyDocument(newName.get(), document.getDocId());
 		return new RoogleDocs(this.service, newdoc);
 	}
 	
@@ -593,9 +621,9 @@ public class RoogleDocs {
 	 */
 	@RMethod 
 	public void delete(
-			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this document',FALSE)") boolean areYouSure
+			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this document',FALSE)") RLogical areYouSure
 	) throws IOException {
-		if (!areYouSure) throw new IOException("Delete aborted by user");
+		if (!areYouSure.get()) throw new IOException("Delete aborted by user");
 		this.service.delete(document.getDocId());
 		System.out.println("Document `"+document.getName()+"` deleted");
 		this.document = null;
@@ -621,13 +649,17 @@ public class RoogleDocs {
 	 * @throws IOException if there was a problem with finding the file or uploading it
 	 */
 	@RMethod
-	public RoogleDocs uploadSupplementaryFiles(String absoluteFilePath, @RDefault(rCode="FALSE") boolean overwrite, @RDefault(rCode="FALSE") boolean duplicate) throws IOException {
+	public RoogleDocs uploadSupplementaryFiles(
+			RFile absoluteFilePath, 
+			@RDefault(rCode="FALSE") RLogical overwrite, 
+			@RDefault(rCode="FALSE") RLogical duplicate
+	) throws IOException {
 		if (disabled) return this;
 		//TODO: detect naming collisions and allow overwriting?
-		Path path = Paths.get(absoluteFilePath);
+		Path path = absoluteFilePath.get();
 		String name = path.getFileName().toString();
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
-		this.service.upload(name, path, parents, overwrite, duplicate);
+		this.service.upload(name, path, parents, overwrite.get(), duplicate.get());
 		return this;
 	}
 	
@@ -643,13 +675,13 @@ public class RoogleDocs {
 	 */
 	@RMethod
 	public static void deleteDocument(
-			String docName, 
-			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") boolean areYouSure,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter docName, 
+			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") RLogical areYouSure,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
-		if (disabled) return;
-		if (areYouSure) RService.with(tokenDirectory).deleteByName(docName, RService.MIME_DOCS);
+		if (disabled.get()) return;
+		if (areYouSure.get()) RService.with(tokenDirectory.get()).deleteByName(docName.get(), RService.MIME_DOCS);
 		else System.out.println("aborted delete.");
 	}
 	
@@ -662,7 +694,10 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers.
 	 */
 	@RMethod
-	public RoogleDocs appendText(RCharacter text, @RDefault(rCode="'NORMAL_TEXT'") RCharacter style) throws IOException {
+	public RoogleDocs appendText(
+			RCharacter text, 
+			@RDefault(rCode="'NORMAL_TEXT'") RCharacter style
+	) throws IOException {
 		if (disabled) return this;
 		if(!text.isNa()) document.appendText(text.get(), style.opt());
 		return this;
@@ -697,11 +732,11 @@ public class RoogleDocs {
 	/**
 	 * Update citation tags in the document. 
 	 * 
-	 * A citation tag is like this `{{cite:challen2020;danon2021}}`. The ids are matched against the provided bibtex, and
+	 * A citation tag is like this `\{\{cite:challen2020;danon2021\}\}`. The ids are matched against the provided bibtex, and
 	 * the tags are replaced with an appropriate citation string. The bibliography itself is added to a specific slide for 
-	 * references which can be decided with the `{{references}}` tag. 
+	 * references which can be decided with the `\{\{references\}\}` tag. 
 	 * 
-	 * If references do not already exist and there if no `{{references}}` tag the
+	 * If references do not already exist and there if no `\{\{references\}\}` tag the
 	 * references will be added to the end of the document. Where it can be cut and
 	 * pasted to the right place. N.B. Do not split up the references when you move them.
 	 *  
@@ -711,8 +746,10 @@ public class RoogleDocs {
 	 * @throws IOException if there is a problem communicating with google servers.
 	 * @throws ParseException if the bibTex is poorly formed
 	 */
-	@RMethod
-	public RoogleDocs updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException {
+	@RMethod 
+	public RoogleDocs updateCitations(
+			RCharacter bibTexPath, 
+			@RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException {
 		if (disabled) return this;
 		
 		// setup 
@@ -721,5 +758,9 @@ public class RoogleDocs {
 		document.updateCitations(bibTex, citationStyle.get());
 				
 		return this;
+	}
+	
+	public String toString() {
+		return String.format("Google doc: %s",document == null ? "no document selected" : document.getName());
 	}
 }

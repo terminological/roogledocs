@@ -25,11 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: '4.1.0', java: 11, distribution: zulu}
-          - {os: macOS-latest, r: '4.1.0', java: 11, distribution: zulu}
-          - {os: windows-latest, r: '4.1.0', java: 11, distribution: zulu}
-          - {os: ubuntu-latest, r: '3.6.1', java: 8, distribution: zulu}
-          - {os: ubuntu-latest, r: '4.2.0', java: 17, distribution: zulu}
+          - {os: ubuntu-latest, r: 'release', java: 11, distribution: zulu}
+          - {os: macOS-latest, r: 'release', java: 11, distribution: zulu}
+          - {os: windows-latest, r: 'release', java: 11, distribution: zulu}
+          - {os: ubuntu-latest, r: 'oldrel-1', java: 8, distribution: zulu}
+          - {os: ubuntu-latest, r: 'release', java: 17, distribution: zulu}
           - {os: ubuntu-latest, r: 'devel', java: 17, distribution: zulu, http-user-agent: 'release'}
 
 
@@ -50,7 +50,6 @@ jobs:
           java-version: ${{ matrix.config.java }}
           distribution: ${{ matrix.config.distribution }}
           java-package: jdk
-          architecture: x64
           cache: 'maven'
 
       - name: Info

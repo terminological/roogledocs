@@ -48,7 +48,7 @@ options("roogledocs.tokenDirectory"="~/.roogledocs-test")
 
 
 ```{r}
-J = roogledocs::JavaApi$get(logLevel = "DEBUG")
+J = roogledocs::JavaApi$get(logLevel = "WARN")
 x = J$RoogleDocs$new()
 ```
 
@@ -76,10 +76,14 @@ event explicitly re-authenticating the library can be done though a call to
 roogledocs::reauth()
 ```
 
-Once authentication is working getting a 
+Once authentication is working we get a new document based on a template I 
+creates and shared:
 
 ```{r}
-doc = roogledocs::doc_from_template("roogledocs-demo","https://docs.Google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing")
+doc = roogledocs::doc_from_template(
+  "roogledocs-demo",
+  "https://docs.Google.com/document/d/1XnrBgBJFz7jEMYtw3o3YKbOuMdWvUkzIul4hb2B-SC4/edit?usp=sharing"
+)
 fs::dir_create(here::here("docs/articles/web-only"))
 doc$saveAsPdf(here::here("docs/articles/web-only/example-template-doc.pdf"))
 ```
@@ -255,7 +259,7 @@ are bibtext ids. References will be updated if present or if not
 
 ```{r}
 
-doc$updateCitations(here::here("vignettes/web-only/test.bib"), "ieee")
+doc$updateCitations(here::here("vignettes/web-only/test.bib"), citationStyle = "journal-of-infection")
 
 ```
 

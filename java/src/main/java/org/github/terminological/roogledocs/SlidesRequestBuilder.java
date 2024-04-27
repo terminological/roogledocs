@@ -654,9 +654,6 @@ public class SlidesRequestBuilder extends ArrayList<Request> {
 	}
 	
 	public void createPlainLink(TextRunPosition textRun, String url) {
-		// TODO: somehow somewhere here the update resets the format of other links in a paragraph
-		// almost as if the range is incorrect or interpreted incorrectly.
-		// alternatively createLink is being called on everything and losing its link formatting in the process?
 		this.add(
 				new Request().setUpdateTextStyle(
 						textRun.setPosition(

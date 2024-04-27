@@ -48,3 +48,12 @@ vignettes/*.pdf
 .Renviron
 .Rproj.user
 inst/doc
+
+# Eclipse paths
+# build paths
+target/
+.classpath
+
+# eclipse project settings
+.project
+.settings/

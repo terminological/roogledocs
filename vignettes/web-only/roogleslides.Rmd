@@ -211,7 +211,7 @@ it will insert citations.
 
 ```{r}
 
-doc$updateCitations(here::here("vignettes/web-only/test.bib"), "ieee")
+doc$updateCitations(here::here("vignettes/web-only/test.bib"), citationStyle = "journal-of-infection")
 
 ```
 

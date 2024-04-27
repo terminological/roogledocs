@@ -4,9 +4,9 @@
 #' @description
 #' R Wrapper For Googledocs Java Library
 #'
-#' Version: 0.4.0
+#' Version: 0.5.0
 #'
-#' Generated: 2024-04-05T16:34:41.835585144
+#' Generated: 2024-04-27T13:56:10.550351393
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import R6
@@ -26,9 +26,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 	.toJava = NULL,
 	#' @field .reg the list of references to java objects created by this API 
 	.reg = list(),
-	#' @field RoogleDocs the RoogleDocs class contructors and static methods
+	#' @field RoogleDocs the RoogleDocs class constructors and static methods
 	RoogleDocs = NULL,
-	#' @field RoogleSlides the RoogleSlides class contructors and static methods
+	#' @field RoogleSlides the RoogleSlides class constructors and static methods
 	RoogleSlides = NULL,
 
 	#' @description
@@ -87,9 +87,9 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		  .jcall(self$.log,returnSig = "V",method = "debug", jar)
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.4.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-04-05T16:34:41.835954387");
-		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.4.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.5.0");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-04-27T13:56:10.550900583");
+		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.5.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
 		self$printMessages()
@@ -109,13 +109,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RDate'))
 				if (length(rObj) > 1) stop('input too long')
 			   if (rObj<'0001-01-01') message('dates smaller than 0001-01-01 will be converted to NA')
-				tmp = as.character(rObj,format='%C%y-%m-%d')[[1]]
+				tmp = format(rObj,format='%C%y-%m-%d')[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDate',tmp))
 			},
 			RDateVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
 				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
-				tmp = as.character(rObj,format='%C%y-%m-%d')
+				tmp = format(rObj,format='%C%y-%m-%d')
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
 			},
 			RCharacterVector=function(rObj) {
@@ -257,6 +257,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RUntypedNaVector'))
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RUntypedNaVector',length(rObj)))
 			},
+			RFile=function(rObj) {
+				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RFile'))
+				if (length(rObj) > 1) stop('input too long')
+				if (!is.character(rObj)) stop('input must be a character representing a file path')
+				tmp = fs::path_abs(fs::path_expand(rObj),getwd())
+				return(rJava::.jnew('uk/co/terminological/rjava/types/RFile',tmp))
+			},
 			RUntypedNa=function(rObj) {
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RUntypedNa'))
 			},
@@ -310,7 +317,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RDate=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RDateVector=function(jObj) as.Date(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive'),'%Y-%m-%d'),
 			RCharacterVector=function(jObj) as.character(rJava::.jcall(jObj,returnSig='[Ljava/lang/String;',method='rPrimitive')),
-			RoogleDocs=function(jObj) return(jObj),
+			RoogleDocs=function(jObj) return(RoogleDocs$new(jObj,self)),
 			RNumeric=function(jObj) as.numeric(rJava::.jcall(jObj,returnSig='D',method='rPrimitive')),
 			RLogical=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='I',method='rPrimitive')),
 			RFactor=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rLabel')),
@@ -318,7 +325,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RLogicalVector=function(jObj) as.logical(rJava::.jcall(jObj,returnSig='[I',method='rPrimitive')),
 			RCharacter=function(jObj) as.character(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive')),
 			String=function(jObj) return(as.character(jObj)),
-			RoogleSlides=function(jObj) return(jObj),
+			RoogleSlides=function(jObj) return(RoogleSlides$new(jObj,self)),
 			void=function(jObj) invisible(NULL),
 			double=function(jObj) return(as.numeric(jObj)),
 			RList=function(jObj) {
@@ -340,6 +347,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				return(dplyr::group_by(convDf(jObj),!!!sapply(groups,as.symbol)))
 			},
 			RUntypedNaVector=function(jObj) rep(NA, rJava::.jcall(jObj,returnSig='I',method='size')),
+			RFile=function(jObj) {	fs::path(rJava::.jcall(jObj,returnSig='Ljava/lang/String;',method='rPrimitive'))},
 			RUntypedNa=function(jObj) return(NA),
 			RFactorVector=function(jObj) ordered(
 				x = rJava::.jcall(jObj,returnSig='[I',method='rValues'),
@@ -357,117 +365,161 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			new = function(tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# constructor
 				# convert parameters to java
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
 				# invoke constructor method
 				tmp_out = .jnew("org/github/terminological/roogledocs/RoogleDocs" , tmp_tokenDirectory, tmp_disabled, check=FALSE);
 				self$printMessages()
 				.jcheck() 
 				# convert result back to R (should be a identity conversion)
 				tmp_r6 = RoogleDocs$new(
-					self$.fromJava$RoogleDocs(tmp_out),
+					tmp_out,
 					self
 				);
 				return(tmp_r6)
 			},
 			reauth = function(tokenDirectory=.tokenDirectory()) {
 				# copy parameters
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="reauth" , tmp_tokenDirectory, check=FALSE);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+					method = "reauth",
+					tmp_tokenDirectory, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleDocs$new(
-					self$.fromJava$RoogleDocs(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleDocs(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			docById = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_shareUrlOrDocId = self$.toJava$String(shareUrlOrDocId);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docById" , tmp_shareUrlOrDocId, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_shareUrlOrDocId = self$.toJava$RCharacter(shareUrlOrDocId);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+					method = "docById",
+					tmp_shareUrlOrDocId,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleDocs$new(
-					self$.fromJava$RoogleDocs(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleDocs(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			docByName = function(title, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_title = self$.toJava$String(title);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docByName" , tmp_title, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_title = self$.toJava$RCharacter(title);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+					method = "docByName",
+					tmp_title,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleDocs$new(
-					self$.fromJava$RoogleDocs(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleDocs(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			docFromTemplate = function(title, templateUri, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_title = self$.toJava$String(title);
-				tmp_templateUri = self$.toJava$String(templateUri);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", method="docFromTemplate" , tmp_title, tmp_templateUri, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_title = self$.toJava$RCharacter(title);
+				tmp_templateUri = self$.toJava$RCharacter(templateUri);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+					method = "docFromTemplate",
+					tmp_title,
+					tmp_templateUri,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleDocs$new(
-					self$.fromJava$RoogleDocs(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleDocs(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			searchForDocuments = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 				# copy parameters
-				tmp_titleMatch = self$.toJava$String(titleMatch);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="searchForDocuments" , tmp_titleMatch, tmp_tokenDirectory, check=FALSE);
+				tmp_titleMatch = self$.toJava$RCharacter(titleMatch);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Luk/co/terminological/rjava/types/RDataframe;", 
+					method = "searchForDocuments",
+					tmp_titleMatch,
+					tmp_tokenDirectory, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# convert java object back to R
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
 				out = self$.fromJava$RDataframe(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			deleteDocument = function(docName, areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE), tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_docName = self$.toJava$String(docName);
-				tmp_areYouSure = self$.toJava$boolean(areYouSure);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "V", method="deleteDocument" , tmp_docName, tmp_areYouSure, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_docName = self$.toJava$RCharacter(docName);
+				tmp_areYouSure = self$.toJava$RLogical(areYouSure);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "V", 
+					method = "deleteDocument",
+					tmp_docName,
+					tmp_areYouSure,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# convert java object back to R
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
 				out = self$.fromJava$void(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			citationStyles = function() {
 				# copy parameters
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleDocs", returnSig = "Luk/co/terminological/rjava/types/RCharacterVector;", method="citationStyles" , check=FALSE);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleDocs", 
+					returnSig = "Luk/co/terminological/rjava/types/RCharacterVector;", 
+					method = "citationStyles", 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# convert java object back to R
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
 				out = self$.fromJava$RCharacterVector(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
@@ -476,92 +528,127 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			new = function(tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# constructor
 				# convert parameters to java
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
 				# invoke constructor method
 				tmp_out = .jnew("org/github/terminological/roogledocs/RoogleSlides" , tmp_tokenDirectory, tmp_disabled, check=FALSE);
 				self$printMessages()
 				.jcheck() 
 				# convert result back to R (should be a identity conversion)
 				tmp_r6 = RoogleSlides$new(
-					self$.fromJava$RoogleSlides(tmp_out),
+					tmp_out,
 					self
 				);
 				return(tmp_r6)
 			},
 			slidesById = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_shareUrlOrDocId = self$.toJava$String(shareUrlOrDocId);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleSlides", returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="slidesById" , tmp_shareUrlOrDocId, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_shareUrlOrDocId = self$.toJava$RCharacter(shareUrlOrDocId);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleSlides", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+					method = "slidesById",
+					tmp_shareUrlOrDocId,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleSlides$new(
-					self$.fromJava$RoogleSlides(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleSlides(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			slidesByName = function(title, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_title = self$.toJava$String(title);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleSlides", returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="slidesByName" , tmp_title, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_title = self$.toJava$RCharacter(title);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleSlides", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+					method = "slidesByName",
+					tmp_title,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleSlides$new(
-					self$.fromJava$RoogleSlides(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleSlides(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			slidesFromTemplate = function(title, templateUri, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_title = self$.toJava$String(title);
-				tmp_templateUri = self$.toJava$String(templateUri);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleSlides", returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", method="slidesFromTemplate" , tmp_title, tmp_templateUri, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_title = self$.toJava$RCharacter(title);
+				tmp_templateUri = self$.toJava$RCharacter(templateUri);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleSlides", 
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleSlides;", 
+					method = "slidesFromTemplate",
+					tmp_title,
+					tmp_templateUri,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# wrap return java object in R6 class 
-				out = RoogleSlides$new(
-					self$.fromJava$RoogleSlides(tmp_out),
-					self
-				);
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
+				out = self$.fromJava$RoogleSlides(tmp_out);
+				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			searchForSlides = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 				# copy parameters
-				tmp_titleMatch = self$.toJava$String(titleMatch);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleSlides", returnSig = "Luk/co/terminological/rjava/types/RDataframe;", method="searchForSlides" , tmp_titleMatch, tmp_tokenDirectory, check=FALSE);
+				tmp_titleMatch = self$.toJava$RCharacter(titleMatch);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleSlides", 
+					returnSig = "Luk/co/terminological/rjava/types/RDataframe;", 
+					method = "searchForSlides",
+					tmp_titleMatch,
+					tmp_tokenDirectory, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# convert java object back to R
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
 				out = self$.fromJava$RDataframe(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
 			},
 			deleteSlides = function(docName, areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE), tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
-				tmp_docName = self$.toJava$String(docName);
-				tmp_areYouSure = self$.toJava$boolean(areYouSure);
-				tmp_tokenDirectory = self$.toJava$String(tokenDirectory);
-				tmp_disabled = self$.toJava$boolean(disabled);
-				#execute static call
-				tmp_out = .jcall("org/github/terminological/roogledocs/RoogleSlides", returnSig = "V", method="deleteSlides" , tmp_docName, tmp_areYouSure, tmp_tokenDirectory, tmp_disabled, check=FALSE);
+				tmp_docName = self$.toJava$RCharacter(docName);
+				tmp_areYouSure = self$.toJava$RLogical(areYouSure);
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				tmp_disabled = self$.toJava$RLogical(disabled);
+				# execute static call
+				tmp_out = .jcall(
+					"org/github/terminological/roogledocs/RoogleSlides", 
+					returnSig = "V", 
+					method = "deleteSlides",
+					tmp_docName,
+					tmp_areYouSure,
+					tmp_tokenDirectory,
+					tmp_disabled, 
+					check = FALSE);
 				self$printMessages()
-				.jcheck() 
-				# convert java object back to R
+				.jcheck()
+				# static methods cannot return themselves fluently, so this does not need to be checked for.
+				# convert java object back to R. Wrapping in an R6 class as needed
 				out = self$.fromJava$void(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
@@ -604,9 +691,9 @@ JavaApi$installDependencies = function() {
 JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
-		r_package_version = "0.4.0",
-		r_package_generated = "2024-04-05T16:34:41.849261428",
-		java_library_version = "io.github.terminological:roogledocs:0.4.0",
+		r_package_version = "0.5.0",
+		r_package_generated = "2024-04-27T13:56:10.580229036",
+		java_library_version = "io.github.terminological:roogledocs:0.5.0",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)
 	# try and get complilation information if library is loaded
@@ -623,7 +710,7 @@ JavaApi$versionInformation = function() {
 
 .checkDependencies = function(nocache = FALSE, ...) {
 	package_jar = .package_jars(package_name="roogledocs",types="fat-jar")
-	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.4.0")]
+	package_jar = package_jar[startsWith(fs::path_file(package_jar),"roogledocs-0.5.0")]
 	
 	# Java dependencies
 	# all java library code and dependencies have already been bundled into a single fat jar

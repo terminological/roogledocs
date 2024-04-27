@@ -9,11 +9,12 @@
 }
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a String)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)}
 	\if{html}{\out{</div>}}
 }
 \value{
 R6 RoogleDocs object: a new RoogleDocs instance without an active document
+
 }
 \description{
 Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 

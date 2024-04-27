@@ -296,7 +296,7 @@ public class DocumentRequestBuilder extends ArrayList<Request> {
 				
 				// If we are in the first cell and tag is present we insert it at the beginning as a single
 				// create a blank table size rows/cols as position or end of document
-				// TODO: https://invisible-characters.com/2060-WORD-JOINER.html
+				// https://invisible-characters.com/2060-WORD-JOINER.html
 				// Use invisible char as base for a link.
 				
 				if (c.col().get() == 1 && c.row().get() == 1 && tag.isPresent()) {
@@ -588,9 +588,6 @@ public class DocumentRequestBuilder extends ArrayList<Request> {
 	}
 	
 	public void createPlainLink(TextRunPosition range, String url) {
-		// TODO: somehow somewhere here the update resets the format of other links in a paragraph
-		// almost as if the range is incorrect or interpreted incorrectly.
-		// alternatively createLink is being called on everything and losing its link formatting in the process?
 		this.add(
 				new Request().setUpdateTextStyle(
 					new UpdateTextStyleRequest()

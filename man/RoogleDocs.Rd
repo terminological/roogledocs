@@ -8,8 +8,8 @@
 
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a String)}
-	\item{disabled}{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a boolean)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)}
+	\item{disabled}{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)}
 	\if{html}{\out{</div>}}
 }
 
@@ -17,9 +17,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc. 
 
-Version: 0.4.0
+Version: 0.5.0
 
-Generated: 2024-04-05T16:34:41.873185786
+Generated: 2024-04-27T13:56:10.603218214
 }
 
 \details{
@@ -240,9 +240,9 @@ instance = J$RoogleDocs$new(tokenDirectory, disabled);
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -274,7 +274,7 @@ instance$enable()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -305,7 +305,7 @@ instance$disable()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -333,8 +333,8 @@ instance$getName(suffix)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{suffix an additional suffix to add to the name - (defaulting to `''`)}{ - (java expects a String)}
+			\describe{
+				\item{suffix an additional suffix to add to the name - (defaulting to `''`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -365,7 +365,7 @@ instance$tagsDefined()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -381,7 +381,7 @@ RDataframe: a dataframe containing tag and count columns
 	\subsection{Method \code{updateTaggedText()}}{
 Replace tags for text
 
-Substitutes all occurrences of {{tag-name}} with the text parameter. If the tag name is not 
+Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the tag name is not 
 found in the document it is inserted at the end in a section labelled "Unmatched tags:". From there
 it can be cut and pasted into the right place.
 
@@ -397,9 +397,9 @@ instance$updateTaggedText(text, tagName)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a String)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a String)}
+			\describe{
+				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -415,7 +415,7 @@ R6 RoogleDocs object: itself - a fluent method
 	\subsection{Method \code{updateTaggedImage()}}{
 Replace a tag with an image.
 
-Substitutes all occurrences of {{tag-name}} with an image from the local storage. 
+Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
 
 The image is uploaded to your google drive as a temporary file, and briefly made publicly readable. From there it is inserted into the 
 google doc, and one completed the temporary file deleted from your google drive. Insertion is
@@ -437,11 +437,11 @@ instance$updateTaggedImage(absoluteFilePath, tagName, dpi, keepUpload)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a String)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a String)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to `300`)}{ - (java expects a double)}
-				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+			\describe{
+				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a RCharacter)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to `300`)}{ - (java expects a RNumeric)}
+				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -457,7 +457,7 @@ R6 RoogleDocs object: itself - a fluent method
 	\subsection{Method \code{updateTaggedTable()}}{
 Replace a tag with a table.
 
-Substitutes a unique occurrences of {{tag-name}} with a table. The tag should either be in the text of the document or as the first entry in 
+Substitutes a unique occurrences of \{\{tag-name\}\} with a table. The tag should either be in the text of the document or as the first entry in 
 the first cell of a table. Once inserted the table is tagged using a zero width character
 as the very first item in the first cell. This will be removed if `removeTags()` is called.
 
@@ -476,10 +476,10 @@ instance$updateTaggedTable(longFormatTable, tagName, colWidths, tableWidthInches
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a String)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a RCharacter)}
 				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from `as.long_format_table` - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
 				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) but you may want to make this wider for
   landscape tables - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
@@ -514,7 +514,7 @@ instance$revertTags()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -545,8 +545,8 @@ instance$removeTags(confirm)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{confirm - This action must be confirmed by passing `true` as cannot be undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`)}{ - (java expects a boolean)}
+			\describe{
+				\item{confirm - This action must be confirmed by passing `true` as cannot be undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -580,10 +580,10 @@ instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to `-1`)}{ - (java expects a int)}
+				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
 				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
 				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
 			}
@@ -619,11 +619,11 @@ instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{absoluteFilePath a file path to an png image file (only png is supported at this point).}{ - (java expects a String)}
-				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to `-1`)}{ - (java expects a int)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to `300`)}{ - (java expects a double)}
-				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+			\describe{
+				\item{absoluteFilePath a file path to an png image file (only png is supported at this point).}{ - (java expects a RCharacter)}
+				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to `300`)}{ - (java expects a RNumeric)}
+				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -656,11 +656,11 @@ instance$saveAsPdf(absoluteFilePath, uploadCopy)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a String)}
+			\describe{
+				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a RFile)}
 				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
   for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
-  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -692,8 +692,8 @@ instance$makeCopy(newName)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{newName - The new document name.}{ - (java expects a String)}
+			\describe{
+				\item{newName - The new document name.}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -724,8 +724,8 @@ instance$delete(areYouSure)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{areYouSure - confirm the delete - (defaulting to `utils::askYesNo('Are you sure you wan...`)}{ - (java expects a boolean)}
+			\describe{
+				\item{areYouSure - confirm the delete - (defaulting to `utils::askYesNo('Are you sure you wan...`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -759,10 +759,10 @@ instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{absoluteFilePath - a file path to upload.}{ - (java expects a String)}
-				\item{overwrite - if matching file(s) are found in the target, delete them before uploading the new one. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
-				\item{duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder. - (defaulting to `FALSE`)}{ - (java expects a boolean)}
+			\describe{
+				\item{absoluteFilePath - a file path to upload.}{ - (java expects a RFile)}
+				\item{overwrite - if matching file(s) are found in the target, delete them before uploading the new one. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+				\item{duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -791,7 +791,7 @@ instance$appendText(text, style)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{text - a single string with the text to append which may include newlines}{ - (java expects a RCharacter)}
 				\item{style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6 - (defaulting to `'NORMAL_TEXT'`)}{ - (java expects a RCharacter)}
 			}
@@ -821,7 +821,7 @@ instance$appendFormattedParagraph(formattedTextDf)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
 			}
 			\if{html}{\out{</div>}}
@@ -838,11 +838,11 @@ R6 RoogleDocs object: itself - a fluent method
 	\subsection{Method \code{updateCitations()}}{
 Update citation tags in the document. 
 
-A citation tag is like this `{{cite:challen2020;danon2021}}`. The ids are matched against the provided bibtex, and
+A citation tag is like this `\{\{cite:challen2020;danon2021\}\}`. The ids are matched against the provided bibtex, and
 the tags are replaced with an appropriate citation string. The bibliography itself is added to a specific slide for 
-references which can be decided with the `{{references}}` tag. 
+references which can be decided with the `\{\{references\}\}` tag. 
 
-If references do not already exist and there if no `{{references}}` tag the
+If references do not already exist and there if no `\{\{references\}\}` tag the
 references will be added to the end of the document. Where it can be cut and
 pasted to the right place. N.B. Do not split up the references when you move them.
 
@@ -858,7 +858,7 @@ instance$updateCitations(bibTexPath, citationStyle)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{bibTexPath - the full file path to the file containing the bibtex}{ - (java expects a RCharacter)}
 				\item{citationStyle - the CSL specification - (defaulting to `'ieee-with-url'`)}{ - (java expects a RCharacter)}
 			}

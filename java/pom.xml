@@ -2,9 +2,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>io.github.terminological</groupId>
 	<artifactId>roogledocs</artifactId>
-	<version>0.4.0</version>
+	<version>0.5.0</version>
 	<description>R wrapper for Google docs API java library</description>
 
 	<properties>
@@ -12,7 +13,7 @@
 		<!-- Must be Java 8 for standard rJava implementation -->
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<r6.version>main-SNAPSHOT</r6.version>
+		<r6.version>1.0.0</r6.version>
     </properties>
 
 	<name>R Google Docs integration</name>
@@ -99,16 +100,16 @@
 
 	<repositories>
 		<repository>
-			<id>Sonatype OSSRH</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+			<id>github</id>
+        	<url>https://maven.pkg.github.com/terminological/m2repo</url>
 		</repository>
 	</repositories>
 
-	<!-- Resolve maven plugin on sonatype OSSRH -->
+	<!-- Resolve maven plugin on Github -->
 	<pluginRepositories>
 		<pluginRepository>
-			<id>Sonatype OSSRH</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+			<id>github</id>
+        	<url>https://maven.pkg.github.com/terminological/m2repo</url>
 		</pluginRepository>
 	</pluginRepositories>
 	
@@ -154,9 +155,10 @@ can be updated independently of the analysis, by the wider team.
 						<doi>10.5281/zenodo.6576096</doi>
 						<debug>false</debug>
 						<useRoxygen2>true</useRoxygen2>
-						<useCmdCheck>true</useCmdCheck>
+						<useCmdCheck>false</useCmdCheck>
 						<usePkgdown>false</usePkgdown>
 						<useJavadoc>false</useJavadoc>
+						<installLocal>true</installLocal>
 <!-- 						<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
 						<rjavaOpts>
 							<rjavaOpt>-Xmx512M</rjavaOpt>

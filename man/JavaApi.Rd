@@ -25,9 +25,9 @@
 \description{
 Programmatically substitute images, data and tables into a google doc or presentation. R library to perform limited interactions with google docs and slides in R via the Java API library. The purpose being to support google docs as a platform for interactive development and documentation of data analysis in R for scientific publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis where a team of people are working collaboratively on documentation, whilst at the same time analysis is being performed and results updated repeatedly as a result of new data. In this environment updating numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs you can automate this a bit like a RMarkdown document, but with the added benefit that the content can be updated independently of the analysis, by the wider team.
 
-Version: 0.4.0
+Version: 0.5.0
 
-Generated: 2024-04-05T16:34:41.812320597
+Generated: 2024-04-27T13:56:10.506316288
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}
@@ -254,7 +254,7 @@ roogledocs::JavaApi$installDependencies()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -281,7 +281,7 @@ roogledocs::JavaApi$rebuildDependencies()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -307,7 +307,7 @@ roogledocs::JavaApi$versionInformation()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -334,7 +334,7 @@ J = roogledocs::JavaApi$get()
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{logLevel}{ The desired verbosity of the package. One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL".}
 			}
 			\if{html}{\out{</div>}}
@@ -361,7 +361,7 @@ J$changeLogLevel("DEBUG")
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{logLevel}{ The desired verbosity of the package. One of "OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL".}
 			}
 			\if{html}{\out{</div>}}
@@ -392,7 +392,7 @@ if (fs::file_exists(prp)) {
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{log4jproperties}{ a full path to a log4jproperies file}
 			}
 			\if{html}{\out{</div>}}
@@ -422,7 +422,7 @@ J$printMessages()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -453,9 +453,9 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -491,8 +491,8 @@ roogledocs::reauth(tokenDirectory)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+			\describe{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -522,10 +522,10 @@ roogledocs::doc_by_id(shareUrlOrDocId, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{shareUrlOrDocId the url from clicking a share button in google docs or an id from searchForDocuments() method}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -555,10 +555,10 @@ roogledocs::doc_by_name(title, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -588,12 +588,12 @@ roogledocs::doc_from_template(title, templateUri, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{title a document title. If there is an exact match in google drive then that document will be used
-otherwise a new one will be created.}{ - (java expects a String)}
-				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+otherwise a new one will be created.}{ - (java expects a RCharacter)}
+				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -623,9 +623,9 @@ roogledocs::search_for_documents(titleMatch, tokenDirectory)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+			\describe{
+				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -655,11 +655,11 @@ roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
-				\item{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`)}{ - (java expects a boolean)}
-				\item{tokenDirectory - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a RCharacter)}
+				\item{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`)}{ - (java expects a RLogical)}
+				\item{tokenDirectory - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -690,7 +690,7 @@ roogledocs::citation_styles()
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
 			\itemize{
-				\item{none}
+				\item none
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -718,9 +718,9 @@ J$RoogleSlides$new(tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -750,10 +750,10 @@ roogledocs::slides_by_id(shareUrlOrDocId, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{shareUrlOrDocId the url from clicking a share button in google slides or an id from searchForDocuments() method}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{shareUrlOrDocId the url from clicking a share button in google slides or an id from searchForDocuments() method}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -783,10 +783,10 @@ roogledocs::slides_by_name(title, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{title a document title. If there is an exact match in google drive then that document will be used}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -816,12 +816,12 @@ roogledocs::slides_from_template(title, templateUri, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
+			\describe{
 				\item{title a document title. If there is an exact match in google drive then that document will be used
-otherwise a new one will be created.}{ - (java expects a String)}
-				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+otherwise a new one will be created.}{ - (java expects a RCharacter)}
+				\item{templateUri the share link (or document id) of a template google document}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)` - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -851,9 +851,9 @@ roogledocs::search_for_slides(titleMatch, tokenDirectory)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a String)}
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
+			\describe{
+				\item{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids.}{ - (java expects a RCharacter)}
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -883,11 +883,11 @@ roogledocs::delete_slides(docName, areYouSure, tokenDirectory, disabled)
 	
 		\subsection{Arguments}{
 			\if{html}{\out{<div class="arguments">}}
-			\itemize{
-				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a String)}
-				\item{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`)}{ - (java expects a boolean)}
-				\item{tokenDirectory - (defaulting to `.tokenDirectory()`)}{ - (java expects a String)}
-				\item{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a boolean)}
+			\describe{
+				\item{docName - the name of a document to delete. must be an exact and unique match.}{ - (java expects a RCharacter)}
+				\item{areYouSure - a boolean check. - (defaulting to `utils::askYesNo(paste0('Are you sure ...`)}{ - (java expects a RLogical)}
+				\item{tokenDirectory - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+				\item{disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}

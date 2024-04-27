@@ -32,6 +32,8 @@ import com.google.api.services.slides.v1.model.Dimension;
 import com.google.api.services.slides.v1.model.Size;
 
 import de.undercouch.citeproc.CSL;
+import uk.co.terminological.rjava.RAsync;
+import uk.co.terminological.rjava.RBlocking;
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RConverter;
 import uk.co.terminological.rjava.RDefault;
@@ -41,7 +43,9 @@ import uk.co.terminological.rjava.types.RBoundDataframe;
 import uk.co.terminological.rjava.types.RCharacter;
 import uk.co.terminological.rjava.types.RCharacterVector;
 import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RFile;
 import uk.co.terminological.rjava.types.RInteger;
+import uk.co.terminological.rjava.types.RLogical;
 import uk.co.terminological.rjava.types.RNamedList;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RNumericVector;
@@ -81,12 +85,12 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public RoogleSlides(
-		@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-		@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+		@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+		@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
-		this.disabled = disabled;
-		this.tokenDirectory = tokenDirectory;
-		if(!disabled) service = RService.with(tokenDirectory);
+		this.disabled = disabled.get();
+		this.tokenDirectory = tokenDirectory.get();
+		if(!this.disabled) service = RService.with(this.tokenDirectory);
 	}
 	
 	// Testing
@@ -156,8 +160,9 @@ public class RoogleSlides {
 	 * @return
 	 */
 	@RMethod
-	public String getName(@RDefault(rCode = "''") String suffix) {
-		return this.document.getName() + suffix;
+	public String getName(
+			@RDefault(rCode = "''") RCharacter suffix) {
+		return this.document.getName() + suffix.get();
 	}
 	
 	/**
@@ -185,12 +190,12 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public static RoogleSlides slidesById(
-			String shareUrlOrDocId,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter shareUrlOrDocId,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
-		out.withDocument(shareUrlOrDocId);
+		out.withDocument(shareUrlOrDocId.get());
 		return out;
 	}
 	
@@ -219,12 +224,12 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public static RoogleSlides slidesByName(
-			String title,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter title,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
-		out.findOrCreateDocument(title);
+		out.findOrCreateDocument(title.get());
 		return out;
 	}
 	
@@ -258,13 +263,13 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public static RoogleSlides slidesFromTemplate(
-			String title,
-			String templateUri,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter title,
+			RCharacter templateUri,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
-		out.findOrCloneTemplate(title, templateUri);
+		out.findOrCloneTemplate(title.get(), templateUri.get());
 		return out;
 	}
 	
@@ -279,11 +284,11 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public static RDataframe searchForSlides(
-			String titleMatch, 
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory
+			RCharacter titleMatch, 
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory
 	) throws IOException, GeneralSecurityException {
-		RService service = RService.with(tokenDirectory);
-		List<Tuple<String, String>> tmp = service.search(titleMatch, RService.MIME_DOCS);
+		RService service = RService.with(tokenDirectory.get());
+		List<Tuple<String, String>> tmp = service.search(titleMatch.get(), RService.MIME_DOCS);
 		return tmp.stream().collect(
 				dataframeCollector(
 						mapping(Tuple.class, "id", t->t.getFirst()),
@@ -313,7 +318,7 @@ public class RoogleSlides {
 	/**
 	 * Replace tags for text
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with the text parameter. If the
+	 * Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the
 	 * tag is not found then a new slide is inserted at the end in a section titled "Unmatched tags:". 
 	 * From there they can be cut and pasted into the right place.
 	 * 
@@ -323,10 +328,13 @@ public class RoogleSlides {
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
 	@RMethod
-	public RoogleSlides updateTaggedText(String text, @RDefault(rCode = "deparse(substitute(text))") String tagName) throws IOException {
+	public RoogleSlides updateTaggedText(
+			RCharacter text, 
+			@RDefault(rCode = "deparse(substitute(text))") RCharacter tagName
+		) throws IOException {
 		if (disabled) return this;
-		if (text == "") throw new IOException("text cannot be blank - use a single space for empty content.");
-		rdoc().updateTaggedText(tagName, text);
+		if (text.get() == "") throw new IOException("text cannot be blank - use a single space for empty content.");
+		rdoc().updateTaggedText(tagName.get(), text.get());
 		System.out.println("Text "+tagName+" updated");
 		return this;
 	}
@@ -334,7 +342,7 @@ public class RoogleSlides {
 	/**
 	 * Replace a tag with an image.
 	 * 
-	 * Substitutes all occurrences of {{tag-name}} with an image from the local storage. 
+	 * Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
 	 * 
 	 * The image is uploaded to your google drive as a temporary file, and made publicly readable. From there it is inserted into the 
 	 * google slides, and once completed the temporary file deleted from your google drive, unless `keepUpload` is true. Insertion
@@ -351,28 +359,32 @@ public class RoogleSlides {
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 */
 	@RMethod
-	public RoogleSlides updateTaggedImage(String absoluteFilePath, @RDefault(rCode = "deparse(substitute(absoluteFilePath))") String tagName, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
+	public RoogleSlides updateTaggedImage(
+			RCharacter absoluteFilePath, 
+			@RDefault(rCode = "deparse(substitute(absoluteFilePath))") RCharacter tagName, 
+			@RDefault(rCode="FALSE") RLogical keepUpload
+		) throws IOException {
 		if (disabled) return this;
-		Path path = Paths.get(absoluteFilePath);
+		Path path = Paths.get(absoluteFilePath.get());
 		String name = rdoc().getName()+" - "+tagName;
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
 		String id = null; 
-		if (keepUpload) {
+		if (keepUpload.get()) {
 			id = service.upload(name,path,parents,true,false);
 		} else {
 			id = service.uploadTmp(path);
 		}
 		URI uri = service.getThumbnailUri(id);
-		rdoc().updateTaggedImage(tagName, uri);
+		rdoc().updateTaggedImage(tagName.get(), uri);
 		System.out.println("Figure "+tagName+" updated");
-		if (!keepUpload) service.delete(id);
+		if (!keepUpload.get()) service.delete(id);
 		return this;
 	}
 	
 	/**
 	 * Replace a tag with a table.
 	 * 
-	 * Substitutes a unique occurrence of {{tag-name}} with a table. The tag must either be in a text box shape or as the first entry in 
+	 * Substitutes a unique occurrence of \{\{tag-name\}\} with a table. The tag must either be in a text box shape or as the first entry in 
 	 * a table. Once inserted the table is tagged using a zero width character
 	 * as the very first item in the first cell. This will be removed if `removeTags()` is called.
 	 * 
@@ -388,11 +400,12 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public RoogleSlides updateTaggedTable(
-			RDataframe longFormatTable, @RDefault(rCode = "deparse(substitute(longFormatTable))") String tagName, 
+			RDataframe longFormatTable, 
+			@RDefault(rCode = "deparse(substitute(longFormatTable))") RCharacter tagName, 
 			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths
 		) throws IOException, UnconvertableTypeException {
 		if (disabled) return this;
-		this.rdoc().updateTaggedTable(tagName, longFormatTable, colWidths);
+		this.rdoc().updateTaggedTable(tagName.get(), longFormatTable, colWidths);
 		return this;
 	}
 	
@@ -463,10 +476,11 @@ public class RoogleSlides {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
-	@RMethod 
-	public RoogleSlides removeTags(@RDefault(rCode = "(menu(c('Yes','No'), title = 'Are you sure?')==1)") boolean confirm) throws IOException {
+	@RMethod
+	public RoogleSlides removeTags(
+			@RDefault(rCode = "(menu(c('Yes','No'), title = 'Are you sure?')==1)") RLogical confirm) throws IOException {
 		if (disabled) throw new IOException("roogledocs is disabled");
-		if (confirm) {
+		if (confirm.get()) {
 			rdoc().removeTags();
 			System.out.println("All roogledoc tags removed from document.");
 		} else {
@@ -546,13 +560,15 @@ public class RoogleSlides {
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 */
 	@RMethod
-	public RoogleSlides saveAsPdf(String absoluteFilePath, @RDefault(rCode="FALSE") boolean uploadCopy) throws IOException {
+	public RoogleSlides saveAsPdf(
+			RFile absoluteFilePath, 
+			@RDefault(rCode="FALSE") RLogical uploadCopy) throws IOException {
 		if (disabled) return this;
 		RPresentation newdoc = this.service.getOrClonePresentation("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
 		newdoc.removeTags();
-		newdoc.saveAsPdf(absoluteFilePath);
+		newdoc.saveAsPdf(absoluteFilePath.getForWriting());
 		this.service.delete(newdoc.getDocId());
-		if (uploadCopy) this.uploadSupplementaryFiles(absoluteFilePath, true, false);
+		if (uploadCopy.get()) this.uploadSupplementaryFiles(absoluteFilePath, RLogical.TRUE, RLogical.FALSE);
 		return this;
 	}
 	
@@ -568,9 +584,9 @@ public class RoogleSlides {
 	 * @throws IOException if a network or google drive problem or if roogledocs is disabled.
 	 */
 	@RMethod
-	public RoogleSlides makeCopy(String newName) throws IOException {
+	public RoogleSlides makeCopy(RCharacter newName) throws IOException {
 		if (disabled) throw new IOException("Cannot make a copy as roogledocs is currently disabled");
-		RPresentation newdoc = this.service.copyPresentation(newName, document.getDocId());
+		RPresentation newdoc = this.service.copyPresentation(newName.get(), document.getDocId());
 		return new RoogleSlides(this.service, newdoc);
 	}
 	
@@ -583,11 +599,11 @@ public class RoogleSlides {
 	 * @param areYouSure - confirm the delete
 	 * @throws IOException - if there is a network problem or the user does not confirm the delete
 	 */
-	@RMethod 
+	@RMethod
 	public void delete(
-			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this presentation',FALSE)") boolean areYouSure
+			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this presentation',FALSE)") RLogical areYouSure
 	) throws IOException {
-		if (!areYouSure) throw new IOException("Delete aborted by user");
+		if (!areYouSure.get()) throw new IOException("Delete aborted by user");
 		this.service.delete(document.getDocId());
 		System.out.println("Presentation `"+document.getName()+"` deleted");
 		this.document = null;
@@ -612,13 +628,16 @@ public class RoogleSlides {
 	 * @throws IOException if there was a problem with finding the file or uploading it
 	 */
 	@RMethod
-	public RoogleSlides uploadSupplementaryFiles(String absoluteFilePath, @RDefault(rCode="FALSE") boolean overwrite, @RDefault(rCode="FALSE") boolean duplicate) throws IOException {
+	public RoogleSlides uploadSupplementaryFiles(
+			RFile absoluteFilePath, 
+			@RDefault(rCode="FALSE") RLogical overwrite, 
+			@RDefault(rCode="FALSE") RLogical duplicate) throws IOException {
 		if (disabled) return this;
 		//TODO: detect naming collisions and allow overwriting?
-		Path path = Paths.get(absoluteFilePath);
+		Path path = absoluteFilePath.get();
 		String name = path.getFileName().toString();
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
-		this.service.upload(name, path, parents, overwrite, duplicate);
+		this.service.upload(name, path, parents, overwrite.get(), duplicate.get());
 		return this;
 	}
 	
@@ -634,13 +653,13 @@ public class RoogleSlides {
 	 */
 	@RMethod
 	public static void deleteSlides(
-			String docName, 
-			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") boolean areYouSure,
-			@RDefault(rCode = ".tokenDirectory()") String tokenDirectory,
-			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") boolean disabled
+			RCharacter docName, 
+			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") RLogical areYouSure,
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
 	) throws IOException, GeneralSecurityException {
-		if (disabled) return;
-		if (areYouSure) RService.with(tokenDirectory).deleteByName(docName, RService.MIME_SLIDES);
+		if (disabled.get()) return;
+		if (areYouSure.get()) RService.with(tokenDirectory.get()).deleteByName(docName.get(), RService.MIME_SLIDES);
 		else System.out.println("aborted delete.");
 	}
 	
@@ -670,10 +689,13 @@ public class RoogleSlides {
 	 * @throws UnconvertableTypeException if the dataframe format is not correct
 	 */
 	@RMethod
-	public RoogleSlides appendFormattedSlide(String title, RDataframe formattedTextDf) throws IOException, UnconvertableTypeException {
+	public RoogleSlides appendFormattedSlide(
+			RCharacter title, 
+			RDataframe formattedTextDf
+		) throws IOException, UnconvertableTypeException {
 		if (disabled) return this;
 		String layoutId = document.getDefaultLayoutId();
-		TextRunPosition id = document.appendSlide(layoutId, Optional.of(title));
+		TextRunPosition id = document.appendSlide(layoutId, title.opt());
 		RBoundDataframe<LongFormatText> df = formattedTextDf.attachPermissive(LongFormatText.class);
 		List<LongFormatText> tmp = df.streamCoerce().collect(Collectors.toList()); 
 		document.setSlideBody(id, tmp, Optional.of(1));
@@ -742,11 +764,11 @@ public class RoogleSlides {
 	/**
 	 * Update citation tags in the document. 
 	 * 
-	 * A citation tag is like this `{{cite:challen2020;danon2021}}`. The ids are matched against the provided bibtex, and
+	 * A citation tag is like this `\{\{cite:challen2020;danon2021\}\}`. The ids are matched against the provided bibtex, and
 	 * the tags are replaced with an appropriate citation string. The bibliography itself is added to a specific slide for 
-	 * references which can be decided with the `{{references}}` tag. 
+	 * references which can be decided with the `\{\{references\}\}` tag. 
 	 * 
-	 * If references do not already exist and there if no `{{references}}` tag a new slide 
+	 * If references do not already exist and there if no `\{\{references\}\}` tag a new slide 
 	 * will be created at the end of the presentation. 
 	 * 
 	 * @param bibTexPath - the full file path to the file containing the bibtex
@@ -765,5 +787,9 @@ public class RoogleSlides {
 		document.updateCitations(bibTex, citationStyle.get());
 				
 		return this;
+	}
+	
+	public String toString() {
+		return String.format("Google slides: %s",document == null ? "no presentation selected" : document.getName());
 	}
 }

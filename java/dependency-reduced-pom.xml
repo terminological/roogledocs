@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.github.terminological</groupId>
+  <artifactId>roogledocs</artifactId>
+  <name>R Google Docs integration</name>
+  <version>0.5.0</version>
+  <description>R wrapper for Google docs API java library</description>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19</version>
+        <configuration>
+          <argLine>-Xmx4096m</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.github.terminological</groupId>
+        <artifactId>r6-generator-maven-plugin</artifactId>
+        <version>${r6.version}</version>
+        <executions>
+          <execution>
+            <id>clean-r-library</id>
+            <goals>
+              <goal>clean-r-library</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten-pom</id>
+            <goals>
+              <goal>flatten-pom</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>generate-r-library</id>
+            <goals>
+              <goal>generate-r-library</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <packageData>
+            <title>R wrapper for Googledocs java library</title>
+            <version>${project.version}</version>
+            <description>Programmatically substitute images, data and tables into a google doc or presentation. 
+R library to perform limited interactions with google docs and slides
+in R via the Java API library. The purpose being to support google docs as a
+platform for interactive development and documentation of data analysis in R for scientific
+publication, although it is not limited to this purpose. The workflow supported is a parallel documentation and analysis
+where a team of people are working collaboratively on documentation, whilst at the same time analysis
+is being performed and results updated repeatedly as a result of new data. In this environment updating
+numeric results, tabular data and figures in word documents manually becomes annoying. With roogledocs
+you can automate this a bit like a RMarkdown document, but with the added benefit that the content
+can be updated independently of the analysis, by the wider team.</description>
+            <url>https://terminological.github.io/roogledocs/</url>
+            <doi>10.5281/zenodo.6576096</doi>
+            <debug>false</debug>
+            <useRoxygen2>true</useRoxygen2>
+            <useCmdCheck>true</useCmdCheck>
+            <usePkgdown>false</usePkgdown>
+            <useJavadoc>false</useJavadoc>
+            <rjavaOpts>
+              <rjavaOpt>-Xmx512M</rjavaOpt>
+            </rjavaOpts>
+            <packageName>roogledocs</packageName>
+            <license>MIT</license>
+            <preCompileBinary>true</preCompileBinary>
+            <packageAllDependencies>true</packageAllDependencies>
+            <useShadePlugin>true</useShadePlugin>
+            <maintainerName>Rob</maintainerName>
+            <maintainerFamilyName>Challen</maintainerFamilyName>
+            <maintainerEmail>rob.challen@bristol.ac.uk</maintainerEmail>
+            <maintainerOrganisation>University of Bristol</maintainerOrganisation>
+            <maintainerORCID>0000-0002-5504-7768</maintainerORCID>
+            <githubOrganisation>terminological</githubOrganisation>
+            <githubRepository>roogledocs</githubRepository>
+          </packageData>
+          <outputDirectory>${project.basedir}/..</outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <repositories>
+    <repository>
+      <id>terminological snapshots</id>
+      <url>https://maven.pkg.github.com/terminological/m2repo</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>terminological snapshots</id>
+      <url>https://maven.pkg.github.com/terminological/m2repo</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>opentest4j</artifactId>
+          <groupId>org.opentest4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-commons</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-platform-engine</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <properties>
+    <r6.version>main-SNAPSHOT</r6.version>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+</project>

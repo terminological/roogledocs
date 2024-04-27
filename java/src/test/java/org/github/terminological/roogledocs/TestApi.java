@@ -45,7 +45,10 @@ import de.undercouch.citeproc.CSL;
 import de.undercouch.citeproc.bibtex.BibTeXConverter;
 import de.undercouch.citeproc.bibtex.BibTeXItemDataProvider;
 import uk.co.terminological.rjava.UnconvertableTypeException;
+import uk.co.terminological.rjava.types.RCharacter;
 import uk.co.terminological.rjava.types.RDataframe;
+import uk.co.terminological.rjava.types.RFile;
+import uk.co.terminological.rjava.types.RLogical;
 import uk.co.terminological.rjava.types.RNumeric;
 import uk.co.terminological.rjava.types.RVector;
 
@@ -101,13 +104,17 @@ class TestApi {
 		Files.newBufferedWriter(tmpPath, StandardOpenOption.CREATE, StandardOpenOption.APPEND).append(
 			LocalDateTime.now().toString()+"\n"
 		).close();
-		tmp.uploadSupplementaryFiles(tmpPath.toString(), false, true);
+		tmp.uploadSupplementaryFiles(
+				new RFile(tmpPath), 
+				RLogical.FALSE, RLogical.TRUE);
 		
 		Path tmpPath2 = Files.createTempDirectory("roogledocs-test").resolve("timestamp_2.txt");
 		Files.newBufferedWriter(tmpPath2, StandardOpenOption.CREATE, StandardOpenOption.APPEND).append(
 			LocalDateTime.now().toString()+"\n"
 		).close();
-		tmp.uploadSupplementaryFiles(tmpPath2.toString(), true, false);
+		tmp.uploadSupplementaryFiles(
+				new RFile(tmpPath), 
+				RLogical.TRUE, RLogical.FALSE);
 	}
 	
 	@Test
@@ -158,7 +165,7 @@ class TestApi {
 	
 	@Test
 	final void testRApi() throws IOException, GeneralSecurityException {
-		RoogleDocs rd = new RoogleDocs(TOKENDIR.toString(),false);
+		RoogleDocs rd = new RoogleDocs(RCharacter.from(TOKENDIR.toString()), RLogical.FALSE);
 		rd.findOrCreateDocument("Roogledocs example 1");
 		System.out.print(rd.tagsDefined());
 		
@@ -378,7 +385,7 @@ class TestApi {
 		RDocument newdoc = singleton.getOrCloneDocument("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), olddoc.getDocId());
 		newdoc.removeTags();
 		Path p = Files.createTempFile("test",".pdf");
-		newdoc.saveAsPdf(p.toAbsolutePath().toString());
+		newdoc.saveAsPdf(Files.newOutputStream(p));
 		singleton.delete(newdoc.getDocId());
 		System.out.println(p.toString());
 	}

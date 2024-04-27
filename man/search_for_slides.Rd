@@ -10,12 +10,13 @@
 }
 \arguments{
 	\if{html}{\out{<div class="arguments">}}
-	\item{titleMatch}{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a String)}
-	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a String)}
+	\item{titleMatch}{titleMatch a string to be searched for as an approximate match. All results will be retrieved with document ids. - (java expects a RCharacter)}
+	\item{tokenDirectory}{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)}
 	\if{html}{\out{</div>}}
 }
 \value{
 RDataframe: a dataframe containing id and name columns
+
 }
 \description{
 no description

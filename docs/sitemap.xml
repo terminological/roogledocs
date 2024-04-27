@@ -40,6 +40,9 @@
     <loc>/reference/JavaApi.html</loc>
   </url>
   <url>
+    <loc>/reference/RFuture.html</loc>
+  </url>
+  <url>
     <loc>/reference/RoogleDocs.html</loc>
   </url>
   <url>
@@ -65,6 +68,45 @@
   </url>
   <url>
     <loc>/reference/doc_from_template.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-as.coordinates.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-clear_rmaven_cache.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-compile_jar.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-copy_artifact.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-developer_mode.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-execute_maven.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-fetch_artifact.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-get_repository_location.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-package_jars.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-print.coordinates.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-resolve_dependencies.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-set_repository_location.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-start_jvm.html</loc>
   </url>
   <url>
     <loc>/reference/ggplot_to_png.html</loc>
