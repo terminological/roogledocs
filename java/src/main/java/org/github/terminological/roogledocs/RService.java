@@ -54,6 +54,8 @@ import com.google.api.services.slides.v1.Slides;
 import com.google.api.services.slides.v1.SlidesScopes;
 import com.google.api.services.slides.v1.model.Presentation;
 
+import uk.co.terminological.rjava.threads.RProgressMonitor;
+
 public class RService {
 
 	static Map<String,RService> services = new HashMap<>();
@@ -164,15 +166,8 @@ public class RService {
 		}
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
-		//	HttpRequestInitializer timeout = new HttpRequestInitializer() {
-		//		@Override
-		//		public void initialize(HttpRequest request) throws IOException {
-		//			request.setConnectTimeout(30);
-		//			request.setReadTimeout(30);
-		//		}
-		//	};
-
-
+		RProgressMonitor.increment();
+		
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
@@ -183,28 +178,35 @@ public class RService {
 		LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
 		AuthorizationCodeInstalledApp loginApp = new AuthorizationCodeInstalledApp(flow, receiver);
 
-		Credential credential;
+		
 		try { 
+			// Test to see if the credentials will be loaded from local store
+			// loading credentials is only part of authorisation so this is just
+			// here to check it is possible to load them from the loginApp
 			flow.loadCredential("user");
 		} catch (IOException e) {
 			log.warn("Existing credentials could not be loaded and have been deleted.");
 			deregister(tokenDirectory.toString());
 		}
 
+		Credential credential;
 		try {
 			credential = CompletableFuture
 					.supplyAsync(Exceptional.unsafe(() -> loginApp.authorize("user")))
 					.get(60, TimeUnit.SECONDS)
 					.result();
+			RProgressMonitor.increment();
 		} catch (InterruptedException | TimeoutException e) {
 			try {
 				receiver.stop();
 			} catch (IOException e2) {}
+			RProgressMonitor.complete();
 			throw new IOException("Authorisation interrupted or timed out.", e.getCause() == null ? e : e.getCause());
 		} catch (Exception e) {
 			try {
 				receiver.stop();
 			} catch (IOException e2) {}
+			RProgressMonitor.complete();
 			throw new IOException("Problem authenticating using existing credentials.", e.getCause() == null ? e : e.getCause());
 		} 
 

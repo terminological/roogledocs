@@ -39,6 +39,7 @@ import uk.co.terminological.rjava.RConverter;
 import uk.co.terminological.rjava.RDefault;
 import uk.co.terminological.rjava.RMethod;
 import uk.co.terminological.rjava.UnconvertableTypeException;
+import uk.co.terminological.rjava.threads.RProgressMonitor;
 import uk.co.terminological.rjava.types.RBoundDataframe;
 import uk.co.terminological.rjava.types.RCharacter;
 import uk.co.terminological.rjava.types.RCharacterVector;
@@ -69,12 +70,12 @@ public class RoogleSlides {
 	boolean disabled;
 	String tokenDirectory;
 	static Logger log = LoggerFactory.getLogger(RoogleSlides.class);
-	
+
 	private RPresentation rdoc() throws IOException {
 		if (document == null) throw new IOException("The google slides has not been defined yet - use the `withDocument()`, `findOrCreateDocument()` or `findOrCloneTemplate()` method"); 
 		return document;
 	}
-	
+
 	/**
 	 * Create a RoogleSlides object for managing the interaction.
 	 * 
@@ -83,47 +84,48 @@ public class RoogleSlides {
 	 * @throws IOException if there is a problem storing the tokens or communicating with google servers
 	 * @throws GeneralSecurityException if there is a problem authenticating
 	 */
-	@RMethod
+	@RBlocking
 	public RoogleSlides(
-		@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
-		@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-	) throws IOException, GeneralSecurityException {
+			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
+			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
+			) throws IOException, GeneralSecurityException {
 		this.disabled = disabled.get();
 		this.tokenDirectory = tokenDirectory.get();
 		if(!this.disabled) service = RService.with(this.tokenDirectory);
+		RProgressMonitor.complete();
 	}
-	
+
 	// Testing
 	protected RoogleSlides(RService service, RPresentation document) {
 		this.service = service;
 		this.document = document;
 		this.disabled = false;
 		this.tokenDirectory = service.getTokenDirectory().toString();
-		
+
 	}
-	
-//	/**
-//	 * Re-authenticate roogledocs library
-//	 * 
-//	 * Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
-//	 * 
-//	 * Generally this is only be needed if  
-//	 * application permission updates are needed in which case the directory can be manually deleted anyway,
-//	 * or if you want to switch google user without using a different tokenDirectory.
-//	 * 
-//	 * 
-//	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
-//	 * @return a new RoogleDocs instance without an active document
-//	 * @throws IOException if there is a problem deleting the old tokens
-//	 * @throws GeneralSecurityException if there is a problem authenticating
-//	 */
-//	@RMethod
-//	public static RoogleSlides reauth(@RDefault(rCode = ".tokenDirectory()") String tokenDirectory) throws IOException, GeneralSecurityException {
-//		RService.deregister(tokenDirectory.toString());
-//		RService service = RService.with(tokenDirectory.toString());
-//		return new RoogleSlides(service, null);
-//	}
-	
+
+	//	/**
+	//	 * Re-authenticate roogledocs library
+	//	 * 
+	//	 * Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+	//	 * 
+	//	 * Generally this is only be needed if  
+	//	 * application permission updates are needed in which case the directory can be manually deleted anyway,
+	//	 * or if you want to switch google user without using a different tokenDirectory.
+	//	 * 
+	//	 * 
+	//	 * @param tokenDirectory the place to store authentication tokens. This should not be checked into version control.
+	//	 * @return a new RoogleDocs instance without an active document
+	//	 * @throws IOException if there is a problem deleting the old tokens
+	//	 * @throws GeneralSecurityException if there is a problem authenticating
+	//	 */
+	//	@RMethod
+	//	public static RoogleSlides reauth(@RDefault(rCode = ".tokenDirectory()") String tokenDirectory) throws IOException, GeneralSecurityException {
+	//		RService.deregister(tokenDirectory.toString());
+	//		RService service = RService.with(tokenDirectory.toString());
+	//		return new RoogleSlides(service, null);
+	//	}
+
 	/**
 	 * Enables roogledocs method calls for this document. 
 	 * 
@@ -139,7 +141,7 @@ public class RoogleSlides {
 		if (this.service == null) service = RService.with(tokenDirectory);
 		return this;
 	}
-	
+
 	/**
 	 * Disables roogledocs temporarily for this document. 
 	 * 
@@ -151,8 +153,8 @@ public class RoogleSlides {
 		this.disabled = true;
 		return this;
 	}
-	
-	
+
+
 	/**
 	 * Return the name of the presentation
 	 * 
@@ -164,7 +166,7 @@ public class RoogleSlides {
 			@RDefault(rCode = "''") RCharacter suffix) {
 		return this.document.getName() + suffix.get();
 	}
-	
+
 	/**
 	 * Select a document by its share url or id.
 	 * 
@@ -177,7 +179,7 @@ public class RoogleSlides {
 		this.document = service.getPresentation(shareUrlOrDocId);
 		return this;
 	}
-	
+
 	/**
 	 * Get a document by id or sharing link.
 	 * 
@@ -193,12 +195,12 @@ public class RoogleSlides {
 			RCharacter shareUrlOrDocId,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-	) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.withDocument(shareUrlOrDocId.get());
 		return out;
 	}
-	
+
 	/**
 	 * Search for a document by name or create one if missing.
 	 * @param title a document title. If there is an exact match in google drive then that document will be used 
@@ -211,7 +213,7 @@ public class RoogleSlides {
 		this.document = service.getOrCreatePresentation(title);
 		return this;
 	}
-	
+
 	/**
 	 * Get a document by name or create a blank document if missing.
 	 * 
@@ -227,13 +229,13 @@ public class RoogleSlides {
 			RCharacter title,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-	) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.findOrCreateDocument(title.get());
 		return out;
 	}
-	
-	
+
+
 	/**
 	 * Get a document by name or create one from a template if missing.
 	 * 
@@ -248,7 +250,7 @@ public class RoogleSlides {
 		this.document = service.getOrClonePresentation(title, templateUri);
 		return this;
 	}
-	
+
 	/**
 	 * Get a document by name or create one from a template if missing.
 	 * 
@@ -267,12 +269,12 @@ public class RoogleSlides {
 			RCharacter templateUri,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-	) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.findOrCloneTemplate(title.get(), templateUri.get());
 		return out;
 	}
-	
+
 	/**
 	 * Search for documents with the given title
 	 * 
@@ -286,16 +288,16 @@ public class RoogleSlides {
 	public static RDataframe searchForSlides(
 			RCharacter titleMatch, 
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory
-	) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException {
 		RService service = RService.with(tokenDirectory.get());
 		List<Tuple<String, String>> tmp = service.search(titleMatch.get(), RService.MIME_DOCS);
 		return tmp.stream().collect(
 				dataframeCollector(
 						mapping(Tuple.class, "id", t->t.getFirst()),
 						mapping(Tuple.class, "name", t->t.getSecond())
-				));
+						));
 	}
-	
+
 	/**
 	 * List all tags
 	 * 
@@ -312,9 +314,9 @@ public class RoogleSlides {
 				dataframeCollector(
 						mapping("tag", t->t.getKey()),
 						mapping("count", t->t.getValue().size())
-				));
+						));
 	}
-	
+
 	/**
 	 * Replace tags for text
 	 * 
@@ -322,23 +324,25 @@ public class RoogleSlides {
 	 * tag is not found then a new slide is inserted at the end in a section titled "Unmatched tags:". 
 	 * From there they can be cut and pasted into the right place.
 	 * 
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+	 * 
 	 * @param tagName the tag name
 	 * @param text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)
-	 * @return itself - a fluent method
+	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers
 	 */
-	@RMethod
-	public RoogleSlides updateTaggedText(
+	@RAsync(synchronise = true)
+	public void updateTaggedText(
 			RCharacter text, 
 			@RDefault(rCode = "deparse(substitute(text))") RCharacter tagName
-		) throws IOException {
-		if (disabled) return this;
+			) throws IOException {
+		if (disabled) return;
 		if (text.get() == "") throw new IOException("text cannot be blank - use a single space for empty content.");
 		rdoc().updateTaggedText(tagName.get(), text.get());
 		System.out.println("Text "+tagName+" updated");
-		return this;
+		return;
 	}
-	
+
 	/**
 	 * Replace a tag with an image.
 	 * 
@@ -352,22 +356,26 @@ public class RoogleSlides {
 	 * If the tag is not found in the document a new slide will be created at the end of the presentation with the image
 	 * and an uninformative title which can be changed.
 	 * 
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+	 * 
 	 * @param tagName the tag name
 	 * @param absoluteFilePath a file path to an png image file.
 	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc. N.B. the result will be publicly readable.
-	 * @return itself - a fluent method
+	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 */
-	@RMethod
-	public RoogleSlides updateTaggedImage(
+	@RAsync(synchronise = true)
+	public void updateTaggedImage(
 			RCharacter absoluteFilePath, 
 			@RDefault(rCode = "deparse(substitute(absoluteFilePath))") RCharacter tagName, 
 			@RDefault(rCode="FALSE") RLogical keepUpload
-		) throws IOException {
-		if (disabled) return this;
+			) throws IOException {
+		if (disabled) return;
+		RProgressMonitor.setTotal(2);
 		Path path = Paths.get(absoluteFilePath.get());
 		String name = rdoc().getName()+" - "+tagName;
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
+		RProgressMonitor.increment();
 		String id = null; 
 		if (keepUpload.get()) {
 			id = service.upload(name,path,parents,true,false);
@@ -375,12 +383,14 @@ public class RoogleSlides {
 			id = service.uploadTmp(path);
 		}
 		URI uri = service.getThumbnailUri(id);
+		RProgressMonitor.increment();
 		rdoc().updateTaggedImage(tagName.get(), uri);
 		System.out.println("Figure "+tagName+" updated");
 		if (!keepUpload.get()) service.delete(id);
-		return this;
+		RProgressMonitor.complete();
+		return;
 	}
-	
+
 	/**
 	 * Replace a tag with a table.
 	 * 
@@ -390,6 +400,8 @@ public class RoogleSlides {
 	 * 
 	 * If the tag is not found in the document a new slide will be created at the end with the table.
 	 * 
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+	 * 
 	 * @param tagName the tag name
 	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
 	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
@@ -398,74 +410,74 @@ public class RoogleSlides {
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
 	 * @throws UnconvertableTypeException if the longFormatTable is incorrectly structured.
 	 */
-	@RMethod
-	public RoogleSlides updateTaggedTable(
+	@RAsync(synchronise = true)
+	public void updateTaggedTable(
 			RDataframe longFormatTable, 
 			@RDefault(rCode = "deparse(substitute(longFormatTable))") RCharacter tagName, 
 			@RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths
-		) throws IOException, UnconvertableTypeException {
-		if (disabled) return this;
+			) throws IOException, UnconvertableTypeException {
+		if (disabled) return;
 		this.rdoc().updateTaggedTable(tagName.get(), longFormatTable, colWidths);
-		return this;
+		return;
 	}
-	
+
 	private static String getFileSuffix(final String path) {
-	    String result = null;
-	    if (path != null) {
-	        result = "";
-	        if (path.lastIndexOf('.') != -1) {
-	            result = path.substring(path.lastIndexOf('.'));
-	            if (result.startsWith(".")) {
-	                result = result.substring(1);
-	            }
-	        }
-	    }
-	    return result;
+		String result = null;
+		if (path != null) {
+			result = "";
+			if (path.lastIndexOf('.') != -1) {
+				result = path.substring(path.lastIndexOf('.'));
+				if (result.startsWith(".")) {
+					result = result.substring(1);
+				}
+			}
+		}
+		return result;
 	}
-	
+
 	protected static Size getImageDim(final String path, double dpi) throws IOException {
 		Size result = null;
-	    String suffix = getFileSuffix(path);
-	    Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
-	    if (iter.hasNext()) {
-	        ImageReader reader = iter.next();
-	        try {
-	            ImageInputStream stream = new FileImageInputStream(new File(path));
-	            reader.setInput(stream);
-	            int width = reader.getWidth(reader.getMinIndex());
-	            int height = reader.getHeight(reader.getMinIndex());
-	            result = new Size()
-	            		.setWidth(
-	            				new Dimension().setMagnitude(width/dpi*72).setUnit("PT")
-	            		)
-	            		.setHeight(
-	            				new Dimension().setMagnitude(height/dpi*72).setUnit("PT")
-	            		);
-	        } finally {
-	            reader.dispose();
-	        }
-	    } else {
-	        throw new IOException("No reader found for given format: " + suffix);
-	    }
-	    return result;
+		String suffix = getFileSuffix(path);
+		Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+		if (iter.hasNext()) {
+			ImageReader reader = iter.next();
+			try {
+				ImageInputStream stream = new FileImageInputStream(new File(path));
+				reader.setInput(stream);
+				int width = reader.getWidth(reader.getMinIndex());
+				int height = reader.getHeight(reader.getMinIndex());
+				result = new Size()
+						.setWidth(
+								new Dimension().setMagnitude(width/dpi*72).setUnit("PT")
+								)
+						.setHeight(
+								new Dimension().setMagnitude(height/dpi*72).setUnit("PT")
+								);
+			} finally {
+				reader.dispose();
+			}
+		} else {
+			throw new IOException("No reader found for given format: " + suffix);
+		}
+		return result;
 	}
-	
-//	/**
-//	 * Revert tagged text and images.
-//	 * 
-//	 * Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
-//	 * This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
-//	 *  
-//	 * @return itself - a fluent method
-//	 * @throws IOException if there is a problem communicating with google servers
-//	 */
-//	@RMethod
-//	public RoogleSlides revertTags() throws IOException {
-//		if (disabled) return this;
-//		rdoc().revertTags();
-//		return this;
-//	}
-	
+
+	//	/**
+	//	 * Revert tagged text and images.
+	//	 * 
+	//	 * Remove all tagged text and images inserted by roogledocs and returns the bare document the tags in place. This does not affect figures and tables inserted by index (i.e. without tags) 
+	//	 * This is needed if content is being moved around as cut and paste of tagged content unfortunately removes the internal named range of the tag.
+	//	 *  
+	//	 * @return itself - a fluent method
+	//	 * @throws IOException if there is a problem communicating with google servers
+	//	 */
+	//	@RMethod
+	//	public RoogleSlides revertTags() throws IOException {
+	//		if (disabled) return this;
+	//		rdoc().revertTags();
+	//		return this;
+	//	}
+
 	/**
 	 * Remove all tags
 	 * 
@@ -488,62 +500,62 @@ public class RoogleSlides {
 		}
 		return this;
 	}
-	
-	
-//	/**
-//	 * Update or insert a formatted table into the document. 
-//	 * 
-//	 * The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
-//	 * 
-//	 * @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document.
-//	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
-//	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
-//	 * @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table
-//	 * @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins)  
-//	 * @return itself - a fluent method
-//	 * @throws IOException if there is a problem communicating with google servers
-//	 * @throws UnconvertableTypeException if the longFormatTable data frame is the wrong format.
-//	 */
-//	@RMethod
-//	public RoogleSlides updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
-//		if (disabled) return this;
-//		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
-//		System.out.println("Table "+index+" updated");
-//		return this;
-//	}
-	
-//	/**
-//	 * Update or insert a figure in the document from a locally stored PNG.
-//	 * 
-//	 * This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
-//	 * google document. Once this is complete the temporary google drive copy of the image is deleted. 
-//	 * 
-//	 * @param figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. 
-//	 * @param absoluteFilePath a file path to an png image file (only png is supported at this point).
-//	 * @param dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi.
-//	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc
-//	 * @return itself - a fluent method
-//	 * @throws IOException if there is a problem communicating with google servers, or the png file cannot be read.
-//	 */
-//	@RMethod
-//	public RoogleSlides updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
-//		if (disabled) return this;
-//		Path path = Paths.get(absoluteFilePath);
-//		String name = rdoc().getName()+" - figure "+figureIndex;
-//		List<String> parents = this.service.getFileParents(rdoc().getDocId());
-//		String id = null; 
-//		if (keepUpload) {
-//			id = service.upload(name,path,parents,true,false);
-//		} else {
-//			id = service.upload(path);
-//		}
-//		URI uri = service.getThumbnailUri(id);
-//		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));
-//		System.out.println("Figure "+index+" updated");
-//		if (!keepUpload) service.delete(id);
-//		return this;
-//	}
-	
+
+
+	//	/**
+	//	 * Update or insert a formatted table into the document. 
+	//	 * 
+	//	 * The table and formatting are described in a dataframe the format of which is documented in the as.long_format_table() method.
+	//	 * 
+	//	 * @param tableIndex what is the table index in the document? This can be left out for a new table at the end of the document.
+	//	 * @param longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+	//	 * rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.
+	//	 * @param colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table
+	//	 * @param tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins)  
+	//	 * @return itself - a fluent method
+	//	 * @throws IOException if there is a problem communicating with google servers
+	//	 * @throws UnconvertableTypeException if the longFormatTable data frame is the wrong format.
+	//	 */
+	//	@RMethod
+	//	public RoogleSlides updateTable(RDataframe longFormatTable, @RDefault(rCode="-1") int tableIndex, @RDefault(rCode="attr(longFormatTable,'colWidths')") RNumericVector colWidths, @RDefault(rCode="6.2") RNumeric tableWidthInches) throws IOException, UnconvertableTypeException {
+	//		if (disabled) return this;
+	//		int index = rdoc().updateOrInsertTable(tableIndex, longFormatTable, colWidths, tableWidthInches);
+	//		System.out.println("Table "+index+" updated");
+	//		return this;
+	//	}
+
+	//	/**
+	//	 * Update or insert a figure in the document from a locally stored PNG.
+	//	 * 
+	//	 * This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publically readable. From there inserts it into the 
+	//	 * google document. Once this is complete the temporary google drive copy of the image is deleted. 
+	//	 * 
+	//	 * @param figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. 
+	//	 * @param absoluteFilePath a file path to an png image file (only png is supported at this point).
+	//	 * @param dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi.
+	//	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc
+	//	 * @return itself - a fluent method
+	//	 * @throws IOException if there is a problem communicating with google servers, or the png file cannot be read.
+	//	 */
+	//	@RMethod
+	//	public RoogleSlides updateFigure(String absoluteFilePath, @RDefault(rCode="-1") int figureIndex, @RDefault(rCode="300") double dpi, @RDefault(rCode="FALSE") boolean keepUpload) throws IOException {
+	//		if (disabled) return this;
+	//		Path path = Paths.get(absoluteFilePath);
+	//		String name = rdoc().getName()+" - figure "+figureIndex;
+	//		List<String> parents = this.service.getFileParents(rdoc().getDocId());
+	//		String id = null; 
+	//		if (keepUpload) {
+	//			id = service.upload(name,path,parents,true,false);
+	//		} else {
+	//			id = service.upload(path);
+	//		}
+	//		URI uri = service.getThumbnailUri(id);
+	//		int index = rdoc().updateOrInsertInlineImage(figureIndex, uri, getImageDim(absoluteFilePath, dpi));
+	//		System.out.println("Figure "+index+" updated");
+	//		if (!keepUpload) service.delete(id);
+	//		return this;
+	//	}
+
 	/**
 	 * Save the document as a PDF
 	 * 
@@ -551,27 +563,35 @@ public class RoogleSlides {
 	 * This is mainly intended for snap-shotting the current state of the document. For final export once all
 	 * analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
 	 * but after this no further updating is possible.
+	 *
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
 	 * 
 	 * @param absoluteFilePath - a file path to save the pdf.
 	 * @param uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
 	 *   for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
 	 *   google drive directory.
-	 * @return itself - a fluent method
+	 * @return nothing called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 */
-	@RMethod
-	public RoogleSlides saveAsPdf(
+	@RAsync(synchronise=true)
+	public void saveAsPdf(
 			RFile absoluteFilePath, 
 			@RDefault(rCode="FALSE") RLogical uploadCopy) throws IOException {
-		if (disabled) return this;
+		if (disabled) return;
+		RProgressMonitor.setTotal(5);
 		RPresentation newdoc = this.service.getOrClonePresentation("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
+		RProgressMonitor.increment();
 		newdoc.removeTags();
+		RProgressMonitor.increment();
 		newdoc.saveAsPdf(absoluteFilePath.getForWriting());
+		RProgressMonitor.increment();
 		this.service.delete(newdoc.getDocId());
+		RProgressMonitor.increment();
 		if (uploadCopy.get()) this.uploadSupplementaryFiles(absoluteFilePath, RLogical.TRUE, RLogical.FALSE);
-		return this;
+		RProgressMonitor.complete();
+		return;
 	}
-	
+
 	/**
 	 * Make a copy of the current document
 	 * 
@@ -589,7 +609,7 @@ public class RoogleSlides {
 		RPresentation newdoc = this.service.copyPresentation(newName.get(), document.getDocId());
 		return new RoogleSlides(this.service, newdoc);
 	}
-	
+
 	/**
 	 * Delete the current presentation
 	 * 
@@ -602,7 +622,7 @@ public class RoogleSlides {
 	@RMethod
 	public void delete(
 			@RDefault(rCode = "utils::askYesNo('Are you sure you want to delete this presentation',FALSE)") RLogical areYouSure
-	) throws IOException {
+			) throws IOException {
 		if (!areYouSure.get()) throw new IOException("Delete aborted by user");
 		this.service.delete(document.getDocId());
 		System.out.println("Presentation `"+document.getName()+"` deleted");
@@ -611,7 +631,7 @@ public class RoogleSlides {
 		this.tokenDirectory = null;
 		this.service = null;
 	}
-	
+
 	/**
 	 * Upload a file into the same directory as the document.
 	 * 
@@ -621,33 +641,35 @@ public class RoogleSlides {
 	 * for uploads will be triggered at this point. As google drive can have multiple files with the same name
 	 * the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options. 
 	 * 
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+	 * 
 	 * @param absoluteFilePath - a file path to upload.
 	 * @param overwrite - if matching file(s) are found in the target, delete them before uploading the new one.
 	 * @param duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder.
-	 * @return itself - a fluent method
+	 * @return nothing, called for side effects
 	 * @throws IOException if there was a problem with finding the file or uploading it
 	 */
-	@RMethod
-	public RoogleSlides uploadSupplementaryFiles(
+	@RAsync(synchronise = true)
+	public void uploadSupplementaryFiles(
 			RFile absoluteFilePath, 
 			@RDefault(rCode="FALSE") RLogical overwrite, 
 			@RDefault(rCode="FALSE") RLogical duplicate) throws IOException {
-		if (disabled) return this;
+		if (disabled) return;
 		//TODO: detect naming collisions and allow overwriting?
 		Path path = absoluteFilePath.get();
 		String name = path.getFileName().toString();
 		List<String> parents = this.service.getFileParents(rdoc().getDocId());
 		this.service.upload(name, path, parents, overwrite.get(), duplicate.get());
-		return this;
+		return;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Deletes a google slides by name. 
 	 * @param docName - the name of a document to delete. must be an exact and unique match.
 	 * @param areYouSure - a boolean check.
-	 * @return nothing, called for side efffects
+	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 * @throws GeneralSecurityException 
 	 */
@@ -657,51 +679,53 @@ public class RoogleSlides {
 			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") RLogical areYouSure,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-	) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException {
 		if (disabled.get()) return;
 		if (areYouSure.get()) RService.with(tokenDirectory.get()).deleteByName(docName.get(), RService.MIME_SLIDES);
 		else System.out.println("aborted delete.");
 	}
-	
-//	/**
-//	 * Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
-//	 * would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
-//	 * @param text - a single string with the text to append which may include newlines
-//	 * @param style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6
-//	 * @return itself - a fluent method
-//	 * @throws IOException if there is a problem communicating with google servers.
-//	 */
-//	@RMethod
-//	public RoogleSlides appendText(RCharacter text, @RDefault(rCode="'NORMAL_TEXT'") RCharacter style) throws IOException {
-//		if (disabled) return this;
-//		if(!text.isNa()) document.appendText(text.get(), style.opt());
-//		return this;
-//	}
-	
-	
+
+	//	/**
+	//	 * Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
+	//	 * would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
+	//	 * @param text - a single string with the text to append which may include newlines
+	//	 * @param style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6
+	//	 * @return itself - a fluent method
+	//	 * @throws IOException if there is a problem communicating with google servers.
+	//	 */
+	//	@RMethod
+	//	public RoogleSlides appendText(RCharacter text, @RDefault(rCode="'NORMAL_TEXT'") RCharacter style) throws IOException {
+	//		if (disabled) return this;
+	//		if(!text.isNa()) document.appendText(text.get(), style.opt());
+	//		return this;
+	//	}
+
+
 	/**
 	 * Append a new "TITLE_AND_BODY" slide, with formatted text from the 'label' column with optional formating in the other columns.
 	 * 
+	 * This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+	 * 
 	 * @param title - A plain text title
 	 * @param formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.
-	 * @return itself - a fluent method
+	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers.
 	 * @throws UnconvertableTypeException if the dataframe format is not correct
 	 */
-	@RMethod
-	public RoogleSlides appendFormattedSlide(
+	@RAsync(synchronise=true)
+	public void appendFormattedSlide(
 			RCharacter title, 
 			RDataframe formattedTextDf
-		) throws IOException, UnconvertableTypeException {
-		if (disabled) return this;
+			) throws IOException, UnconvertableTypeException {
+		if (disabled) return;
 		String layoutId = document.getDefaultLayoutId();
 		TextRunPosition id = document.appendSlide(layoutId, title.opt());
 		RBoundDataframe<LongFormatText> df = formattedTextDf.attachPermissive(LongFormatText.class);
 		List<LongFormatText> tmp = df.streamCoerce().collect(Collectors.toList()); 
 		document.setSlideBody(id, tmp, Optional.of(1));
-		return this;
+		return;
 	}
-	
+
 	/**
 	 * The default dimensions of the body of a new slide.
 	 * 
@@ -726,7 +750,7 @@ public class RoogleSlides {
 				.and("width", RNumeric.from(tmp.getFirst()))
 				.and("height", RNumeric.from(tmp.getSecond()));
 	}
-	
+
 	/**
 	 * The layouts available in the slides templates
 	 * 
@@ -738,7 +762,7 @@ public class RoogleSlides {
 		List<String> tmp = document.getLayouts();
 		return tmp.stream().collect(RConverter.stringCollector());
 	}
-	
+
 	/**
 	 * Set the default layout
 	 * 
@@ -759,8 +783,8 @@ public class RoogleSlides {
 		}
 		return this;
 	}
-	
-	
+
+
 	/**
 	 * Update citation tags in the document. 
 	 * 
@@ -773,22 +797,22 @@ public class RoogleSlides {
 	 * 
 	 * @param bibTexPath - the full file path to the file containing the bibtex
 	 * @param citationStyle - the CSL specification
-	 * @return itself - a fluent method
+	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers.
 	 * @throws ParseException if the bibTex is poorly formed
 	 */
-	@RMethod
-	public RoogleSlides updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee'") RCharacter citationStyle) throws IOException, ParseException {
-		if (disabled) return this;
-		
+	@RAsync(synchronise=true) 
+	public void updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException {
+		if (disabled) return;
+
 		// setup 
 		String bibTex = Files.readString(Paths.get(bibTexPath.toString()));
 		if (!CSL.supportsStyle(citationStyle.get())) throw new IOException("Unsupported citation style:"+citationStyle.get());
 		document.updateCitations(bibTex, citationStyle.get());
-				
-		return this;
+
+		return;
 	}
-	
+
 	public String toString() {
 		return String.format("Google slides: %s",document == null ? "no presentation selected" : document.getName());
 	}

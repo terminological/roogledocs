@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 import de.undercouch.citeproc.CSL;
 import de.undercouch.citeproc.bibtex.BibTeXConverter;
 import de.undercouch.citeproc.bibtex.BibTeXItemDataProvider;
+import uk.co.terminological.rjava.threads.RProgressMonitor;
 
 public abstract class RCitable {
 
@@ -43,6 +44,7 @@ public abstract class RCitable {
 
 	public void updateCitations(String bibTex, String citationStyle) throws IOException, ParseException {
 		
+		RProgressMonitor.setTotal(4);
 		// Load the bibtex and setup the parser.
 		BibTeXDatabase db = new BibTeXConverter().loadDatabase(new ByteArrayInputStream(bibTex.getBytes(StandardCharsets.UTF_8)));
 		BibTeXItemDataProvider provider = new BibTeXItemDataProvider();
@@ -52,13 +54,10 @@ public abstract class RCitable {
 				
 		CSL citeproc = new CSL(provider, citationStyle);
 		//citeproc.setOutputFormat("text");
-		
+		RProgressMonitor.increment();
 		
 		// Get the tags in the document 
 		Map<String, List<TextRunPosition>> allDocumentTags = this.updateInlineTags();
-		
-		// populate citeKeyOrder with the first occurrence of each citation in the document and the start range.
-		// TODO: this needs looking at again - probably does not do what is expected in Slides.
 		
 		Map<String, Integer> citeKeyOrder = new HashMap<>();  
 		allDocumentTags.entrySet().stream()
@@ -117,6 +116,7 @@ public abstract class RCitable {
 				}
 			});
 		
+		RProgressMonitor.increment();
 		
 		// find and delete any tag of the format {{bib:[0-9*]}}
 		// use position of the first as place to enter bibliography
@@ -135,6 +135,8 @@ public abstract class RCitable {
 			throw new RuntimeException("Encountered a problem parsing CSL output.");
 		}
 		
+		RProgressMonitor.increment();
+		
 		this.insertReferences(bibs);
 		
 		if (notMatched.size() > 0) {
@@ -143,6 +145,8 @@ public abstract class RCitable {
 			log.info("Available keys: ");
 			log.info(bibtexIds.stream().collect(Collectors.joining("; ")));
 		}
+		
+		RProgressMonitor.complete();
 		// citeproc.close();
 	}
 	
