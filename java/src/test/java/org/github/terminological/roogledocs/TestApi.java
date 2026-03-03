@@ -164,7 +164,7 @@ class TestApi {
 	}
 	
 	@Test
-	final void testRApi() throws IOException, GeneralSecurityException {
+	final void testRApi() throws IOException, GeneralSecurityException, InterruptedException {
 		RoogleDocs rd = new RoogleDocs(RCharacter.from(TOKENDIR.toString()), RLogical.FALSE);
 		rd.findOrCreateDocument("Roogledocs example 1");
 		System.out.print(rd.tagsDefined());
@@ -373,7 +373,7 @@ class TestApi {
 	}
 	
 	@Test
-	final void testCitation() throws IOException, URISyntaxException, ParseException {
+	final void testCitation() throws IOException, URISyntaxException, ParseException, InterruptedException {
 		RCitable test2 = singleton.getOrCreateDocument("Roogledocs example 1");
 		String bibtex = Files.readString(Paths.get(TestApi.class.getResource("/test.bib").toURI()));
 		test2.updateCitations(bibtex, "ieee");
@@ -390,7 +390,7 @@ class TestApi {
 		System.out.println(p.toString());
 	}
 	
-	public static void main(String[] args) throws IOException, GeneralSecurityException {
+	public static void main(String[] args) throws IOException, GeneralSecurityException, InterruptedException {
 		Path tkn  = //Files.createTempDirectory("test-token");
 			Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
 		// RService singleton = 

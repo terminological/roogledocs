@@ -19,7 +19,7 @@
 	\if{html}{\out{</div>}}
 }
 \value{
-void: nothing, called for side efffects
+void: nothing, called for side effects
 
 }
 \description{

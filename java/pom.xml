@@ -13,7 +13,7 @@
 		<!-- Must be Java 8 for standard rJava implementation -->
 		<maven.compiler.source>1.9</maven.compiler.source>
 		<maven.compiler.target>1.9</maven.compiler.target>
-		<r6.version>1.1.0</r6.version>
+		<r6.version>1.1.1-SNAPSHOT</r6.version>
     </properties>
 
 	<name>R Google Docs integration</name>

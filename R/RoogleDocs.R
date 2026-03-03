@@ -10,7 +10,7 @@
 #' 
 #' Version: 0.5.0
 #' 
-#' Generated: 2024-04-27T13:56:10.616274127
+#' Generated: 2024-05-17T12:54:03.812241276
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe
@@ -176,177 +176,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	
 	#' @description 
-	#' updateTaggedText: 
-	#' Replace tags for text
-	#'   
-	#'   Substitutes all occurrences of \{\{tag-name\}\}
-	#'   with the text parameter. If the tag name is not 
-	#'   found in the document
-	#'   it is inserted at the end in a section labelled "Unmatched tags:".
-	#'   From there
-	#'   it can be cut and pasted into the right place.
-	#' @param text the value to replace the tag with (e.g. a result from analysis)
-	#'   (cannot be empty) - (java expects a RCharacter)
-	#' @param tagName the tag name - (defaulting to `deparse(substitute(text))`) - (java expects a RCharacter)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	updateTaggedText = function(text, tagName=deparse(substitute(text))) {
-		# copy parameters into Java
-		tmp_text = self$.api$.toJava$RCharacter(text);
-		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "updateTaggedText",
-			tmp_text,
-			tmp_tagName, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
-	#' updateTaggedImage: 
-	#' Replace a tag with an image.
-	#'   
-	#'   Substitutes all occurrences of
-	#'   \{\{tag-name\}\} with an image from the local storage. 
-	#'   
-	#'   The image is
-	#'   uploaded to your google drive as a temporary file, and briefly made
-	#'   publicly readable. From there it is inserted into the 
-	#'   google doc, and
-	#'   one completed the temporary file deleted from your google drive.
-	#'   Insertion is
-	#'   done using the dimensions of the existing image (if
-	#'   present) or the PNG dimensions if not.
-	#'   Creating the image with the
-	#'   correct dimensions (and providing the dpi if not 300) is
-	#'   important.
-	#'   
-	#'   If the tag is missing from the document the image
-	#'   is
-	#'   inserted at the end (and tagged). From there it can be cut and pasted
-	#'   to the correct place.
-	#' @param absoluteFilePath a file path to an png image file. - (java expects a RCharacter)
-	#' @param tagName the tag name - (defaulting to
-	#'   `deparse(substitute(absoluteFilePath))`) - (java expects a RCharacter)
-	#' @param dpi the dots per inch of the image in the document (defaults to 300) -
-	#'   (defaulting to `300`) - (java expects a RNumeric)
-	#' @param keepUpload keep the uploaded image as a supplementary file in the same
-	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a RLogical)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	updateTaggedImage = function(absoluteFilePath, tagName=deparse(substitute(absoluteFilePath)), dpi=300, keepUpload=FALSE) {
-		# copy parameters into Java
-		tmp_absoluteFilePath = self$.api$.toJava$RCharacter(absoluteFilePath);
-		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
-		tmp_dpi = self$.api$.toJava$RNumeric(dpi);
-		tmp_keepUpload = self$.api$.toJava$RLogical(keepUpload);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "updateTaggedImage",
-			tmp_absoluteFilePath,
-			tmp_tagName,
-			tmp_dpi,
-			tmp_keepUpload, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
-	#' updateTaggedTable: 
-	#' Replace a tag with a table.
-	#'   
-	#'   Substitutes a unique occurrences of
-	#'   \{\{tag-name\}\} with a table. The tag should either be in the text of
-	#'   the document or as the first entry in 
-	#'   the first cell of a table. Once
-	#'   inserted the table is tagged using a zero width character
-	#'   as the very
-	#'   first item in the first cell. This will be removed if `removeTags()`
-	#'   is called.
-	#'   
-	#'   If the tag is missing the table is inserted at the end of
-	#'   the document where it can be 
-	#'   cut and pasted to the correct place.
-	#' @param longFormatTable A dataframe consisting of the table content and
-	#'   formatting indexed by row and column. at a minimum this should have
-	#'   columns label,row,col, but may also
-	#'   include
-	#'   rowSpan,colSpan,fillColour, leftBorderWeight,
-	#'   rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment
-	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
-	#'   fontFace, fontSize. - (java expects a RDataframe)
-	#' @param tagName the tag name - (defaulting to
-	#'   `deparse(substitute(longFormatTable))`) - (java expects a RCharacter)
-	#' @param colWidths A vector including the relative length of each column. This
-	#'   can be left out if longFormatTable comes from `as.long_format_table` -
-	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
-	#' @param tableWidthInches The final width of the table in inches (defaults to a
-	#'   size that fits in A4 page with margins) but you may want to make this
-	#'   wider for
-	#'     landscape tables - (defaulting to `6.2`) - (java expects a RNumeric)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	updateTaggedTable = function(longFormatTable, tagName=deparse(substitute(longFormatTable)), colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
-		# copy parameters into Java
-		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
-		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
-		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
-		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "updateTaggedTable",
-			tmp_longFormatTable,
-			tmp_tagName,
-			tmp_colWidths,
-			tmp_tableWidthInches, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
 	#' revertTags: 
 	#' Revert tagged text and images.
 	#'   
@@ -403,181 +232,6 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
 			method = "removeTags",
 			tmp_confirm, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
-	#' updateTable: 
-	#' Update or insert a formatted table into the document. 
-	#'   
-	#'   This function
-	#'   counts the number of tables from the start of the document.
-	#'   Inserting
-	#'   tables by index works only if your document does not change much or
-	#'   you are creating one from
-	#'   scratch. You can overwrite tables using this
-	#'   function but if the order of tables has been changed by
-	#'   your
-	#'   collaborators this will be generally cause probelms. Use of this
-	#'   function is generally discouraged and
-	#'   we now prefer
-	#'   `updateTaggedTable()`.
-	#' @param longFormatTable A dataframe consisting of the table content and
-	#'   formatting indexed by row and column. at a minimum this should have
-	#'   columns label,row,col, but may also
-	#'   include
-	#'   rowSpan,colSpan,fillColour, leftBorderWeight,
-	#'   rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment
-	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
-	#'   fontFace, fontSize. - (java expects a RDataframe)
-	#' @param tableIndex what is the table index in the document? This can be left
-	#'   out for a new table at the end of the document. - (defaulting to `-1`) - (java expects a RInteger)
-	#' @param colWidths A vector including the relative length of each column. This
-	#'   can be left out if longFormatTable comes from as.long_format_table -
-	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
-	#' @param tableWidthInches The final width of the table in inches (defaults to a
-	#'   size that fits in A4 page with margins) - (defaulting to `6.2`) - (java expects a RNumeric)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	updateTable = function(longFormatTable, tableIndex=-1, colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
-		# copy parameters into Java
-		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
-		tmp_tableIndex = self$.api$.toJava$RInteger(tableIndex);
-		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
-		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "updateTable",
-			tmp_longFormatTable,
-			tmp_tableIndex,
-			tmp_colWidths,
-			tmp_tableWidthInches, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
-	#' updateFigure: 
-	#' Update or insert a figure in the document from a locally stored PNG by
-	#'   index.
-	#'   
-	#'   This function counts the number of inline images (i.e. not
-	#'   absolutely positioned ones) from the start of the document.
-	#'   Inserting
-	#'   images by index works only if your document does not change much or
-	#'   you are creating one from
-	#'   scratch. You can overwrite images using this
-	#'   function but if the order of images has been changed by
-	#'   your
-	#'   collaborators this will generally cause problems. This function
-	#'   uploads the image into a temporary file onto your Google Drive, and
-	#'   makes it briefly publicly readable. From there inserts it into the
-	#'   
-	#'   google document. Once this is complete the temporary google drive
-	#'   copy of the image is deleted.
-	#' @param absoluteFilePath a file path to an png image file (only png is
-	#'   supported at this point). - (java expects a RCharacter)
-	#' @param figureIndex what is the figure index in the document? (This only
-	#'   counts inline images - and ignores absolutely positioned ones). leave
-	#'   out for a new image at the end of the document. - (defaulting to `-1`) - (java expects a RInteger)
-	#' @param dpi the dots per inch of the image in the document (defaults to 300).
-	#'   the final size of the image in the doc will be determined by the image
-	#'   file dimensions and the dpi. - (defaulting to `300`) - (java expects a RNumeric)
-	#' @param keepUpload keep the uploaded image as a supplementary file in the same
-	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a RLogical)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	updateFigure = function(absoluteFilePath, figureIndex=-1, dpi=300, keepUpload=FALSE) {
-		# copy parameters into Java
-		tmp_absoluteFilePath = self$.api$.toJava$RCharacter(absoluteFilePath);
-		tmp_figureIndex = self$.api$.toJava$RInteger(figureIndex);
-		tmp_dpi = self$.api$.toJava$RNumeric(dpi);
-		tmp_keepUpload = self$.api$.toJava$RLogical(keepUpload);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "updateFigure",
-			tmp_absoluteFilePath,
-			tmp_figureIndex,
-			tmp_dpi,
-			tmp_keepUpload, 
-			check=FALSE
-		);
-		self$.api$printMessages();
-		# check for exceptions and rethrow them
-		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
-		return(out);
-	},
-	
-	#' @description 
-	#' saveAsPdf: 
-	#' Save the document as a PDF
-	#'   
-	#'   Saves a snapshot of the current google doc
-	#'   with `roogledocs` links removed as a pdf to a local drive. 
-	#'   This is
-	#'   mainly intended for snapshotting the current state of the document.
-	#'   For final export once all
-	#'   analysis is complete it may be preferable to
-	#'   call `doc$removeTags()` and manually export the output
-	#'   but after this
-	#'   no further updating is possible.
-	#' @param absoluteFilePath - a file path to save the pdf. - (java expects a RFile)
-	#' @param uploadCopy place a copy of the downloaded pdf back onto google drive
-	#'   in the same folder as the document
-	#'     for example for keeping submitted
-	#'   versions of a updated document. This will overwrite files of the same
-	#'   name in the 
-	#'     google drive directory. - (defaulting to `FALSE`) - (java expects a RLogical)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
-	saveAsPdf = function(absoluteFilePath, uploadCopy=FALSE) {
-		# copy parameters into Java
-		tmp_absoluteFilePath = self$.api$.toJava$RFile(absoluteFilePath);
-		tmp_uploadCopy = self$.api$.toJava$RLogical(uploadCopy);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-			method = "saveAsPdf",
-			tmp_absoluteFilePath,
-			tmp_uploadCopy, 
 			check=FALSE
 		);
 		self$.api$printMessages();
@@ -667,6 +321,330 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	},
 	
 	#' @description 
+	#' updateTaggedText: 
+	#' Replace tags for text
+	#'   
+	#'   Substitutes all occurrences of \{\{tag-name\}\}
+	#'   with the text parameter. If the tag name is not 
+	#'   found in the document
+	#'   it is inserted at the end in a section labelled "Unmatched tags:".
+	#'   From there
+	#'   it can be cut and pasted into the right place.
+	#'   
+	#'   This call
+	#'   runs in the background. Its status can be monitored with
+	#'   `roogledocs::.background_status()`
+	#' @param text the value to replace the tag with (e.g. a result from analysis)
+	#'   (cannot be empty) - (java expects a RCharacter)
+	#' @param tagName the tag name - (defaulting to `deparse(substitute(text))`) - (java expects a RCharacter)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
+	updateTaggedText = function(text, tagName=deparse(substitute(text))) {
+		# copy parameters into Java
+		tmp_text = self$.api$.toJava$RCharacter(text);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
+			method = "updateTaggedText",
+			tmp_text,
+			tmp_tagName
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
+	#' updateTaggedImage: 
+	#' Replace a tag with an image.
+	#'   
+	#'   Substitutes all occurrences of
+	#'   \{\{tag-name\}\} with an image from the local storage. 
+	#'   
+	#'   The image is
+	#'   uploaded to your google drive as a temporary file, and briefly made
+	#'   publicly readable. From there it is inserted into the 
+	#'   google doc, and
+	#'   one completed the temporary file deleted from your google drive.
+	#'   Insertion is
+	#'   done using the dimensions of the existing image (if
+	#'   present) or the PNG dimensions if not.
+	#'   Creating the image with the
+	#'   correct dimensions (and providing the dpi if not 300) is
+	#'   important.
+	#'   
+	#'   If the tag is missing from the document the image
+	#'   is
+	#'   inserted at the end (and tagged). From there it can be cut and pasted
+	#'   to the correct place.
+	#'   
+	#'   This call runs in the background. Its status
+	#'   can be monitored with `roogledocs::.background_status()`
+	#' @param absoluteFilePath a file path to an png image file. - (java expects a RCharacter)
+	#' @param tagName the tag name - (defaulting to
+	#'   `deparse(substitute(absoluteFilePath))`) - (java expects a RCharacter)
+	#' @param dpi the dots per inch of the image in the document (defaults to 300) -
+	#'   (defaulting to `300`) - (java expects a RNumeric)
+	#' @param keepUpload keep the uploaded image as a supplementary file in the same
+	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a RLogical)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
+	updateTaggedImage = function(absoluteFilePath, tagName=deparse(substitute(absoluteFilePath)), dpi=300, keepUpload=FALSE) {
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RCharacter(absoluteFilePath);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
+		tmp_dpi = self$.api$.toJava$RNumeric(dpi);
+		tmp_keepUpload = self$.api$.toJava$RLogical(keepUpload);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
+			method = "updateTaggedImage",
+			tmp_absoluteFilePath,
+			tmp_tagName,
+			tmp_dpi,
+			tmp_keepUpload
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
+	#' updateTaggedTable: 
+	#' Replace a tag with a table.
+	#'   
+	#'   Substitutes a unique occurrences of
+	#'   \{\{tag-name\}\} with a table. The tag should either be in the text of
+	#'   the document or as the first entry in 
+	#'   the first cell of a table. Once
+	#'   inserted the table is tagged using a zero width character
+	#'   as the very
+	#'   first item in the first cell. This will be removed if `removeTags()`
+	#'   is called.
+	#'   
+	#'   If the tag is missing the table is inserted at the end of
+	#'   the document where it can be 
+	#'   cut and pasted to the correct place.
+	#'   
+	#'   
+	#'   This call runs in the background. Its status can be monitored with
+	#'   `roogledocs::.background_status()`
+	#' @param longFormatTable A dataframe consisting of the table content and
+	#'   formatting indexed by row and column. at a minimum this should have
+	#'   columns label,row,col, but may also
+	#'   include
+	#'   rowSpan,colSpan,fillColour, leftBorderWeight,
+	#'   rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment
+	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
+	#'   fontFace, fontSize. - (java expects a RDataframe)
+	#' @param tagName the tag name - (defaulting to
+	#'   `deparse(substitute(longFormatTable))`) - (java expects a RCharacter)
+	#' @param colWidths A vector including the relative length of each column. This
+	#'   can be left out if longFormatTable comes from `as.long_format_table` -
+	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
+	#' @param tableWidthInches The final width of the table in inches (defaults to a
+	#'   size that fits in A4 page with margins) but you may want to make this
+	#'   wider for
+	#'     landscape tables - (defaulting to `6.2`) - (java expects a RNumeric)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
+	updateTaggedTable = function(longFormatTable, tagName=deparse(substitute(longFormatTable)), colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
+		# copy parameters into Java
+		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
+		tmp_tagName = self$.api$.toJava$RCharacter(tagName);
+		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
+		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
+			method = "updateTaggedTable",
+			tmp_longFormatTable,
+			tmp_tagName,
+			tmp_colWidths,
+			tmp_tableWidthInches
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
+	#' updateTable: 
+	#' Update or insert a formatted table into the document. 
+	#'   
+	#'   This function
+	#'   counts the number of tables from the start of the document.
+	#'   Inserting
+	#'   tables by index works only if your document does not change much or
+	#'   you are creating one from
+	#'   scratch. You can overwrite tables using this
+	#'   function but if the order of tables has been changed by
+	#'   your
+	#'   collaborators this will be generally cause probelms. Use of this
+	#'   function is generally discouraged and
+	#'   we now prefer
+	#'   `updateTaggedTable()`.
+	#'   
+	#'   This call runs in the background. Its status
+	#'   can be monitored with `roogledocs::.background_status()`
+	#' @param longFormatTable A dataframe consisting of the table content and
+	#'   formatting indexed by row and column. at a minimum this should have
+	#'   columns label,row,col, but may also
+	#'   include
+	#'   rowSpan,colSpan,fillColour, leftBorderWeight,
+	#'   rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment
+	#'   (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName,
+	#'   fontFace, fontSize. - (java expects a RDataframe)
+	#' @param tableIndex what is the table index in the document? This can be left
+	#'   out for a new table at the end of the document. - (defaulting to `-1`) - (java expects a RInteger)
+	#' @param colWidths A vector including the relative length of each column. This
+	#'   can be left out if longFormatTable comes from as.long_format_table -
+	#'   (defaulting to `attr(longFormatTable,'colWidths')`) - (java expects a RNumericVector)
+	#' @param tableWidthInches The final width of the table in inches (defaults to a
+	#'   size that fits in A4 page with margins) - (defaulting to `6.2`) - (java expects a RNumeric)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a R6 RoogleDocs object 
+	#' itself - a fluent method
+	updateTable = function(longFormatTable, tableIndex=-1, colWidths=attr(longFormatTable,'colWidths'), tableWidthInches=6.2) {
+		# copy parameters into Java
+		tmp_longFormatTable = self$.api$.toJava$RDataframe(longFormatTable);
+		tmp_tableIndex = self$.api$.toJava$RInteger(tableIndex);
+		tmp_colWidths = self$.api$.toJava$RNumericVector(colWidths);
+		tmp_tableWidthInches = self$.api$.toJava$RNumeric(tableWidthInches);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$RoogleDocs,
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+			method = "updateTable",
+			tmp_longFormatTable,
+			tmp_tableIndex,
+			tmp_colWidths,
+			tmp_tableWidthInches
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
+	#' updateFigure: 
+	#' Update or insert a figure in the document from a locally stored PNG by
+	#'   index.
+	#'   
+	#'   This function counts the number of inline images (i.e. not
+	#'   absolutely positioned ones) from the start of the document.
+	#'   Inserting
+	#'   images by index works only if your document does not change much or
+	#'   you are creating one from
+	#'   scratch. You can overwrite images using this
+	#'   function but if the order of images has been changed by
+	#'   your
+	#'   collaborators this will generally cause problems. This function
+	#'   uploads the image into a temporary file onto your Google Drive, and
+	#'   makes it briefly publicly readable. From there inserts it into the
+	#'   
+	#'   google document. Once this is complete the temporary google drive
+	#'   copy of the image is deleted. 
+	#'   
+	#'   This call runs in the background. Its
+	#'   status can be monitored with `roogledocs::.background_status()`
+	#' @param absoluteFilePath a file path to an png image file (only png is
+	#'   supported at this point). - (java expects a RCharacter)
+	#' @param figureIndex what is the figure index in the document? (This only
+	#'   counts inline images - and ignores absolutely positioned ones). leave
+	#'   out for a new image at the end of the document. - (defaulting to `-1`) - (java expects a RInteger)
+	#' @param dpi the dots per inch of the image in the document (defaults to 300).
+	#'   the final size of the image in the doc will be determined by the image
+	#'   file dimensions and the dpi. - (defaulting to `300`) - (java expects a RNumeric)
+	#' @param keepUpload keep the uploaded image as a supplementary file in the same
+	#'   directory as the google doc - (defaulting to `FALSE`) - (java expects a RLogical)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a R6 RoogleDocs object 
+	#' itself - a fluent method
+	updateFigure = function(absoluteFilePath, figureIndex=-1, dpi=300, keepUpload=FALSE) {
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RCharacter(absoluteFilePath);
+		tmp_figureIndex = self$.api$.toJava$RInteger(figureIndex);
+		tmp_dpi = self$.api$.toJava$RNumeric(dpi);
+		tmp_keepUpload = self$.api$.toJava$RLogical(keepUpload);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$RoogleDocs,
+			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+			method = "updateFigure",
+			tmp_absoluteFilePath,
+			tmp_figureIndex,
+			tmp_dpi,
+			tmp_keepUpload
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
+	#' saveAsPdf: 
+	#' Save the document as a PDF
+	#'   
+	#'   Saves a snapshot of the current google doc
+	#'   with `roogledocs` links removed as a pdf to a local drive. 
+	#'   This is
+	#'   mainly intended for snapshotting the current state of the document.
+	#'   For final export once all
+	#'   analysis is complete it may be preferable to
+	#'   call `doc$removeTags()` and manually export the output
+	#'   but after this
+	#'   no further updating is possible.
+	#'   
+	#'   This call runs in the background.
+	#'   Its status can be monitored with `roogledocs::.background_status()`
+	#' @param absoluteFilePath - a file path to save the pdf. - (java expects a RFile)
+	#' @param uploadCopy place a copy of the downloaded pdf back onto google drive
+	#'   in the same folder as the document
+	#'     for example for keeping submitted
+	#'   versions of a updated document. This will overwrite files of the same
+	#'   name in the 
+	#'     google drive directory. - (defaulting to `FALSE`) - (java expects a RLogical)
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing called for side effects
+	saveAsPdf = function(absoluteFilePath, uploadCopy=FALSE) {
+		# copy parameters into Java
+		tmp_absoluteFilePath = self$.api$.toJava$RFile(absoluteFilePath);
+		tmp_uploadCopy = self$.api$.toJava$RLogical(uploadCopy);
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
+			method = "saveAsPdf",
+			tmp_absoluteFilePath,
+			tmp_uploadCopy
+		);
+		# handle any messages and exceptions arising:
+		self$.api$printMessages();
+		.jcheck();
+		return(out);
+	},
+	
+	#' @description 
 	#' uploadSupplementaryFiles: 
 	#' Upload a file into the same directory as the document.
 	#'   
@@ -682,41 +660,38 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#'   for uploads will be triggered at this point. As google drive can have
 	#'   multiple files with the same name
 	#'   the behaviour if the file already
-	#'   exists is slightly complex, with `overwrite` and `duplicate` options.
+	#'   exists is slightly complex, with `overwrite` and `duplicate`
+	#'   options.
+	#'   
+	#'   This call runs in the background. Its status can be
+	#'   monitored with `roogledocs::.background_status()`
 	#' @param absoluteFilePath - a file path to upload. - (java expects a RFile)
 	#' @param overwrite - if matching file(s) are found in the target, delete them
 	#'   before uploading the new one. - (defaulting to `FALSE`) - (java expects a RLogical)
 	#' @param duplicate - if matching file(s) are found in the target, upload this
 	#'   new file anyway, creating duplicate names in the folder. - (defaulting
 	#'   to `FALSE`) - (java expects a RLogical)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
 	uploadSupplementaryFiles = function(absoluteFilePath, overwrite=FALSE, duplicate=FALSE) {
 		# copy parameters into Java
 		tmp_absoluteFilePath = self$.api$.toJava$RFile(absoluteFilePath);
 		tmp_overwrite = self$.api$.toJava$RLogical(overwrite);
 		tmp_duplicate = self$.api$.toJava$RLogical(duplicate);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
 			method = "uploadSupplementaryFiles",
 			tmp_absoluteFilePath,
 			tmp_overwrite,
-			tmp_duplicate, 
-			check=FALSE
+			tmp_duplicate
 		);
+		# handle any messages and exceptions arising:
 		self$.api$printMessages();
-		# check for exceptions and rethrow them
 		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
 	
@@ -728,36 +703,32 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#'   would normally not want this so it is
 	#'   up to you to end paragraphs with a new line character, before changing
 	#'   styles.
+	#'   
+	#'   This call runs in the background. Its status can be monitored
+	#'   with `roogledocs::.background_status()`
 	#' @param text - a single string with the text to append which may include
 	#'   newlines - (java expects a RCharacter)
 	#' @param style - one of NORMAL_TEXT, TITLE, SUBTITLE, HEADING_1, ... HEADING_6
 	#'   - (defaulting to `'NORMAL_TEXT'`) - (java expects a RCharacter)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
 	appendText = function(text, style='NORMAL_TEXT') {
 		# copy parameters into Java
 		tmp_text = self$.api$.toJava$RCharacter(text);
 		tmp_style = self$.api$.toJava$RCharacter(style);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
 			method = "appendText",
 			tmp_text,
-			tmp_style, 
-			check=FALSE
+			tmp_style
 		);
+		# handle any messages and exceptions arising:
 		self$.api$printMessages();
-		# check for exceptions and rethrow them
 		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
 	
@@ -765,32 +736,29 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#' appendFormattedParagraph: 
 	#' Append a new paragraph, with text from the 'label' column with
 	#'   optional formating in the other columns.
+	#'   
+	#'   This call runs in the
+	#'   background. Its status can be monitored with
+	#'   `roogledocs::.background_status()`
 	#' @param formattedTextDf - a data frame containing the columns label, and
 	#'   optionally: link (as a URL), fontName, fontFace, fontSize. - (java expects a RDataframe)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a R6 RoogleDocs object 
+	#' nothing, called for side effects
 	appendFormattedParagraph = function(formattedTextDf) {
 		# copy parameters into Java
 		tmp_formattedTextDf = self$.api$.toJava$RDataframe(formattedTextDf);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$RoogleDocs,
 			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
 			method = "appendFormattedParagraph",
-			tmp_formattedTextDf, 
-			check=FALSE
+			tmp_formattedTextDf
 		);
+		# handle any messages and exceptions arising:
 		self$.api$printMessages();
-		# check for exceptions and rethrow them
 		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
 	
@@ -813,35 +781,32 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	#'   the document. Where it can be cut and
 	#'   pasted to the right place. N.B.
 	#'   Do not split up the references when you move them.
+	#'   
+	#'   This call runs in
+	#'   the background. Its status can be monitored with
+	#'   `roogledocs::.background_status()`
 	#' @param bibTexPath - the full file path to the file containing the bibtex - (java expects a RCharacter)
 	#' @param citationStyle - the CSL specification - (defaulting to
 	#'   `'ieee-with-url'`) - (java expects a RCharacter)
-	#' @return R6 RoogleDocs object 
-	#' itself - a fluent method
+	#' @return an `RFuture` with methods `cancel()`, `isCancelled()`, `isDone()` and `get()`. 
+	#' The result of a `get()` call will be a void
+	#' nothing, called for side effects
 	updateCitations = function(bibTexPath, citationStyle='ieee-with-url') {
 		# copy parameters into Java
 		tmp_bibTexPath = self$.api$.toJava$RCharacter(bibTexPath);
 		tmp_citationStyle = self$.api$.toJava$RCharacter(citationStyle);
-		# execute method call
-		tmp_out = .jcall(
-			self$.jobj, 
-			returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+		# construct a JFuture R6 object as return value.
+		out = RFuture$new(
+			r6obj = self,
+			converter = self$.api$.fromJava$void,
+			returnSig = "V", 
 			method = "updateCitations",
 			tmp_bibTexPath,
-			tmp_citationStyle, 
-			check=FALSE
+			tmp_citationStyle
 		);
+		# handle any messages and exceptions arising:
 		self$.api$printMessages();
-		# check for exceptions and rethrow them
 		.jcheck();
-		# is this a fluent method (output is same as dispatching class)?
-		if(self$.jobj$equals(tmp_out)) {
-			# return fluent method
-			return(invisible(self));
-		}
-		# convert java object back to R. Wrapping to R6 as needed. 
-		out = self$.api$.fromJava$RoogleDocs(tmp_out);
-		if(is.null(out)) return(invisible(out));
 		return(out);
 	},
 	

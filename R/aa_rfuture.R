@@ -37,13 +37,15 @@ RFuture = R6::R6Class("RFuture", public=list(
 	.returnSig = NULL,
 	
 	#' @description
-	#' Create a new JFuture. This is done automatically by the API.
+	#' Create a new RFuture. This is done automatically by the API.
 	#' @param r6obj The r6obj creating this future, or the canonical java class name of a static java class
-	#' @param api The java api
 	#' @param method The java method name to be called async
 	#' @param returnSig The JNI return signature
 	#' @param converter The R6 api function that the return value should use
-	#' @param ... parameters to pass to the java method
+	#' @param ... parameters to pass to the java method. must be unnamed
+	#' @param api The java api (e.g. `JavaApi$new()`)
+	#' @param jthread a pointer to the java RFuture object if we are reconstructing the 
+	#'   future from a `RThreadMonitor.status() / .background_status()` id.
 	#' @return A new RFuture holding the java thread executing the method.
 	initialize = function(
 		r6obj,
@@ -51,10 +53,13 @@ RFuture = R6::R6Class("RFuture", public=list(
 		returnSig,
 		converter,
 		...,
-		api = r6obj$.api
+		api = r6obj$.api,
+		jthread = NULL
 	){
 		params = rlang::list2(...)
 		jparams = .jnew('java/util/ArrayList')
+		# cast the parameters to java Objects and put them in a list
+		# TODO: this will fail if the parameters are primitives.
 		lapply(params, function(p) {
 			.jcall(jparams, returnSig = "Z", method="add", .jcast(p,"java/lang/Object"))		
 		})
@@ -64,12 +69,20 @@ RFuture = R6::R6Class("RFuture", public=list(
 		self$.returnSig = returnSig;
 		self$.converter = converter;
 		tmp = if (is.R6(r6obj)) r6obj$.jobj else .jnew("java/lang/String",r6obj)
-		self$.jthread = .jnew(
-			'uk/co/terminological/rjava/RFuture',
-			.jcast(tmp, "java/lang/Object"),
-			method,
-			jparams
-		)
+		if (is.null(jthread)) {
+			# Create the RFuture thread and start execution.
+			self$.jthread = .jnew(
+				'uk/co/terminological/rjava/threads/RFuture',
+				.jcast(tmp, "java/lang/Object"),
+				method,
+				jparams,
+				returnSig,
+				deparse(substitute(converter))
+			)
+		} else {
+			# This is constructed from an existing java thread
+			self$.jthread = jthread
+		}
 	},
 	
 	#' @description 
@@ -82,7 +95,8 @@ RFuture = R6::R6Class("RFuture", public=list(
 	#' @description 
 	#' has the function been cancelled
 	isCancelled = function() {
-		as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='isCancelled'))
+		tmp = as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='isCancelled'))
+		return(tmp)
 	},
 	
 	#' @description 
@@ -90,8 +104,6 @@ RFuture = R6::R6Class("RFuture", public=list(
 	#' with an appropriate delay.
 	isDone = function() {
 		tmp = as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='isDone'))
-		self$.api$printMessages()
-		.jcheck()
 		return(tmp)
 	},
 	
@@ -106,15 +118,35 @@ RFuture = R6::R6Class("RFuture", public=list(
 		# thread so it can shut down if this function is interrupted in R.
 		on.exit(if (!complete) { self$cancel() })
 		
+		# Attach a progress bar
+		pb = .progress_bar()
+		prog = NULL
+		rJava::.jcall(self$.jthread, returnSig='V', method='attachProgressBar', .jnew("java/lang/String",pb))
+		
 		# Wait whilst polling for result. poll is false if the thread has not completed
 		# if R is interrupted the function will exit and trigger java thread shutdown.
 		# via the on.exit clause. The poll 20ms time delay will short circuit if the thread has finished.
-		while(!as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='poll', .jlong(20)))) {
+		while(!as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='poll', .jlong(5)))) {
 			# This is here to allow control to return to R briefly to allow for 
 			# R session interruptions to be processed and for messages from java code to 
 			# be relayed to the R terminal.
-			self$.api$printMessages()
+			# Poll for any messages produced by the thread:
+			msg = .jcall(self$.jthread, returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE)
+			.message(msg)
+			prog = .jcall(self$.jthread, returnSig = "Ljava/lang/String;", method = "getProgressRCode", check=FALSE)
+			prog = eval(parse(text=prog))
+			if (!is.null(prog)) {
+				.progress_update(
+					total = prog$total,
+					id = prog$id,
+					set = prog$set
+				)
+			}
 		}
+		# get the last messages as it completed
+		msg = .jcall(self$.jthread, returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE)
+		.message(msg)
+		if (!is.null(prog)) {.progress_done(id = prog$id)}
 		
 		# If R was interrupted whilst java was still 
 		# running this next part should not be executed and the function should
@@ -123,47 +155,146 @@ RFuture = R6::R6Class("RFuture", public=list(
 		# isDone() should be true now. 
 		complete = self$isDone()
 		
-		# thread is done but did it succeed?
-		if (as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='succeeded'))) {
-			# Yes, the thread completed normally, and the result should be available
-			# It is a plain untyped java object when returned from the ThreadRunner.
-			tmp_fut_out = .jcall(self$.jthread, returnSig='Ljava/lang/Object;', method='getSuccess')
-			if (is.null(tmp_fut_out)) tmp_out = NULL
-			else if (self$.returnSig == "V") tmp_out = NULL
-			else tmp_out = .jcast(tmp_fut_out,self$.returnSig)
-			# Deal with any outstanding messages or errors
-			self$.api$printMessages()
-			.jcheck()
-			if (is.R6(self$.r6obj) && self$.r6obj$.jobj$equals(tmp_out)) {
-				# The java result is the same object as the dispatching object 
-				# return the original R6 object wrapper as a future fluent method
-				# N.B. this is impossible if the method was called in a static context
-				return(invisible(self$.r6obj))
-			} else {
-				# The return value is a primitive or other non object standard data type.
-				# or a member fo the API. The converter will know to wrap it in an R6 class if needed.
-				return(self$.converter(tmp_out))
-			}
-		} else {
-			# No.
-			# The thread completed but with errors. The result value in .jthread will
-			# be an exception which we throw. No return value		
-			rJava::.jcall(self$.jthread, returnSig='V', method='throwFailure', check=FALSE)
-			self$.api$printMessages()
-			.jcheck()
+		if (as.logical(rJava::.jcall(self$.jthread, returnSig='Z', method='isCancelled'))) {
+			# the method was cancelled lets just throw a R error
+			stop("background call to ",self$.method,"(...) was cancelled.")
 		}
+		
+		# thread is done and wasn't cancelled but processing may or may not have succeeded
+		# If the thread completed normally, the result should be available
+		# if not then an exception will be thrown when we try and get it.
+		# It is a plain untyped java object when returned from the ThreadRunner.
+		
+		tmp_fut_out = .jcall(self$.jthread, returnSig='Ljava/lang/Object;', method='get')
+		
+		# now we have to coerce it to the correct R type using the provided 
+		# converter
+		if (is.null(tmp_fut_out)) tmp_out = NULL
+		else if (self$.returnSig == "V") tmp_out = NULL
+		else tmp_out = .jcast(tmp_fut_out,self$.returnSig)
+		if (is.R6(self$.r6obj) && self$.r6obj$.jobj$equals(tmp_out)) {
+			# The java result is the same object as the dispatching object 
+			# return the original R6 object wrapper as a future fluent method
+			# N.B. this is impossible if the method was called in a static context
+			return(invisible(self$.r6obj))
+		} else {
+			# The return value is a primitive or other non object standard data type.
+			# or a member of the API. The converter will know to wrap it in an R6 class if needed.
+			return(self$.converter(tmp_out))
+		}
+		
 	},
 	
+	#' @description 
+	#' print the status
 	print = function() {
-		sprintf("Background call `%s(...)`: %s%s",
-			self$.method,
-			if (self$isDone()) "complete." else "executing.",
-			if (self$isCancelled()) " (cancelled)" else ""
-		)
+		msg = .jcall(self$.jthread, returnSig = "Ljava/lang/String;", method = "toString", check=FALSE)
+		if (!is.null(msg) && trimws(msg) != "") cat(trimws(msg))
+		return(invisible(NULL))
 	},
 	
+	#' @description 
+	#' clean up and cancel this thread 
 	finalize = function() {
 		self$cancel()
 	}
 	
 ))
+
+#' Async function status
+#' 
+#' Print any asynchronous java function calls that are in progress, complete or
+#' cancelled. The function returns a thread id which may be used to retrieve the
+#' thread itself
+#' 
+#' @return a maybe empty dataframe with `id` and `status` columns
+#' @export
+.background_status = function() {
+	msg = .jcall("uk/co/terminological/rjava/threads/RThreadMonitor", returnSig = "Ljava/lang/String;", method = "status")
+	out = read.delim(
+		text=msg,
+		col.names = c("id","status"),
+		colClasses = c("integer","character"),
+		header = FALSE,
+		as.is = TRUE)
+	return(out)
+}
+
+#' Async cancel all
+#' 
+#' Cancel all asynchronous operations.
+#' @return nothing, called for side effects
+#' @export
+.background_cancel_all = function() {
+	.jcall("uk/co/terminological/rjava/threads/RThreadMonitor", returnSig = "V", method = "cancelAll")
+}
+
+#' Async cancel one
+#' 
+#' Cancel an asynchronous operation by id.
+#'
+#' @param id the id from `.background_status()`
+#' @return nothing, called for side effects
+#' @export
+.background_cancel = function(id) {
+	.jcall("uk/co/terminological/rjava/threads/RThreadMonitor", returnSig = "V", method = "cancel", .jlong(id))
+}
+
+#' Tidy up completed async operations
+#' 
+#' Remove all processed and cancelled aync operations from the status list.
+#' This will potentially free up some system resources
+#' 
+#' @return nothing, called for side effects
+#' @export
+.background_tidy_up = function() {
+	.jcall("uk/co/terminological/rjava/threads/RThreadMonitor", returnSig = "V", method = "tidyUp")
+	.jgc(R.gc = FALSE)
+}
+
+#' Get a RFuture by id
+#' 
+#' Get a background task from the `.background_status()` list and wrap it in 
+#' an R6 RFuture class. This 
+#' 
+#' @param id the id from `.background_status()` 
+#' @return an RFuture
+#' @export
+.background_get_by_id = function(id) {
+	.jthread = .jcall("uk/co/terminological/rjava/threads/RThreadMonitor", returnSig = "Luk/co/terminological/rjava/threads/RFuture;", method = "get", .jlong(id))
+	.conv = .jcall(.jthread, returnSig = "Ljava/lang/String;", method="getConverter")
+	# this is a spectacular hack that seems to work:
+	# I get round the fact that the converter is usually evaluated in the context
+	# of a R6 object by creating a reference to it within this function called `self$.api`.
+	# an alternative would have been to pass the body of the function and recreate it
+	# from the text
+	self = list(.api = JavaApi$get())
+	return(RFuture$new(
+		r6obj = "",
+		method = .jcall(.jthread, returnSig = "Ljava/lang/String;", method="getMethod"),
+		returnSig = .jcall(.jthread, returnSig = "Ljava/lang/String;", method="getReturnSig"),
+		converter = eval(parse(text=.conv)),
+		api = self,
+		jthread = .jthread
+	))
+}
+
+.progress_bar = function(..., .envir=parent.frame()) {
+	if (!isTRUE(getOption("knitr.in.progress"))) {
+		return(cli::cli_progress_bar(..., .envir=.envir))
+	} else {
+		return(NULL)
+	}
+}
+
+.progress_update = function(..., .envir=parent.frame()) {
+	if (!isTRUE(getOption("knitr.in.progress"))) {
+		cli::cli_progress_update(..., .envir=.envir)
+	}
+}
+
+.progress_done = function(..., .envir=parent.frame()) {
+	if (!isTRUE(getOption("knitr.in.progress"))) {
+		cli::cli_progress_done(..., .envir=.envir)
+	}
+}

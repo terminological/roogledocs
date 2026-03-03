@@ -203,7 +203,7 @@ class TestSlides {
 //	}
 	
 	@Test
-	final void testCitation() throws IOException, URISyntaxException, ParseException {
+	final void testCitation() throws IOException, URISyntaxException, ParseException, InterruptedException {
 		RPresentation test2 = singleton.getOrClonePresentation("roogleslides-demo",
 				"https://docs.google.com/presentation/d/18jqzzDI1zBruO3Rc0RlzX_rxhsDiOuKbTM4vnwuimn4/edit?usp=sharing");
 		String bibtex = Files.readString(Paths.get(TestApi.class.getResource("/test.bib").toURI()));

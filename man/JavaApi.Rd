@@ -27,7 +27,7 @@ Programmatically substitute images, data and tables into a google doc or present
 
 Version: 0.5.0
 
-Generated: 2024-04-27T13:56:10.506316288
+Generated: 2024-05-17T12:54:03.708483892
 }
 
 \author{\email{rob.challen@bristol.ac.uk}}
@@ -55,17 +55,6 @@ J = roogledocs::JavaApi$get()
 J$RoogleDocs$new(tokenDirectory, disabled)
 # or alternatively:
 roogledocs::new(tokenDirectory, disabled)
-}
-
-## -----------------------------------
-## Method `J$RoogleDocs$reauth(...)`
-## Aliased as `roogledocs::reauth(...)`
-## -----------------------------------
-\dontrun{
-# no example given - appropriate parameter values must be provided:
-J$RoogleDocs$reauth(tokenDirectory)
-# or alternatively:
-roogledocs::reauth(tokenDirectory)
 }
 
 ## -----------------------------------
@@ -132,6 +121,17 @@ roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 J$RoogleDocs$citationStyles()
 # or alternatively:
 roogledocs::citation_styles()
+}
+
+## -----------------------------------
+## Method `J$RoogleDocs$reauth(...)`
+## Aliased as `roogledocs::reauth(...)`
+## -----------------------------------
+\dontrun{
+# no example given - appropriate parameter values must be provided:
+J$RoogleDocs$reauth(tokenDirectory)
+# or alternatively:
+roogledocs::reauth(tokenDirectory)
 }
 
 ## -----------------------------------
@@ -218,13 +218,13 @@ roogledocs::delete_slides(docName, areYouSure, tokenDirectory, disabled)
 	\if{html}{\out{<hr>}}
 	\itemize{
 		\item \href{#method-RoogleDocs-new}{\code{J$RoogleDocs$new(tokenDirectory, disabled)}}
-		\item \href{#method-RoogleDocs-reauth}{\code{J$RoogleDocs$reauth(tokenDirectory)}}
 		\item \href{#method-RoogleDocs-docById}{\code{J$RoogleDocs$docById(shareUrlOrDocId, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docByName}{\code{J$RoogleDocs$docByName(title, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-docFromTemplate}{\code{J$RoogleDocs$docFromTemplate(title, templateUri, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-searchForDocuments}{\code{J$RoogleDocs$searchForDocuments(titleMatch, tokenDirectory)}}
 		\item \href{#method-RoogleDocs-deleteDocument}{\code{J$RoogleDocs$deleteDocument(docName, areYouSure, tokenDirectory, disabled)}}
 		\item \href{#method-RoogleDocs-citationStyles}{\code{J$RoogleDocs$citationStyles()}}
+		\item \href{#method-RoogleDocs-reauth}{\code{J$RoogleDocs$reauth(tokenDirectory)}}
 	}
 	\if{html}{\out{<hr>}}
 	\itemize{
@@ -467,43 +467,6 @@ J$RoogleDocs$new(tokenDirectory, disabled)
 
 
 	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-RoogleDocs-reauth"></a>}}
-	
-	\subsection{Method \code{RoogleDocs$reauth()}}{
-		Re-authenticate roogledocs library
-
-Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
-
-Generally this is only be needed if  
-application permission updates are needed in which case the directory can be manually deleted anyway,
-or if you want to switch google user without using a different tokenDirectory.
-	
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-J$RoogleDocs$reauth(tokenDirectory)
-# this method is also exposed as a package function:
-roogledocs::reauth(tokenDirectory)
-	  		}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-			R6 RoogleDocs object: a new RoogleDocs instance without an active document
-		}
-	}
-
-
-	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-RoogleDocs-docById"></a>}}
 	
 	\subsection{Method \code{RoogleDocs$docById()}}{
@@ -665,7 +628,7 @@ roogledocs::delete_document(docName, areYouSure, tokenDirectory, disabled)
 		}
 
 		\subsection{Returns}{
-			void: nothing, called for side efffects
+			void: nothing, called for side effects
 		}
 	}
 
@@ -697,6 +660,43 @@ roogledocs::citation_styles()
 
 		\subsection{Returns}{
 			RCharacterVector: a vector of csl style names
+		}
+	}
+
+
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-RoogleDocs-reauth"></a>}}
+	
+	\subsection{Method \code{RoogleDocs$reauth()}}{
+		Re-authenticate roogledocs library
+
+Re-authenticate the service deleting the existing OAuth tokens may be helpful if there is some problem. 
+
+Generally this is only be needed if  
+application permission updates are needed in which case the directory can be manually deleted anyway,
+or if you want to switch google user without using a different tokenDirectory.
+	
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+J$RoogleDocs$reauth(tokenDirectory)
+# this method is also exposed as a package function:
+roogledocs::reauth(tokenDirectory)
+	  		}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{tokenDirectory the place to store authentication tokens. This should not be checked into version control. - (defaulting to `.tokenDirectory()`)}{ - (java expects a RCharacter)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+			R6 RoogleDocs object: a new RoogleDocs instance without an active document
 		}
 	}
 
@@ -893,7 +893,7 @@ roogledocs::delete_slides(docName, areYouSure, tokenDirectory, disabled)
 		}
 
 		\subsection{Returns}{
-			void: nothing, called for side efffects
+			void: nothing, called for side effects
 		}
 	}
 

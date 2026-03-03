@@ -19,7 +19,7 @@ Programmatically substitute images, data and tables into a google presentation.
 
 Version: 0.5.0
 
-Generated: 2024-04-27T13:56:10.641295657
+Generated: 2024-05-17T12:54:03.841654011
 }
 
 \details{
@@ -76,43 +76,11 @@ instance$tagsDefined()
 }
 
 ## -----------------------------------
-## Method `RoogleSlides$updateTaggedText(text, tagName)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$updateTaggedText(text, tagName)
-}
-
-## -----------------------------------
-## Method `RoogleSlides$updateTaggedImage(absoluteFilePath, tagName, keepUpload)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)
-}
-
-## -----------------------------------
-## Method `RoogleSlides$updateTaggedTable(longFormatTable, tagName, colWidths)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$updateTaggedTable(longFormatTable, tagName, colWidths)
-}
-
-## -----------------------------------
 ## Method `RoogleSlides$removeTags(confirm)`
 ## -----------------------------------
 \dontrun{
 # appropriate parameter values must be provided
 instance$removeTags(confirm)
-}
-
-## -----------------------------------
-## Method `RoogleSlides$saveAsPdf(absoluteFilePath, uploadCopy)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$saveAsPdf(absoluteFilePath, uploadCopy)
 }
 
 ## -----------------------------------
@@ -129,22 +97,6 @@ instance$makeCopy(newName)
 \dontrun{
 # appropriate parameter values must be provided
 instance$delete(areYouSure)
-}
-
-## -----------------------------------
-## Method `RoogleSlides$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
-}
-
-## -----------------------------------
-## Method `RoogleSlides$appendFormattedSlide(title, formattedTextDf)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$appendFormattedSlide(title, formattedTextDf)
 }
 
 ## -----------------------------------
@@ -172,6 +124,54 @@ instance$setDefaultLayout(layout)
 }
 
 ## -----------------------------------
+## Method `RoogleSlides$updateTaggedText(text, tagName)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTaggedText(text, tagName)
+}
+
+## -----------------------------------
+## Method `RoogleSlides$updateTaggedImage(absoluteFilePath, tagName, keepUpload)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)
+}
+
+## -----------------------------------
+## Method `RoogleSlides$updateTaggedTable(longFormatTable, tagName, colWidths)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$updateTaggedTable(longFormatTable, tagName, colWidths)
+}
+
+## -----------------------------------
+## Method `RoogleSlides$saveAsPdf(absoluteFilePath, uploadCopy)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$saveAsPdf(absoluteFilePath, uploadCopy)
+}
+
+## -----------------------------------
+## Method `RoogleSlides$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
+}
+
+## -----------------------------------
+## Method `RoogleSlides$appendFormattedSlide(title, formattedTextDf)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$appendFormattedSlide(title, formattedTextDf)
+}
+
+## -----------------------------------
 ## Method `RoogleSlides$updateCitations(bibTexPath, citationStyle)`
 ## -----------------------------------
 \dontrun{
@@ -194,18 +194,18 @@ instance$updateCitations(bibTexPath, citationStyle)
 			\item \href{#method-disable}{\code{instance$disable()}}
 			\item \href{#method-getName}{\code{instance$getName(suffix)}}
 			\item \href{#method-tagsDefined}{\code{instance$tagsDefined()}}
-			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
-			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)}}
-			\item \href{#method-updateTaggedTable}{\code{instance$updateTaggedTable(longFormatTable, tagName, colWidths)}}
 			\item \href{#method-removeTags}{\code{instance$removeTags(confirm)}}
-			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath, uploadCopy)}}
 			\item \href{#method-makeCopy}{\code{instance$makeCopy(newName)}}
 			\item \href{#method-delete}{\code{instance$delete(areYouSure)}}
-			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
-			\item \href{#method-appendFormattedSlide}{\code{instance$appendFormattedSlide(title, formattedTextDf)}}
 			\item \href{#method-slideDimensions}{\code{instance$slideDimensions()}}
 			\item \href{#method-slideLayouts}{\code{instance$slideLayouts()}}
 			\item \href{#method-setDefaultLayout}{\code{instance$setDefaultLayout(layout)}}
+			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
+			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)}}
+			\item \href{#method-updateTaggedTable}{\code{instance$updateTaggedTable(longFormatTable, tagName, colWidths)}}
+			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath, uploadCopy)}}
+			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
+			\item \href{#method-appendFormattedSlide}{\code{instance$appendFormattedSlide(title, formattedTextDf)}}
 			\item \href{#method-updateCitations}{\code{instance$updateCitations(bibTexPath, citationStyle)}}
 			\item \code{instance$clone()}
 			\item \code{instance$print()}
@@ -365,119 +365,6 @@ RDataframe: a dataframe containing tag and count columns
 
 	}
 	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
-	
-	\subsection{Method \code{updateTaggedText()}}{
-Replace tags for text
-
-Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the
-tag is not found then a new slide is inserted at the end in a section titled "Unmatched tags:". 
-From there they can be cut and pasted into the right place.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$updateTaggedText(text, tagName)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a RCharacter)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a RCharacter)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
-	
-	\subsection{Method \code{updateTaggedImage()}}{
-Replace a tag with an image.
-
-Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
-
-The image is uploaded to your google drive as a temporary file, and made publicly readable. From there it is inserted into the 
-google slides, and once completed the temporary file deleted from your google drive, unless `keepUpload` is true. Insertion
-is done in the dimensions of the containing box of the image if it already exists or
-a default slide body box if not. 
-
-If the tag is not found in the document a new slide will be created at the end of the presentation with the image
-and an uninformative title which can be changed.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a RCharacter)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a RCharacter)}
-				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc. N.B. the result will be publicly readable. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedTable"></a>}}
-	
-	\subsection{Method \code{updateTaggedTable()}}{
-Replace a tag with a table.
-
-Substitutes a unique occurrence of \{\{tag-name\}\} with a table. The tag must either be in a text box shape or as the first entry in 
-a table. Once inserted the table is tagged using a zero width character
-as the very first item in the first cell. This will be removed if `removeTags()` is called.
-
-If the tag is not found in the document a new slide will be created at the end with the table.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$updateTaggedTable(longFormatTable, tagName, colWidths)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
-rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a RCharacter)}
-				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-removeTags"></a>}}
 	
 	\subsection{Method \code{removeTags()}}{
@@ -500,43 +387,6 @@ instance$removeTags(confirm)
 			\if{html}{\out{<div class="arguments">}}
 			\describe{
 				\item{confirm - This action must be confirmed by passing `true` as cannot be undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
-	
-	\subsection{Method \code{saveAsPdf()}}{
-Save the document as a PDF
-
-Saves a snapshot of the current google slides with `roogledocs` links removed as a pdf to a local drive. 
-This is mainly intended for snap-shotting the current state of the document. For final export once all
-analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
-but after this no further updating is possible.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$saveAsPdf(absoluteFilePath, uploadCopy)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a RFile)}
-				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
-  for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
-  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -608,73 +458,6 @@ instance$delete(areYouSure)
 
 		\subsection{Returns}{
 void: 
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-uploadSupplementaryFiles"></a>}}
-	
-	\subsection{Method \code{uploadSupplementaryFiles()}}{
-Upload a file into the same directory as the document.
-
-This allow you to load e.g. a supplementary file, or the pdf of an image file or a docx/html version of a table
-into google drive into the same directory as the slides you are editing. This is handy for organising all the files
-for a journal submission in one place. Any kind of file can be loaded, and the mimetype will be detected. Normal Google Drive rules 
-for uploads will be triggered at this point. As google drive can have multiple files with the same name
-the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath - a file path to upload.}{ - (java expects a RFile)}
-				\item{overwrite - if matching file(s) are found in the target, delete them before uploading the new one. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
-				\item{duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-appendFormattedSlide"></a>}}
-	
-	\subsection{Method \code{appendFormattedSlide()}}{
-Append a new "TITLE_AND_BODY" slide, with formatted text from the 'label' column with optional formating in the other columns.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleSlides$new(tokenDirectory, disabled);
-instance$appendFormattedSlide(title, formattedTextDf)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{title - A plain text title}{ - (java expects a RCharacter)}
-				\item{formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
 		}
 
 	}
@@ -781,6 +564,235 @@ R6 RoogleSlides object: itself - a fluent method
 
 	}
 	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
+	
+	\subsection{Method \code{updateTaggedText()}}{
+Replace tags for text
+
+Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the
+tag is not found then a new slide is inserted at the end in a section titled "Unmatched tags:". 
+From there they can be cut and pasted into the right place.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$updateTaggedText(text, tagName)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a RCharacter)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
+	
+	\subsection{Method \code{updateTaggedImage()}}{
+Replace a tag with an image.
+
+Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
+
+The image is uploaded to your google drive as a temporary file, and made publicly readable. From there it is inserted into the 
+google slides, and once completed the temporary file deleted from your google drive, unless `keepUpload` is true. Insertion
+is done in the dimensions of the containing box of the image if it already exists or
+a default slide body box if not. 
+
+If the tag is not found in the document a new slide will be created at the end of the presentation with the image
+and an uninformative title which can be changed.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$updateTaggedImage(absoluteFilePath, tagName, keepUpload)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a RCharacter)}
+				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc. N.B. the result will be publicly readable. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedTable"></a>}}
+	
+	\subsection{Method \code{updateTaggedTable()}}{
+Replace a tag with a table.
+
+Substitutes a unique occurrence of \{\{tag-name\}\} with a table. The tag must either be in a text box shape or as the first entry in 
+a table. Once inserted the table is tagged using a zero width character
+as the very first item in the first cell. This will be removed if `removeTags()` is called.
+
+If the tag is not found in the document a new slide will be created at the end with the table.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$updateTaggedTable(longFormatTable, tagName, colWidths)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a RCharacter)}
+				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
+	
+	\subsection{Method \code{saveAsPdf()}}{
+Save the document as a PDF
+
+Saves a snapshot of the current google slides with `roogledocs` links removed as a pdf to a local drive. 
+This is mainly intended for snap-shotting the current state of the document. For final export once all
+analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
+but after this no further updating is possible.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$saveAsPdf(absoluteFilePath, uploadCopy)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a RFile)}
+				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
+  for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
+  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-uploadSupplementaryFiles"></a>}}
+	
+	\subsection{Method \code{uploadSupplementaryFiles()}}{
+Upload a file into the same directory as the document.
+
+This allow you to load e.g. a supplementary file, or the pdf of an image file or a docx/html version of a table
+into google drive into the same directory as the slides you are editing. This is handy for organising all the files
+for a journal submission in one place. Any kind of file can be loaded, and the mimetype will be detected. Normal Google Drive rules 
+for uploads will be triggered at this point. As google drive can have multiple files with the same name
+the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options. 
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath - a file path to upload.}{ - (java expects a RFile)}
+				\item{overwrite - if matching file(s) are found in the target, delete them before uploading the new one. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+				\item{duplicate - if matching file(s) are found in the target, upload this new file anyway, creating duplicate names in the folder. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-appendFormattedSlide"></a>}}
+	
+	\subsection{Method \code{appendFormattedSlide()}}{
+Append a new "TITLE_AND_BODY" slide, with formatted text from the 'label' column with optional formating in the other columns.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleSlides$new(tokenDirectory, disabled);
+instance$appendFormattedSlide(title, formattedTextDf)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{title - A plain text title}{ - (java expects a RCharacter)}
+				\item{formattedTextDf - a data frame containing the columns label, and optionally: link (as a URL), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-updateCitations"></a>}}
 	
 	\subsection{Method \code{updateCitations()}}{
@@ -807,13 +819,13 @@ instance$updateCitations(bibTexPath, citationStyle)
 			\if{html}{\out{<div class="arguments">}}
 			\describe{
 				\item{bibTexPath - the full file path to the file containing the bibtex}{ - (java expects a RCharacter)}
-				\item{citationStyle - the CSL specification - (defaulting to `'ieee'`)}{ - (java expects a RCharacter)}
+				\item{citationStyle - the CSL specification - (defaulting to `'ieee-with-url'`)}{ - (java expects a RCharacter)}
 			}
 			\if{html}{\out{</div>}}
 		}
 
 		\subsection{Returns}{
-R6 RoogleSlides object: itself - a fluent method
+void: nothing, called for side effects
 		}
 
 	}

@@ -1,7 +1,7 @@
 # ---
 # repo: terminological/roogledocs
 # file: standalone-roogledocs.R
-# last-updated: 2024-02-20
+# last-updated: 2024-11-27
 # license: https://unlicense.org
 # imports: 
 #   - rlang (>= 1.1.1)
@@ -21,7 +21,7 @@
 #' Get a named `roogledoc` document
 #' 
 #' This function connects to a `roogledoc` document by name defaulting to
-#' `getOption("roogledoc.doc_name")`. If `roogledocs` is not installed it
+#' `getOption("roogledocs.doc_name")`. If `roogledocs` is not installed it
 #' returns a shim that silently ignores `roogledocs` calls. This is setup so a
 #' script with `roogledocs` calls in it can be executed on a machine without
 #' `roogledocs` installed.
@@ -30,8 +30,8 @@
 #'
 #' @return a `RoogleDocs` R6 object or a shim that ignores `roogledocs` calls
 #' @noRd
-roogledoc = function(name = getOption("roogledoc.doc_name",NULL)) {
-  if (is.null(name)) stop("roogledocs name must be given (or `option(roogledoc.doc_name = '...')` must be set)")
+roogledoc = function(name = getOption("roogledocs.doc_name",NULL)) {
+  if (is.null(name)) stop("roogledocs name must be given (or `option(roogledocs.doc_name = '...')` must be set)")
   .roogledoc_impl(name)()
 }
 
@@ -55,20 +55,20 @@ roogledoc = function(name = getOption("roogledoc.doc_name",NULL)) {
 }
 
 
-#' Get a named `roogledoc` presentation
+#' Get a named `roogledocs` presentation
 #' 
-#' This function connects to a `roogledoc` presentation instance by name which
-#' defaults to `getOption("roogledoc.slides_name")`. If `roogledocs` is not
+#' This function connects to a `roogledocs` presentation instance by name which
+#' defaults to `getOption("roogledocs.slides_name")`. If `roogledocs` is not
 #' installed it returns a shim that silently ignores `roogledocs` calls. This is
 #' setup so a script with `roogledocs` calls in it can be executed on a machine
 #' without `roogledocs` installed.
 #'
-#' @param name a googledocs presentation name (will be created if it does not exist)
+#' @param name a google docs presentation name (will be created if it does not exist)
 #'
 #' @return a `RoogleSlides` R6 object or a shim that ignores `roogledocs` calls
 #' @noRd
-roogleslides = function(name = getOption("roogledoc.slides_name",NULL)) {
-  if (is.null(name)) stop("roogledocs name must be given (or `option(roogledoc.doc_name = '...')` must be set)")
+roogleslides = function(name = getOption("roogledocs.slides_name",NULL)) {
+  if (is.null(name)) stop("roogledocs name must be given (or `option(roogledocs.slides_name = '...')` must be set)")
   .roogleslides_impl(name)()
 }
 
@@ -101,5 +101,6 @@ roogleslides = function(name = getOption("roogledoc.slides_name",NULL)) {
     return(tmp[[1]])
   })
 }
+
 
 

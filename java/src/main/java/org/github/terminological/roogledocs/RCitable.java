@@ -42,7 +42,7 @@ public abstract class RCitable {
 		return citeIds(tag).collect(Collectors.toList()).toArray(new String[0]);
 	}
 
-	public void updateCitations(String bibTex, String citationStyle) throws IOException, ParseException {
+	public void updateCitations(String bibTex, String citationStyle) throws IOException, ParseException, InterruptedException {
 		
 		RProgressMonitor.setTotal(4);
 		// Load the bibtex and setup the parser.

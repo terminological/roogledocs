@@ -19,7 +19,7 @@ Programmatically substitute images, data and tables into a google doc.
 
 Version: 0.5.0
 
-Generated: 2024-04-27T13:56:10.603218214
+Generated: 2024-05-17T12:54:03.799157142
 }
 
 \details{
@@ -78,6 +78,38 @@ instance$tagsDefined()
 }
 
 ## -----------------------------------
+## Method `RoogleDocs$revertTags()`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$revertTags()
+}
+
+## -----------------------------------
+## Method `RoogleDocs$removeTags(confirm)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$removeTags(confirm)
+}
+
+## -----------------------------------
+## Method `RoogleDocs$makeCopy(newName)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$makeCopy(newName)
+}
+
+## -----------------------------------
+## Method `RoogleDocs$delete(areYouSure)`
+## -----------------------------------
+\dontrun{
+# appropriate parameter values must be provided
+instance$delete(areYouSure)
+}
+
+## -----------------------------------
 ## Method `RoogleDocs$updateTaggedText(text, tagName)`
 ## -----------------------------------
 \dontrun{
@@ -102,22 +134,6 @@ instance$updateTaggedTable(longFormatTable, tagName, colWidths, tableWidthInches
 }
 
 ## -----------------------------------
-## Method `RoogleDocs$revertTags()`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$revertTags()
-}
-
-## -----------------------------------
-## Method `RoogleDocs$removeTags(confirm)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$removeTags(confirm)
-}
-
-## -----------------------------------
 ## Method `RoogleDocs$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)`
 ## -----------------------------------
 \dontrun{
@@ -139,22 +155,6 @@ instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)
 \dontrun{
 # appropriate parameter values must be provided
 instance$saveAsPdf(absoluteFilePath, uploadCopy)
-}
-
-## -----------------------------------
-## Method `RoogleDocs$makeCopy(newName)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$makeCopy(newName)
-}
-
-## -----------------------------------
-## Method `RoogleDocs$delete(areYouSure)`
-## -----------------------------------
-\dontrun{
-# appropriate parameter values must be provided
-instance$delete(areYouSure)
 }
 
 ## -----------------------------------
@@ -204,16 +204,16 @@ instance$updateCitations(bibTexPath, citationStyle)
 			\item \href{#method-disable}{\code{instance$disable()}}
 			\item \href{#method-getName}{\code{instance$getName(suffix)}}
 			\item \href{#method-tagsDefined}{\code{instance$tagsDefined()}}
+			\item \href{#method-revertTags}{\code{instance$revertTags()}}
+			\item \href{#method-removeTags}{\code{instance$removeTags(confirm)}}
+			\item \href{#method-makeCopy}{\code{instance$makeCopy(newName)}}
+			\item \href{#method-delete}{\code{instance$delete(areYouSure)}}
 			\item \href{#method-updateTaggedText}{\code{instance$updateTaggedText(text, tagName)}}
 			\item \href{#method-updateTaggedImage}{\code{instance$updateTaggedImage(absoluteFilePath, tagName, dpi, keepUpload)}}
 			\item \href{#method-updateTaggedTable}{\code{instance$updateTaggedTable(longFormatTable, tagName, colWidths, tableWidthInches)}}
-			\item \href{#method-revertTags}{\code{instance$revertTags()}}
-			\item \href{#method-removeTags}{\code{instance$removeTags(confirm)}}
 			\item \href{#method-updateTable}{\code{instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)}}
 			\item \href{#method-updateFigure}{\code{instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)}}
 			\item \href{#method-saveAsPdf}{\code{instance$saveAsPdf(absoluteFilePath, uploadCopy)}}
-			\item \href{#method-makeCopy}{\code{instance$makeCopy(newName)}}
-			\item \href{#method-delete}{\code{instance$delete(areYouSure)}}
 			\item \href{#method-uploadSupplementaryFiles}{\code{instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)}}
 			\item \href{#method-appendText}{\code{instance$appendText(text, style)}}
 			\item \href{#method-appendFormattedParagraph}{\code{instance$appendFormattedParagraph(formattedTextDf)}}
@@ -376,123 +376,6 @@ RDataframe: a dataframe containing tag and count columns
 
 	}
 	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
-	
-	\subsection{Method \code{updateTaggedText()}}{
-Replace tags for text
-
-Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the tag name is not 
-found in the document it is inserted at the end in a section labelled "Unmatched tags:". From there
-it can be cut and pasted into the right place.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$updateTaggedText(text, tagName)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a RCharacter)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a RCharacter)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
-	
-	\subsection{Method \code{updateTaggedImage()}}{
-Replace a tag with an image.
-
-Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
-
-The image is uploaded to your google drive as a temporary file, and briefly made publicly readable. From there it is inserted into the 
-google doc, and one completed the temporary file deleted from your google drive. Insertion is
-done using the dimensions of the existing image (if present) or the PNG dimensions if not.
-Creating the image with the correct dimensions (and providing the dpi if not 300) is important.
-
-If the tag is missing from the document the image
-is inserted at the end (and tagged). From there it can be cut and pasted to the correct place.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$updateTaggedImage(absoluteFilePath, tagName, dpi, keepUpload)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a RCharacter)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a RCharacter)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to `300`)}{ - (java expects a RNumeric)}
-				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTaggedTable"></a>}}
-	
-	\subsection{Method \code{updateTaggedTable()}}{
-Replace a tag with a table.
-
-Substitutes a unique occurrences of \{\{tag-name\}\} with a table. The tag should either be in the text of the document or as the first entry in 
-the first cell of a table. Once inserted the table is tagged using a zero width character
-as the very first item in the first cell. This will be removed if `removeTags()` is called.
-
-If the tag is missing the table is inserted at the end of the document where it can be 
-cut and pasted to the correct place.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$updateTaggedTable(longFormatTable, tagName, colWidths, tableWidthInches)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
-rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a RCharacter)}
-				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from `as.long_format_table` - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
-				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) but you may want to make this wider for
-  landscape tables - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-revertTags"></a>}}
 	
 	\subsection{Method \code{revertTags()}}{
@@ -547,120 +430,6 @@ instance$removeTags(confirm)
 			\if{html}{\out{<div class="arguments">}}
 			\describe{
 				\item{confirm - This action must be confirmed by passing `true` as cannot be undone. - (defaulting to `(menu(c('Yes','No'), title = 'Are you...`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateTable"></a>}}
-	
-	\subsection{Method \code{updateTable()}}{
-Update or insert a formatted table into the document. 
-
-This function counts the number of tables from the start of the document.
-Inserting tables by index works only if your document does not change much or you are creating one from
-scratch. You can overwrite tables using this function but if the order of tables has been changed by
-your collaborators this will be generally cause probelms. Use of this function is generally discouraged and
-we now prefer `updateTaggedTable()`.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
-rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
-				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
-				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
-				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-updateFigure"></a>}}
-	
-	\subsection{Method \code{updateFigure()}}{
-Update or insert a figure in the document from a locally stored PNG by index.
-
-This function counts the number of inline images (i.e. not absolutely positioned ones) from the start of the document.
-Inserting images by index works only if your document does not change much or you are creating one from
-scratch. You can overwrite images using this function but if the order of images has been changed by
-your collaborators this will generally cause problems. This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publicly readable. From there inserts it into the 
-google document. Once this is complete the temporary google drive copy of the image is deleted.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath a file path to an png image file (only png is supported at this point).}{ - (java expects a RCharacter)}
-				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
-				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to `300`)}{ - (java expects a RNumeric)}
-				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
-			}
-			\if{html}{\out{</div>}}
-		}
-
-		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
-		}
-
-	}
-	\if{html}{\out{<hr>}}
-	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
-	
-	\subsection{Method \code{saveAsPdf()}}{
-Save the document as a PDF
-
-Saves a snapshot of the current google doc with `roogledocs` links removed as a pdf to a local drive. 
-This is mainly intended for snapshotting the current state of the document. For final export once all
-analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
-but after this no further updating is possible.
-
-		\subsection{Usage}{
-			\if{html}{\out{<div class="r">}}
-			\preformatted{
-J = roogledocs::JavaApi$get()
-instance = J$RoogleDocs$new(tokenDirectory, disabled);
-instance$saveAsPdf(absoluteFilePath, uploadCopy)
-  			}
-			\if{html}{\out{</div>}}
-		}
-	
-		\subsection{Arguments}{
-			\if{html}{\out{<div class="arguments">}}
-			\describe{
-				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a RFile)}
-				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
-  for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
-  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
 			}
 			\if{html}{\out{</div>}}
 		}
@@ -736,6 +505,249 @@ void:
 
 	}
 	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedText"></a>}}
+	
+	\subsection{Method \code{updateTaggedText()}}{
+Replace tags for text
+
+Substitutes all occurrences of \{\{tag-name\}\} with the text parameter. If the tag name is not 
+found in the document it is inserted at the end in a section labelled "Unmatched tags:". From there
+it can be cut and pasted into the right place.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateTaggedText(text, tagName)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{text the value to replace the tag with (e.g. a result from analysis) (cannot be empty)}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(text))`)}{ - (java expects a RCharacter)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedImage"></a>}}
+	
+	\subsection{Method \code{updateTaggedImage()}}{
+Replace a tag with an image.
+
+Substitutes all occurrences of \{\{tag-name\}\} with an image from the local storage. 
+
+The image is uploaded to your google drive as a temporary file, and briefly made publicly readable. From there it is inserted into the 
+google doc, and one completed the temporary file deleted from your google drive. Insertion is
+done using the dimensions of the existing image (if present) or the PNG dimensions if not.
+Creating the image with the correct dimensions (and providing the dpi if not 300) is important.
+
+If the tag is missing from the document the image
+is inserted at the end (and tagged). From there it can be cut and pasted to the correct place.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateTaggedImage(absoluteFilePath, tagName, dpi, keepUpload)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath a file path to an png image file.}{ - (java expects a RCharacter)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(absoluteFilePath))`)}{ - (java expects a RCharacter)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300) - (defaulting to `300`)}{ - (java expects a RNumeric)}
+				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTaggedTable"></a>}}
+	
+	\subsection{Method \code{updateTaggedTable()}}{
+Replace a tag with a table.
+
+Substitutes a unique occurrences of \{\{tag-name\}\} with a table. The tag should either be in the text of the document or as the first entry in 
+the first cell of a table. Once inserted the table is tagged using a zero width character
+as the very first item in the first cell. This will be removed if `removeTags()` is called.
+
+If the tag is missing the table is inserted at the end of the document where it can be 
+cut and pasted to the correct place. 
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateTaggedTable(longFormatTable, tagName, colWidths, tableWidthInches)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
+				\item{tagName the tag name - (defaulting to `deparse(substitute(longFormatTable))`)}{ - (java expects a RCharacter)}
+				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from `as.long_format_table` - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
+				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) but you may want to make this wider for
+  landscape tables - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing, called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateTable"></a>}}
+	
+	\subsection{Method \code{updateTable()}}{
+Update or insert a formatted table into the document. 
+
+This function counts the number of tables from the start of the document.
+Inserting tables by index works only if your document does not change much or you are creating one from
+scratch. You can overwrite tables using this function but if the order of tables has been changed by
+your collaborators this will be generally cause probelms. Use of this function is generally discouraged and
+we now prefer `updateTaggedTable()`.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateTable(longFormatTable, tableIndex, colWidths, tableWidthInches)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{longFormatTable A dataframe consisting of the table content and formatting indexed by row and column. at a minimum this should have columns label,row,col, but may also include
+rowSpan,colSpan,fillColour, leftBorderWeight, rightBorderWeight, topBorderWeight, bottomBorderWeight, alignment (START,CENTER,END), valignment (TOP,MIDDLE,BOTTOM), fontName, fontFace, fontSize.}{ - (java expects a RDataframe)}
+				\item{tableIndex what is the table index in the document? This can be left out for a new table at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
+				\item{colWidths A vector including the relative length of each column. This can be left out if longFormatTable comes from as.long_format_table - (defaulting to `attr(longFormatTable,'colWidths')`)}{ - (java expects a RNumericVector)}
+				\item{tableWidthInches The final width of the table in inches (defaults to a size that fits in A4 page with margins) - (defaulting to `6.2`)}{ - (java expects a RNumeric)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-updateFigure"></a>}}
+	
+	\subsection{Method \code{updateFigure()}}{
+Update or insert a figure in the document from a locally stored PNG by index.
+
+This function counts the number of inline images (i.e. not absolutely positioned ones) from the start of the document.
+Inserting images by index works only if your document does not change much or you are creating one from
+scratch. You can overwrite images using this function but if the order of images has been changed by
+your collaborators this will generally cause problems. This function uploads the image into a temporary file onto your Google Drive, and makes it briefly publicly readable. From there inserts it into the 
+google document. Once this is complete the temporary google drive copy of the image is deleted. 
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$updateFigure(absoluteFilePath, figureIndex, dpi, keepUpload)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath a file path to an png image file (only png is supported at this point).}{ - (java expects a RCharacter)}
+				\item{figureIndex what is the figure index in the document? (This only counts inline images - and ignores absolutely positioned ones). leave out for a new image at the end of the document. - (defaulting to `-1`)}{ - (java expects a RInteger)}
+				\item{dpi the dots per inch of the image in the document (defaults to 300). the final size of the image in the doc will be determined by the image file dimensions and the dpi. - (defaulting to `300`)}{ - (java expects a RNumeric)}
+				\item{keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+R6 RoogleDocs object: itself - a fluent method
+		}
+
+	}
+	\if{html}{\out{<hr>}}
+	\if{html}{\out{<a id="method-saveAsPdf"></a>}}
+	
+	\subsection{Method \code{saveAsPdf()}}{
+Save the document as a PDF
+
+Saves a snapshot of the current google doc with `roogledocs` links removed as a pdf to a local drive. 
+This is mainly intended for snapshotting the current state of the document. For final export once all
+analysis is complete it may be preferable to call `doc$removeTags()` and manually export the output
+but after this no further updating is possible.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
+
+		\subsection{Usage}{
+			\if{html}{\out{<div class="r">}}
+			\preformatted{
+J = roogledocs::JavaApi$get()
+instance = J$RoogleDocs$new(tokenDirectory, disabled);
+instance$saveAsPdf(absoluteFilePath, uploadCopy)
+  			}
+			\if{html}{\out{</div>}}
+		}
+	
+		\subsection{Arguments}{
+			\if{html}{\out{<div class="arguments">}}
+			\describe{
+				\item{absoluteFilePath - a file path to save the pdf.}{ - (java expects a RFile)}
+				\item{uploadCopy place a copy of the downloaded pdf back onto google drive in the same folder as the document
+  for example for keeping submitted versions of a updated document. This will overwrite files of the same name in the 
+  google drive directory. - (defaulting to `FALSE`)}{ - (java expects a RLogical)}
+			}
+			\if{html}{\out{</div>}}
+		}
+
+		\subsection{Returns}{
+void: nothing called for side effects
+		}
+
+	}
+	\if{html}{\out{<hr>}}
 	\if{html}{\out{<a id="method-uploadSupplementaryFiles"></a>}}
 	
 	\subsection{Method \code{uploadSupplementaryFiles()}}{
@@ -746,6 +758,8 @@ into google drive into the same directory as the document you are editing. This 
 for a journal submission in one place. Any kind of file can be loaded, and the mimetype will be detected. Normal Google Drive rules 
 for uploads will be triggered at this point. As google drive can have multiple files with the same name
 the behaviour if the file already exists is slightly complex, with `overwrite` and `duplicate` options.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -768,7 +782,7 @@ instance$uploadSupplementaryFiles(absoluteFilePath, overwrite, duplicate)
 		}
 
 		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
+void: nothing, called for side effects
 		}
 
 	}
@@ -778,6 +792,8 @@ R6 RoogleDocs object: itself - a fluent method
 	\subsection{Method \code{appendText()}}{
 Append text to the document with optional paragraph styling. If you run text blocks into each other without newlines the whole resulting paragraph will be styled. You 
 would normally not want this so it is up to you to end paragraphs with a new line character, before changing styles.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -799,7 +815,7 @@ instance$appendText(text, style)
 		}
 
 		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
+void: nothing, called for side effects
 		}
 
 	}
@@ -808,6 +824,8 @@ R6 RoogleDocs object: itself - a fluent method
 	
 	\subsection{Method \code{appendFormattedParagraph()}}{
 Append a new paragraph, with text from the 'label' column with optional formating in the other columns.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -828,7 +846,7 @@ instance$appendFormattedParagraph(formattedTextDf)
 		}
 
 		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
+R6 RoogleDocs object: nothing, called for side effects
 		}
 
 	}
@@ -845,6 +863,8 @@ references which can be decided with the `\{\{references\}\}` tag.
 If references do not already exist and there if no `\{\{references\}\}` tag the
 references will be added to the end of the document. Where it can be cut and
 pasted to the right place. N.B. Do not split up the references when you move them.
+
+This call runs in the background. Its status can be monitored with `roogledocs::.background_status()`
 
 		\subsection{Usage}{
 			\if{html}{\out{<div class="r">}}
@@ -866,7 +886,7 @@ instance$updateCitations(bibTexPath, citationStyle)
 		}
 
 		\subsection{Returns}{
-R6 RoogleDocs object: itself - a fluent method
+void: nothing, called for side effects
 		}
 
 	}

@@ -78,15 +78,15 @@ public class RService {
 	private Drive driveService = null;
 	private Slides slideService = null;
 
-	private RService() throws IOException, GeneralSecurityException {
+	private RService() throws IOException, GeneralSecurityException, InterruptedException {
 		this(Paths.get(System.getProperty("user.home"), ".roogledocs"));
 	}
 
-	private RService(String tokenDirectory) throws IOException, GeneralSecurityException {
+	private RService(String tokenDirectory) throws IOException, GeneralSecurityException, InterruptedException {
 		this(Paths.get(tokenDirectory));
 	}
 
-	public static RService with(String tokenDirectory) throws IOException, GeneralSecurityException {
+	public static RService with(String tokenDirectory) throws IOException, GeneralSecurityException, InterruptedException {
 		if (!services.containsKey(tokenDirectory)) {
 			RService out = new RService(tokenDirectory);
 			services.put(tokenDirectory, out);
@@ -95,7 +95,7 @@ public class RService {
 	}
 
 	// Constructor
-	private RService(Path tokenDirectory) throws IOException, GeneralSecurityException {
+	private RService(Path tokenDirectory) throws IOException, GeneralSecurityException, InterruptedException {
 		Iterator<Path> it = tokenDirectory.iterator();
 		while (it.hasNext()) {
 			Path p = it.next();
@@ -156,7 +156,7 @@ public class RService {
 	}
 
 	// do auth stuff when RoogleDocs first called.
-	private void initialiseService() throws IOException, GeneralSecurityException {
+	private void initialiseService() throws IOException, GeneralSecurityException, InterruptedException {
 		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 
 		// Load client secrets.

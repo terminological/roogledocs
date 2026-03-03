@@ -6,7 +6,7 @@
 #'
 #' Version: 0.5.0
 #'
-#' Generated: 2024-04-27T13:56:10.550351393
+#' Generated: 2024-05-17T12:54:03.747422878
 #'
 #' Contact: rob.challen@bristol.ac.uk
 #' @import R6
@@ -36,7 +36,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 	#' @param logLevel A string such as "DEBUG", "INFO", "WARN"
 	#' @return nothing
 	changeLogLevel = function(logLevel) {
-		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "changeLogLevel" , logLevel)
+		.jcall("uk/co/terminological/rjava/RLogController", returnSig = "V", method = "changeLogLevel" , logLevel)
 		invisible(NULL)
 	},
 	
@@ -45,7 +45,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 	#' @param log4jproperties An absolute filepath to the log4j propertied file
 	#' @return nothing
 	reconfigureLog = function(log4jproperties) {
-		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "reconfigureLog" , log4jproperties)
+		.jcall("uk/co/terminological/rjava/RLogController", returnSig = "V", method = "reconfigureLog" , log4jproperties)
 		invisible(NULL)
 	},
 	
@@ -54,8 +54,8 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 	#' @return nothing
 	printMessages = function() {
 		# check = FALSE here to stop exceptions being cleared from the stack.
-		msg = .jcall("uk/co/terminological/rjava/LogController", returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE)
-		if (!is.null(msg) && trimws(msg) != "") message(trimws(msg))
+		msg = .jcall("uk/co/terminological/rjava/RSystemOut", returnSig = "Ljava/lang/String;", method = "getSystemMessages", check=FALSE)
+		.message(msg)
 		invisible(NULL)
 	},
 	
@@ -76,11 +76,11 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		jars = .checkDependencies(quiet = TRUE)
 		.jaddClassPath(jars)
 		
-		# configure logging
- 		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "setupRConsole")
- 		.jcall("uk/co/terminological/rjava/LogController", returnSig = "V", method = "configureLog" , logLevel)
+		# configure system console and logging
+ 		.jcall("uk/co/terminological/rjava/RSystemOut", returnSig = "V", method = "setup")
+ 		.jcall("uk/co/terminological/rjava/RLogController", returnSig = "V", method = "configureLog" , logLevel)
  		# TODO: this is the library build date code but it requires testing
- 		buildDate = .jcall("uk/co/terminological/rjava/LogController", returnSig = "S", method = "getClassBuildTime")
+ 		buildDate = .jcall("uk/co/terminological/rjava/RLogController", returnSig = "S", method = "getClassBuildTime")
 		self$.log = .jcall("org/slf4j/LoggerFactory", returnSig = "Lorg/slf4j/Logger;", method = "getLogger", "roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug", "Adding to classpath: ")
 		for (jar in jars) {
@@ -88,7 +88,7 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 		}
 		.jcall(self$.log,returnSig = "V",method = "info","Initialised roogledocs");
 		.jcall(self$.log,returnSig = "V",method = "debug","R package version: 0.5.0");
-		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-04-27T13:56:10.550900583");
+		.jcall(self$.log,returnSig = "V",method = "debug","R package generated: 2024-05-17T12:54:03.748675364");
 		.jcall(self$.log,returnSig = "V",method = "debug","Java library version: io.github.terminological:roogledocs:0.5.0");
 		.jcall(self$.log,returnSig = "V",method = "debug",paste0("Java library compiled: ",buildDate));
 		.jcall(self$.log,returnSig = "V",method = "debug","Contact: rob.challen@bristol.ac.uk");
@@ -108,13 +108,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 			RDate=function(rObj) {
 				if (is.na(rObj)) return(rJava::.jnew('uk/co/terminological/rjava/types/RDate'))
 				if (length(rObj) > 1) stop('input too long')
-			   if (rObj<'0001-01-01') message('dates smaller than 0001-01-01 will be converted to NA')
+			   if (rObj<'0001-01-01') cli::cli_inform('dates smaller than 0001-01-01 will be converted to NA')
 				tmp = format(rObj,format='%C%y-%m-%d')[[1]]
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDate',tmp))
 			},
 			RDateVector=function(rObj) {
 				if (is.null(rObj)) return(rJava::.new('uk/co/terminological/rjava/types/RDateVector'))
-				if (any(na.omit(rObj)<'0001-01-01')) message('dates smaller than 0001-01-01 will be converted to NA')
+				if (any(na.omit(rObj)<'0001-01-01')) cli::cli_inform('dates smaller than 0001-01-01 will be converted to NA')
 				tmp = format(rObj,format='%C%y-%m-%d')
 				return(rJava::.jnew('uk/co/terminological/rjava/types/RDateVector',rJava::.jarray(tmp)))
 			},
@@ -378,24 +378,6 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				);
 				return(tmp_r6)
 			},
-			reauth = function(tokenDirectory=.tokenDirectory()) {
-				# copy parameters
-				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
-				# execute static call
-				tmp_out = .jcall(
-					"org/github/terminological/roogledocs/RoogleDocs", 
-					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
-					method = "reauth",
-					tmp_tokenDirectory, 
-					check = FALSE);
-				self$printMessages()
-				.jcheck()
-				# static methods cannot return themselves fluently, so this does not need to be checked for.
-				# convert java object back to R. Wrapping in an R6 class as needed
-				out = self$.fromJava$RoogleDocs(tmp_out);
-				if(is.null(out)) return(invisible(out))
-				return(out)
-			},
 			docById = function(shareUrlOrDocId, tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# copy parameters
 				tmp_shareUrlOrDocId = self$.toJava$RCharacter(shareUrlOrDocId);
@@ -523,7 +505,26 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				out = self$.fromJava$RCharacterVector(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
-			}	)
+			},
+			reauth = function(tokenDirectory=.tokenDirectory()) {
+				# copy parameters
+				tmp_tokenDirectory = self$.toJava$RCharacter(tokenDirectory);
+				# statically construct a JFuture R6 object as return value.
+				# this uses the JFuture constructor with a canonical  name as a parameter. 
+				# in which case we must supply the api
+				out = RFuture$new(
+					r6obj = "org.github.terminological.roogledocs.RoogleDocs",
+					converter = self$.fromJava$RoogleDocs,
+					returnSig = "Lorg/github/terminological/roogledocs/RoogleDocs;", 
+					method = "reauth",
+					tmp_tokenDirectory,
+					api = self
+				);
+				# handle any messages and exceptions arising:
+				self$printMessages();
+				.jcheck();
+				return(out$get());
+			}		)
 		self$RoogleSlides = list(
 			new = function(tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 				# constructor
@@ -652,7 +653,13 @@ JavaApi = R6::R6Class("JavaApi", public=list(
 				out = self$.fromJava$void(tmp_out);
 				if(is.null(out)) return(invisible(out))
 				return(out)
-			}	)
+			}		)
+	},
+	
+	#' @description Allow this object to be garbage collected.
+	finalize = function() {
+		# shutdown system console and logging
+		.jcall("uk/co/terminological/rjava/RSystemOut", returnSig = "V", method = "release")
 	}
 ))
 
@@ -692,13 +699,13 @@ JavaApi$versionInformation = function() {
 	out = list(
 		package = "roogledocs",
 		r_package_version = "0.5.0",
-		r_package_generated = "2024-04-27T13:56:10.580229036",
+		r_package_generated = "2024-05-17T12:54:03.775208338",
 		java_library_version = "io.github.terminological:roogledocs:0.5.0",
 		maintainer = "rob.challen@bristol.ac.uk"
 	)
 	# try and get complilation information if library is loaded
 	try({
-		out$java_library_compiled = .jcall("uk/co/terminological/rjava/LogController", returnSig = "S", method = "getClassBuildTime")
+		out$java_library_compiled = .jcall("uk/co/terminological/rjava/RLogController", returnSig = "S", method = "getClassBuildTime")
 	}, silent=TRUE)
 	return(out)
 }
@@ -727,3 +734,6 @@ JavaApi$versionInformation = function() {
 	.start_jvm(debug=FALSE)
 }
 
+.message = function(msg) {
+	if (!is.null(msg) && trimws(msg) != "") rlang::inform(paste0(trimws(msg),"\n"))
+}

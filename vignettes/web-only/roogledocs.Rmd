@@ -24,7 +24,7 @@ here::i_am("vignettes/web-only/roogledocs.Rmd")
 ```
 
 
-```{r eval=FALSE}
+```R
 remove.packages("roogledocs")
 devtools::install_local("~/Git/roogledocs",upgrade = FALSE)
 ```

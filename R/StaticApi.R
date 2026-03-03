@@ -3,37 +3,10 @@
 # and serves as an alternative R centric entry point of the roogledocs generated R library.
 
 # Version: 0.5.0
-# Generated: 2024-04-27T13:56:10.582362960
+# Generated: 2024-05-17T12:54:03.777406751
 # Contact: rob.challen@bristol.ac.uk
 
 # RoogleDocs class static methods ----
-
-
-#' reauth: Re-authenticate roogledocs library
-#' 
-#' Re-authenticate the service deleting the existing OAuth tokens may be
-#'   helpful if there is some problem. 
-#'   
-#'   Generally this is only be needed
-#'   if  
-#'   application permission updates are needed in which case the
-#'   directory can be manually deleted anyway,
-#'   or if you want to switch
-#'   google user without using a different tokenDirectory.
-#' @param tokenDirectory the place to store authentication tokens. This should
-#'   not be checked into version control. - (defaulting to
-#'   `.tokenDirectory()`) - (java expects a RCharacter)
-#' @return R6 RoogleDocs object: 
-#' a new RoogleDocs instance without an active document
-#' @export
-reauth = function(tokenDirectory=.tokenDirectory()) {
-	# get the API singleton
-	J = JavaApi$get()
-	# execute the R6 function call with the same parameters
-	out = J$RoogleDocs$reauth(tokenDirectory)
-	if(is.null(out)) return(invisible(out))
-	return(out)
-}
 
 
 #' docById: Get a document by id or sharing link.
@@ -145,7 +118,7 @@ search_for_documents = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 #' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return void: 
-#' nothing, called for side efffects
+#' nothing, called for side effects
 #' @export
 delete_document = function(docName, areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE), tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 	# get the API singleton
@@ -168,6 +141,33 @@ citation_styles = function() {
 	J = JavaApi$get()
 	# execute the R6 function call with the same parameters
 	out = J$RoogleDocs$citationStyles()
+	if(is.null(out)) return(invisible(out))
+	return(out)
+}
+
+
+#' reauth: Re-authenticate roogledocs library
+#' 
+#' Re-authenticate the service deleting the existing OAuth tokens may be
+#'   helpful if there is some problem. 
+#'   
+#'   Generally this is only be needed
+#'   if  
+#'   application permission updates are needed in which case the
+#'   directory can be manually deleted anyway,
+#'   or if you want to switch
+#'   google user without using a different tokenDirectory.
+#' @param tokenDirectory the place to store authentication tokens. This should
+#'   not be checked into version control. - (defaulting to
+#'   `.tokenDirectory()`) - (java expects a RCharacter)
+#' @return R6 RoogleDocs object: 
+#' a new RoogleDocs instance without an active document
+#' @export
+reauth = function(tokenDirectory=.tokenDirectory()) {
+	# get the API singleton
+	J = JavaApi$get()
+	# execute the R6 function call with the same parameters
+	out = J$RoogleDocs$reauth(tokenDirectory)
 	if(is.null(out)) return(invisible(out))
 	return(out)
 }
@@ -285,7 +285,7 @@ search_for_slides = function(titleMatch, tokenDirectory=.tokenDirectory()) {
 #' @param tokenDirectory - (defaulting to `.tokenDirectory()`) - (java expects a RCharacter)
 #' @param disabled - (defaulting to `getOption('roogledocs.disabled',FALSE)`) - (java expects a RLogical)
 #' @return void: 
-#' nothing, called for side efffects
+#' nothing, called for side effects
 #' @export
 delete_slides = function(docName, areYouSure=utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE), tokenDirectory=.tokenDirectory(), disabled=getOption('roogledocs.disabled',FALSE)) {
 	# get the API singleton

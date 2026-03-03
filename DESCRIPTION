@@ -27,6 +27,7 @@ Imports:
 	rJava,
 	R6,
 	fs,
+	cli,
 	rappdirs,
 	utils,
 	magrittr,

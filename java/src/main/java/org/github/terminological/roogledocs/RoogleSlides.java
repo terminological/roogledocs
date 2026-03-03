@@ -83,12 +83,13 @@ public class RoogleSlides {
 	 * @param disabled a flag to switch roogledocs off (on a document by document basis, for testing or development. This can be set globally with `options('roogledocs.disabled'=TRUE)`
 	 * @throws IOException if there is a problem storing the tokens or communicating with google servers
 	 * @throws GeneralSecurityException if there is a problem authenticating
+	 * @throws InterruptedException 
 	 */
 	@RBlocking
 	public RoogleSlides(
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		this.disabled = disabled.get();
 		this.tokenDirectory = tokenDirectory.get();
 		if(!this.disabled) service = RService.with(this.tokenDirectory);
@@ -134,9 +135,10 @@ public class RoogleSlides {
 	 * @return itself - a fluent method
 	 * @throws GeneralSecurityException if the client cannot authenticate
 	 * @throws IOException if there is a problem communicating with google servers
+	 * @throws InterruptedException 
 	 */
 	@RMethod 
-	public RoogleSlides enable() throws IOException, GeneralSecurityException {
+	public RoogleSlides enable() throws IOException, GeneralSecurityException, InterruptedException {
 		this.disabled = false;
 		if (this.service == null) service = RService.with(tokenDirectory);
 		return this;
@@ -189,13 +191,14 @@ public class RoogleSlides {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers, or the document does not exist, or is not a google doc
 	 * @throws GeneralSecurityException 
+	 * @throws InterruptedException 
 	 */
 	@RMethod
 	public static RoogleSlides slidesById(
 			RCharacter shareUrlOrDocId,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.withDocument(shareUrlOrDocId.get());
 		return out;
@@ -223,13 +226,14 @@ public class RoogleSlides {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers
 	 * @throws GeneralSecurityException 
+	 * @throws InterruptedException 
 	 */
 	@RMethod
 	public static RoogleSlides slidesByName(
 			RCharacter title,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.findOrCreateDocument(title.get());
 		return out;
@@ -262,6 +266,7 @@ public class RoogleSlides {
 	 * @return itself - a fluent method
 	 * @throws IOException if there is a problem communicating with google servers
 	 * @throws GeneralSecurityException 
+	 * @throws InterruptedException 
 	 */
 	@RMethod
 	public static RoogleSlides slidesFromTemplate(
@@ -269,7 +274,7 @@ public class RoogleSlides {
 			RCharacter templateUri,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		RoogleSlides out = new RoogleSlides(tokenDirectory, disabled);
 		out.findOrCloneTemplate(title.get(), templateUri.get());
 		return out;
@@ -283,12 +288,13 @@ public class RoogleSlides {
 	 * @return a dataframe containing "id" and "name" columns
 	 * @throws IOException if there is a problem communicating with google servers
 	 * @throws GeneralSecurityException 
+	 * @throws InterruptedException 
 	 */
 	@RMethod
 	public static RDataframe searchForSlides(
 			RCharacter titleMatch, 
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		RService service = RService.with(tokenDirectory.get());
 		List<Tuple<String, String>> tmp = service.search(titleMatch.get(), RService.MIME_DOCS);
 		return tmp.stream().collect(
@@ -363,13 +369,14 @@ public class RoogleSlides {
 	 * @param keepUpload keep the uploaded image as a supplementary file in the same directory as the google doc. N.B. the result will be publicly readable.
 	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or there is a problem loading the image file
+	 * @throws InterruptedException 
 	 */
 	@RAsync(synchronise = true)
 	public void updateTaggedImage(
 			RCharacter absoluteFilePath, 
 			@RDefault(rCode = "deparse(substitute(absoluteFilePath))") RCharacter tagName, 
 			@RDefault(rCode="FALSE") RLogical keepUpload
-			) throws IOException {
+			) throws IOException, InterruptedException {
 		if (disabled) return;
 		RProgressMonitor.setTotal(2);
 		Path path = Paths.get(absoluteFilePath.get());
@@ -572,11 +579,12 @@ public class RoogleSlides {
 	 *   google drive directory.
 	 * @return nothing called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
+	 * @throws InterruptedException 
 	 */
 	@RAsync(synchronise=true)
 	public void saveAsPdf(
 			RFile absoluteFilePath, 
-			@RDefault(rCode="FALSE") RLogical uploadCopy) throws IOException {
+			@RDefault(rCode="FALSE") RLogical uploadCopy) throws IOException, InterruptedException {
 		if (disabled) return;
 		RProgressMonitor.setTotal(5);
 		RPresentation newdoc = this.service.getOrClonePresentation("tmp_copy_for_pdf_"+UUID.randomUUID().toString(), document.getDocId());
@@ -672,6 +680,7 @@ public class RoogleSlides {
 	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers, or the file cannot be saved.
 	 * @throws GeneralSecurityException 
+	 * @throws InterruptedException 
 	 */
 	@RMethod
 	public static void deleteSlides(
@@ -679,7 +688,7 @@ public class RoogleSlides {
 			@RDefault(rCode = "utils::askYesNo(paste0('Are you sure you want to delete ',docName),FALSE)") RLogical areYouSure,
 			@RDefault(rCode = ".tokenDirectory()") RCharacter tokenDirectory,
 			@RDefault(rCode = "getOption('roogledocs.disabled',FALSE)") RLogical disabled
-			) throws IOException, GeneralSecurityException {
+			) throws IOException, GeneralSecurityException, InterruptedException {
 		if (disabled.get()) return;
 		if (areYouSure.get()) RService.with(tokenDirectory.get()).deleteByName(docName.get(), RService.MIME_SLIDES);
 		else System.out.println("aborted delete.");
@@ -800,9 +809,10 @@ public class RoogleSlides {
 	 * @return nothing, called for side effects
 	 * @throws IOException if there is a problem communicating with google servers.
 	 * @throws ParseException if the bibTex is poorly formed
+	 * @throws InterruptedException 
 	 */
 	@RAsync(synchronise=true) 
-	public void updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException {
+	public void updateCitations(RCharacter bibTexPath, @RDefault(rCode = "'ieee-with-url'") RCharacter citationStyle) throws IOException, ParseException, InterruptedException {
 		if (disabled) return;
 
 		// setup 
