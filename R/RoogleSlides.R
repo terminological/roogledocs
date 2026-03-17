@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.5.0
+#' Version: 0.6.0
 #' 
-#' Generated: 2024-04-27T13:56:10.645594618
+#' Generated: 2026-03-17T09:08:33.865974815
 #'
 #' @details
 	#' The purpose being to support google slides as a
@@ -744,9 +744,10 @@ RoogleSlides = R6::R6Class("RoogleSlides", public=list(
 	equals = function(object) {
 		if (is.null(object$.jobj)) return(FALSE);
 		return(self$.jobj$equals(object$.jobj));
-	},
+	}
 	
-	#' @description Allow this object to be garbage collected.
+	), private=list(
+	
 	finalize = function() {
 		self$.jobj = .jnull("org/github/terminological/roogledocs/RoogleSlides")
 		self$.jobj = NULL

@@ -226,9 +226,11 @@ public class RDocument extends RCitable {
 			requests.deleteContent(range);
 			String tagName = allRanges.get(range);
 			String newText = tagMap.get(tagName);
+			// remove format?
 			// Insert the replacement text.
 			TextRunPosition newRange = requests.insertTextContent(range, newText, Optional.empty());
 			// Re-create the roogledocs hyperlink on the new text.
+			
 			requests.createLinkTag(tagName, newRange);
 		}
 

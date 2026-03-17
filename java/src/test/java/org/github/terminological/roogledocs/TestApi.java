@@ -393,6 +393,15 @@ class TestApi {
 	public static void main(String[] args) throws IOException, GeneralSecurityException {
 		Path tkn  = //Files.createTempDirectory("test-token");
 			Paths.get(SystemUtils.getUserHome().getPath(),".roogledocs-test");
+		
+//		if (!Desktop.isDesktopSupported()) throw new RuntimeException();
+//		Desktop desktop = Desktop.getDesktop();
+//        if (!desktop.isSupported(Action.BROWSE)) {
+//        	throw new RuntimeException("Bros");
+//        } else {
+//        	System.out.println("Supported");
+//        }
+		
 		// RService singleton = 
 		if (Files.exists(tkn)) {
 			Files.walk(tkn).filter(p -> p != tkn).forEach(p -> {

@@ -8,9 +8,9 @@
 #' 
 #' This is a class of the roogledocs generated R library.
 #' 
-#' Version: 0.5.0
+#' Version: 0.6.0
 #' 
-#' Generated: 2024-04-27T13:56:10.616274127
+#' Generated: 2026-03-17T09:08:33.914587391
 #'
 #' @details
 	#' R library to perform limited interactions with google docs (and maybe
@@ -858,9 +858,10 @@ RoogleDocs = R6::R6Class("RoogleDocs", public=list(
 	equals = function(object) {
 		if (is.null(object$.jobj)) return(FALSE);
 		return(self$.jobj$equals(object$.jobj));
-	},
+	}
 	
-	#' @description Allow this object to be garbage collected.
+	), private=list(
+	
 	finalize = function() {
 		self$.jobj = .jnull("org/github/terminological/roogledocs/RoogleDocs")
 		self$.jobj = NULL

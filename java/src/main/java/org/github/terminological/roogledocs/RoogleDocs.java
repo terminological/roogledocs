@@ -29,8 +29,6 @@ import com.google.api.services.docs.v1.model.Dimension;
 import com.google.api.services.docs.v1.model.Size;
 
 import de.undercouch.citeproc.CSL;
-import uk.co.terminological.rjava.RAsync;
-import uk.co.terminological.rjava.RBlocking;
 import uk.co.terminological.rjava.RClass;
 import uk.co.terminological.rjava.RConverter;
 import uk.co.terminological.rjava.RDefault;

@@ -5,7 +5,7 @@
 
 	<groupId>io.github.terminological</groupId>
 	<artifactId>roogledocs</artifactId>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 	<description>R wrapper for Google docs API java library</description>
 
 	<properties>
@@ -13,7 +13,7 @@
 		<!-- Must be Java 8 for standard rJava implementation -->
 		<maven.compiler.source>1.9</maven.compiler.source>
 		<maven.compiler.target>1.9</maven.compiler.target>
-		<r6.version>1.1.0</r6.version>
+		<r6.version>1.1.2-SNAPSHOT</r6.version>
     </properties>
 
 	<name>R Google Docs integration</name>
@@ -27,29 +27,30 @@
 		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>
-			<version>1.33.0</version>
+			<version>2.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.32.1</version>
+		    <groupId>com.google.oauth-client</groupId>
+		    <artifactId>google-oauth-client-jetty</artifactId>
+		    <version>1.39.0</version>
+		    <scope>compile</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-docs -->
 		<dependency>
 		    <groupId>com.google.apis</groupId>
 		    <artifactId>google-api-services-docs</artifactId>
-		    <version>v1-rev20210707-1.32.1</version>
+		    <version>v1-rev20260114-2.0.0</version>
 		</dependency>
 		<dependency>
 	      <groupId>com.google.apis</groupId>
 	      <artifactId>google-api-services-drive</artifactId>
-	      <version>v3-rev20211107-1.32.1</version>
+	      <version>v3-rev20260220-2.0.0</version>
 	    </dependency>
 	    <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-slides -->
 		<dependency>
 		    <groupId>com.google.apis</groupId>
 		    <artifactId>google-api-services-slides</artifactId>
-		    <version>v1-rev399-1.25.0</version>
+		    <version>v1-rev20250401-2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

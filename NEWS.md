@@ -1,5 +1,11 @@
 # NEWS
 
+# roogledocs 0.6.0
+
+* simpler interfaces to main roogledocs functions
+* slides support
+* citation support
+
 # roogledocs 0.2.0
 
 * Widespread changes streamlining functions

@@ -34,10 +34,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp.Browser;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -155,11 +155,14 @@ public class RService {
 
 	// do auth stuff when RoogleDocs first called.
 	private void initialiseService() throws IOException, GeneralSecurityException {
-		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+		final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport(); //GoogleNetHttpTransport.newTrustedTransport();
 
 		// Load client secrets.
 		InputStream in = RService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 		if (in == null) {
+			// The client_secrets.json is a proporty of the project and if we are getting here the
+			// project has not been compiled properly as the client secret has to stay outside of github.
+			
 			throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
 		}
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
@@ -181,7 +184,50 @@ public class RService {
 				//.setRequestInitializer(timeout)
 				.build();
 		LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-		AuthorizationCodeInstalledApp loginApp = new AuthorizationCodeInstalledApp(flow, receiver);
+		AuthorizationCodeInstalledApp loginApp = new AuthorizationCodeInstalledApp(flow, receiver, new Browser() {
+
+			final String[] browsers = {
+	                "xdg-open",
+	                "google-chrome",
+	                "firefox",
+	                "opera",
+	                "konqueror",
+	                "mozilla"
+	        };
+			
+			@Override
+			public void browse(String uri) throws IOException {
+				// TODO Auto-generated method stub
+				String osName = System.getProperty("os.name");
+	            try {
+	                if (osName.startsWith("Mac OS")) {
+	                    Runtime.getRuntime().exec(
+	                            "open " + uri);
+	                } else if (osName.startsWith("Windows")) {
+	                    Runtime.getRuntime().exec(
+	                            "rundll32 url.dll,FileProtocolHandler " + uri);
+	                } else { //assume Unix or Linux
+	                    String browser = null;
+	                    for (String b : browsers) {
+	                        if (browser == null && Runtime.getRuntime().exec(
+	                                new String[]{"which", b}).getInputStream().read() != -1) {
+	                            Runtime.getRuntime().exec(new String[]{browser = b, uri});
+	                        }
+	                    }
+	                    if (browser == null) {
+	                        throw new Exception("No web browser found");
+	                    }
+	                }
+	            } catch (Exception e) {
+	                // should not happen
+	                // dump stack for debug purpose
+	                e.printStackTrace();
+	            }
+			}
+			
+		});
+		
+		
 
 		Credential credential;
 		try { 

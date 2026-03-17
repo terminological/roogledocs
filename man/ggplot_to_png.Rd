@@ -18,8 +18,8 @@ a full path to a png in a temp directory
 }
 \description{
 In `roogledocs` a path to a local png is needed as input
-to tagged image commands. This is a simple wrapper function to 
-save a png using `ragg` with DPI fixed at 300 to a temporary directory 
+to tagged image commands. This is a simple wrapper function to
+save a png using `ragg` with DPI fixed at 300 to a temporary directory
 and return the file path.
 }
 \examples{
@@ -28,10 +28,10 @@ if (FALSE) {
   g = ggplot(diamonds, aes(x=carat,y=price, colour=color))+geom_point()
   figure_1 = ggplot_to_png(g, width=4, height=4)
   doc$updateTaggedImage(figure_1)
-  
+
   # same as:
   # doc$updateTaggedImage(ggplot_to_png(plot,4,4), tagName = "figure_1")
-  
+
 }
 
 }
