@@ -1,15 +1,15 @@
 # java files
 java/src/main/resources/client_secret.json
 java/target/
-java/.classpath
-java/.factorypath
-java/.flattened-pom.xml
-java/.project
-java/.settings
+**/\.classpath
+**/\.factorypath
+**/\.flattened-pom.xml
+**/\.project
+**/\.settings
 
 # History files
-.Rhistory
-.Rapp.history
+\.Rhistory
+\.Rapp.history
 
 # Session Data files
 .RData
